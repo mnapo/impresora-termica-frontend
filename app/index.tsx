@@ -11,7 +11,7 @@ export default function Welcome() {
     <>
       <Stack.Screen options={{ title: 'Welcome' }} />
       <Container>
-        <ScreenContent path="app/index.tsx" title="Welcome"></ScreenContent>
+        <ScreenContent path="app/index.tsx" title="🚚 Ticketeador"></ScreenContent>
         <Link href={{ pathname: '/details', params: { name: 'Dan' } }} asChild>
           <Button title="Show Details" style={styles.button} />
         </Link>
