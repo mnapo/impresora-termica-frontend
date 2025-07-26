@@ -6,12 +6,12 @@ import { Button } from '~/components/Button';
 import { Container } from '~/components/Container';
 import { ScreenContent } from '~/components/ScreenContent';
 
-export default function Home() {
+export default function Welcome() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Home' }} />
+      <Stack.Screen options={{ title: 'Welcome' }} />
       <Container>
-        <ScreenContent path="app/index.tsx" title="Home"></ScreenContent>
+        <ScreenContent path="app/index.tsx" title="Welcome"></ScreenContent>
         <Link href={{ pathname: '/details', params: { name: 'Dan' } }} asChild>
           <Button title="Show Details" style={styles.button} />
         </Link>
