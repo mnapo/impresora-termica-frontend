@@ -9,11 +9,11 @@ export const EditScreenInfo = ({ path }: { path: string }) => {
   return (
     <View>
       <View style={styles.getStartedContainer}>
-        <Text style={styles.getStartedText}>{title}</Text>
+        <Text style={styles.getStartedText}>{}</Text>
         <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-          <Text style={styles.text}>{path}</Text>
+          <Text style={styles.text}>{}</Text>
         </View>
-        <Text style={styles.getStartedText}>{description}</Text>
+        <Text style={styles.getStartedText}>{}</Text>
       </View>
     </View>
   );
