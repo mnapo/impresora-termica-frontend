@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import { Text, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 import { Button, Checkbox, TextInput } from 'react-native-paper';
@@ -13,7 +14,9 @@ export const LoginForm = () => {
       <Text style={styles.title}>- o ingresar mediante -</Text>
       <Button mode="contained">Google</Button>
       <Text style={styles.title}>- o si no tenés cuenta -</Text>
-      <Button mode="contained">Registrate</Button>
+        <Link href={{ pathname: '/signup' }} asChild>
+          <Button mode="contained">Registrate</Button>
+        </Link>
     </View>
   );
 };
