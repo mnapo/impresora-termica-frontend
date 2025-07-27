@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native-unistyles';
 import { Container } from '~/components/Container';
 import { SignupForm } from '~/components/SignupForm';
 
-export default function Details() {
+export default function Signup() {
   const { name } = useLocalSearchParams();
 
   return (
