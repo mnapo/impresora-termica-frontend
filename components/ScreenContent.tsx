@@ -24,13 +24,11 @@ const styles = StyleSheet.create((theme) => ({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
+    padding: 1,
     backgroundColor: theme.colors.background,
   },
   separator: {
     height: 1,
-    marginVertical: 30,
     width: '80%',
     backgroundColor: theme.colors.limedSpruce,
   },
