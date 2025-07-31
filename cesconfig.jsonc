@@ -12,10 +12,6 @@
       }
     },
     {
-      "name": "unistyles",
-      "type": "styling"
-    },
-    {
       "name": "zustand",
       "type": "state-management"
     }
