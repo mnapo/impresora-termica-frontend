@@ -8,13 +8,13 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { signIn } = useAuth();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async () => {
     try {
       await signIn(email, password);
     } catch (e) {
-      console.error('Login error:', e);
+      setError("Credenciales incorrectas");
     }
   };
 
@@ -27,7 +27,7 @@ export default function LoginScreen() {
       <Text>Contraseña</Text>
       <TextInput value={password} onChangeText={setPassword} secureTextEntry />
       <Button mode="contained" onPress={handleLogin}>Entrar</Button>
-      {error && <Text style={{ color: 'red' }}>{error}</Text>}
+      {error && <Text style={{ color: "red" }}>{error}</Text>}
     </View>
   );
 }
