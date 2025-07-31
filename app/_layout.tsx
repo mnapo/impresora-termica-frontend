@@ -15,9 +15,9 @@ function AppNavigator() {
   return (
     <Stack.Navigator>
       {user ? (
-        <Stack.Screen name="🚚 Ticketeador" component={SettingsScreen} />
+        <Stack.Screen options={{ headerShown: false }} name="settings" component={SettingsScreen} />
       ) : (
-        <Stack.Screen name="Ingreso" component={LoginScreen} />
+        <Stack.Screen options={{ headerShown: false }} name="login" component={LoginScreen} />
       )}
     </Stack.Navigator>
   );
