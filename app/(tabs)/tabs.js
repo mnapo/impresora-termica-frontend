@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import InvoicesScreen from './InvoicesScreen';
+import InvoicesScreen from './invoices';
 import SettingsScreen from './settings';
 
 const Tab = createBottomTabNavigator();
