@@ -1,22 +1,14 @@
-import { useUnistyles } from 'react-native-unistyles';
+import { Redirect, Slot } from 'expo-router';
+import { useAuth } from './context/AuthContext';
 
-import { Stack } from 'expo-router';
+export default function RootLayout() {
+  const { user, loading } = useAuth();
 
-export default function Layout() {
-  const { theme } = useUnistyles();
+  if (loading) return null;
 
-  return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        headerStyle: {
-          backgroundColor: theme.colors.background,
-        },
-        headerTitleStyle: {
-          color: theme.colors.typography,
-        },
-        headerTintColor: theme.colors.typography,
-      }}
-    />
-  );
+  if (!user) {
+    return <Slot />;
+  }
+
+  return <Slot />;
 }

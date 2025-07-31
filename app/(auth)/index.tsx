@@ -3,7 +3,7 @@ import { NavigationContainer,  NavigationIndependentTree} from '@react-navigatio
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginScreen from './screens/LoginScreen';
-import HomeScreen from './screens/HomeScreen';
+import ScreensTabs from './screens/ScreensTabs';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +15,7 @@ function AppNavigator() {
   return (
     <Stack.Navigator>
       {user ? (
-        <Stack.Screen name="🚚 Ticketeador" component={HomeScreen} />
+        <Stack.Screen name="🚚 Ticketeador" component={ScreensTabs} />
       ) : (
         <Stack.Screen name="Ingreso" component={LoginScreen} />
       )}
@@ -26,11 +26,7 @@ function AppNavigator() {
 export default function App() {
   return (
     <AuthProvider>
-      <NavigationIndependentTree>
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
-      </NavigationIndependentTree>
+      <AppNavigator/>
     </AuthProvider>
   );
 }
