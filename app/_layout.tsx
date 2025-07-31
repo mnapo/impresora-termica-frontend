@@ -3,7 +3,7 @@ import { NavigationContainer,  NavigationIndependentTree} from '@react-navigatio
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginScreen from './(auth)/login';
-import SettingsScreen from './(tabs)/SettingsScreen';
+import SettingsScreen from './(tabs)/settings';
 
 const Stack = createNativeStackNavigator();
 

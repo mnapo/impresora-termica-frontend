@@ -1,13 +1,32 @@
-import { Stack } from 'expo-router';
+import { AuthProvider, useAuth } from '../context/AuthContext'; // Your auth context
+import { Redirect, Stack } from 'expo-router';
 
-export default function Layout() {
+function RootLayout() {
+  const { isAuthenticated } = useAuth();
 
+  if (!isAuthenticated) {
+    return <Redirect href="/login" />;
+  }
+
+  return <Stack />;
+}
+
+export default function App() {
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        headerStyle: {},
-      }}
-    />
+    <AuthProvider>
+      <RootLayout />
+    </AuthProvider>
+  );
+}
+
+// app/(tabs)/_layout.tsx
+import { Tabs } from 'expo-router';
+
+export function TabsLayout() {
+  return (
+    <Tabs>
+      <Tabs.Screen name="home" options={{ title: 'Home' }} />
+      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+    </Tabs>
   );
 }

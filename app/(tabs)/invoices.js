@@ -8,7 +8,7 @@ export default function InvoicesScreen() {
 
   return (
     <View style={styles(theme).container}>
-      <Text style={styles(theme).title}>Invoices</Text>
+      <Text style={styles(theme).title}>Invoicess</Text>
     </View>
   );
 }
