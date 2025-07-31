@@ -1,23 +1,36 @@
-import { Stack } from 'expo-router';
+import React from 'react';
+import { NavigationContainer,  NavigationIndependentTree} from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginScreen from './screens/LoginScreen';
+import HomeScreen from './screens/HomeScreen';
 
-import { StyleSheet } from 'react-native-unistyles';
-import { Container } from '~/components/Container';
+const Stack = createNativeStackNavigator();
 
-import { LoginForm } from '~/components/LoginForm';
+function AppNavigator() {
+  const { user, loading } = useAuth();
 
-export default function Welcome() {
+  if (loading) return null;
+
   return (
-    <>
-      <Stack.Screen options={{ title: "🚚 Ticketeador" }} />
-      <Container>
-        <LoginForm/>
-      </Container>
-    </>
+    <Stack.Navigator>
+      {user ? (
+        <Stack.Screen name="🚚 Ticketeador" component={HomeScreen} />
+      ) : (
+        <Stack.Screen name="Ingreso" component={LoginScreen} />
+      )}
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create((theme) => ({
-  button: {
-    marginHorizontal: theme.margins.xl,
-  },
-}));
+export default function App() {
+  return (
+    <AuthProvider>
+      <NavigationIndependentTree>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </NavigationIndependentTree>
+    </AuthProvider>
+  );
+}
