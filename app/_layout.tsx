@@ -1,32 +1,28 @@
 import React from 'react';
-import { NavigationContainer,  NavigationIndependentTree} from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Stack } from 'expo-router';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import LoginScreen from './(auth)/login';
-import SettingsScreen from './(tabs)/settings';
 
-const Stack = createNativeStackNavigator();
-
-function AppNavigator() {
-  const { user, loading } = useAuth();
-
+function AppLayout() {
+  const { isAuthenticated, loading } = useAuth();
   if (loading) return null;
-
   return (
-    <Stack.Navigator>
-      {user ? (
-        <Stack.Screen options={{ headerShown: false }} name="settings" component={SettingsScreen} />
-      ) : (
-        <Stack.Screen options={{ headerShown: false }} name="login" component={LoginScreen} />
-      )}
-    </Stack.Navigator>
+    <>
+      <Stack>
+        <Stack.Protected guard={!isAuthenticated}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
+        <Stack.Protected guard={isAuthenticated}>
+          <Stack.Screen name="(tabs)" />
+        </Stack.Protected>
+      </Stack>
+    </>
   );
 }
 
-export default function App() {
+export default function RootLayout() {
   return (
     <AuthProvider>
-      <AppNavigator/>
+      <AppLayout />
     </AuthProvider>
   );
 }

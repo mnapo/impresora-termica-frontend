@@ -5,24 +5,21 @@ import { StyleSheet } from 'react-native';
 
 export default function InvoicesScreen() {
   const theme = useTheme();
-
   return (
-    <View style={styles(theme).container}>
-      <Text style={styles(theme).title}>Invoicess</Text>
+    <View style={styles().container}>
+      <Text style={styles().title}>Invoicess</Text>
     </View>
   );
 }
 
-const styles = (theme) => StyleSheet.create({
+const styles = () => StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     padding: 1,
-    backgroundColor: theme.colors.background,
   },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: theme.colors.onBackground,
   },
 });
