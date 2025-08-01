@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { Button, Checkbox, useTheme } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function SettingsScreen() {
   const theme = useTheme();
