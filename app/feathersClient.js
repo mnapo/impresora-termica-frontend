@@ -4,7 +4,8 @@ import auth from '@feathersjs/authentication-client';
 import io from 'socket.io-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const socket = io('http://localhost:3030', {
+const host = process.env.EXPO_PUBLIC_HOST;
+const socket = io(`http://${host}:3030`, {
   transports: ['websocket'],
 });
 
