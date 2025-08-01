@@ -9,10 +9,10 @@ function AppLayout() {
     <>
       <Stack>
         <Stack.Protected guard={!isAuthenticated}>
-          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(auth)" options={{ title: "🚚Ticketeador", headerShown: false }} />
         </Stack.Protected>
         <Stack.Protected guard={isAuthenticated}>
-          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="(tabs)" options={{ title: "🚚Ticketeador" }}/>
         </Stack.Protected>
       </Stack>
     </>

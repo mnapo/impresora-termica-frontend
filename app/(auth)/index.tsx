@@ -23,10 +23,10 @@ export default function LoginScreen() {
       <Text style={styles().title}>Iniciar Sesión</Text>
       <Divider/>
       <Text>Email</Text>
-      <TextInput value={email} onChangeText={setEmail} autoCapitalize="none" />
+      <TextInput mode="outlined" value={email} onChangeText={setEmail} autoCapitalize="none" />
       <Text>Contraseña</Text>
-      <TextInput value={password} onChangeText={setPassword} secureTextEntry />
-      <Button mode="contained" onPress={handleLogin}>Entrar</Button>
+      <TextInput mode="outlined" value={password} onChangeText={setPassword} secureTextEntry />
+      <Button style={styles().button} mode="contained" onPress={handleLogin}>Entrar</Button>
       {error && <Text style={{ color: "red" }}>{error}</Text>}
     </View>
   );
@@ -35,11 +35,14 @@ export default function LoginScreen() {
 const styles = () => StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    padding: 1,
+    paddingLeft: 40,
+    paddingRight: 40,
   },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  button: {
+    marginTop: 15,
   },
 });
