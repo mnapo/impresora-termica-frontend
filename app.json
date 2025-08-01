@@ -38,6 +38,13 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.ticketeador"
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2fdac53d-3033-44fc-b301-a74c35d1bac3"
+      }
+    },
+    "owner": "mnap"
   }
 }
