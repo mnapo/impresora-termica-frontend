@@ -7,36 +7,41 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Inicio',
-          tabBarIcon: ({ color }) => <FontAwesome size={30} name="home" color={color} />,
+          title: "Inicio",
+          tabBarIcon: () => <FontAwesome size={30} name="home" color="purple" />,
+          tabBarActiveTintColor: "purple",
         }}
       />
       <Tabs.Screen
         name="invoices"
         options={{
-          title: 'Facturas',
-          tabBarIcon: ({ color }) => <FontAwesome size={30} name="paperclip" color={color} />,
+          title: "Facturas",
+          tabBarIcon: () => <FontAwesome size={30} name="paperclip" color="purple" />,
+          tabBarActiveTintColor: "purple",
         }}
       />
       <Tabs.Screen
         name="clients"
         options={{
-          title: 'Clientes',
-          tabBarIcon: ({ color }) => <FontAwesome size={30} name="id-card-o" color={color} />,
+          title: "Clientes",
+          tabBarIcon: () => <FontAwesome size={30} name="id-card-o" color="purple" />,
+          tabBarActiveTintColor: "purple",
         }}
       />
       <Tabs.Screen
         name="products"
         options={{
-          title: 'Productos',
-          tabBarIcon: ({ color }) => <FontAwesome size={30} name="shopping-cart" color={color} />,
+          title: "Productos",
+          tabBarIcon: () => <FontAwesome size={30} name="shopping-cart" color="purple" />,
+          tabBarActiveTintColor: "purple",
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Cuenta',
-          tabBarIcon: ({ color }) => <FontAwesome size={30} name="cog" color={color} />,
+          title: "Cuenta",
+          tabBarIcon: () => <FontAwesome size={30} name="cog" color="purple" />,
+          tabBarActiveTintColor: "purple",
         }}
       />
     </Tabs>
