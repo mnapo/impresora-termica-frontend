@@ -7,7 +7,6 @@ export default function InvoicesScreen() {
   const theme = useTheme();
   return (
     <View style={styles().container}>
-      <Text style={styles().title}>Invoicess</Text>
     </View>
   );
 }

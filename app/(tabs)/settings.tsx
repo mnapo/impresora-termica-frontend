@@ -9,7 +9,7 @@ export default function SettingsScreen() {
   return (
     <View style={styles().container}>
       <Chip style={styles().connectionState} icon={() => (
-        <Icon source="circle" size={16} color="red" />
+        <Icon source="circle" size={16} color="#b71c1c" />
       )}>conexión ARCA no establecida</Chip>
       <Button onPress={signOut} mode="contained">Cerrar sesión</Button>
     </View>
