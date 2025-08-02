@@ -1,7 +1,7 @@
 // screens/LoginScreen.js
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { TextInput, Button, Text, Divider } from 'react-native-paper';
+import { TextInput, Button, Text, Divider, Checkbox } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginScreen() {
@@ -28,6 +28,7 @@ export default function LoginScreen() {
       <TextInput mode="outlined" value={password} onChangeText={setPassword} secureTextEntry />
       <Button style={styles().button} mode="contained" onPress={handleLogin}>Entrar</Button>
       {error && <Text style={{ color: "red" }}>{error}</Text>}
+      <Checkbox.Item label="Recordarme" status="checked" disabled={true} />
     </View>
   );
 }
