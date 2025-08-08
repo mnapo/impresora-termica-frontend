@@ -4,7 +4,7 @@ import { Button, Checkbox, useTheme } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import ClientsScreen from '../components/screens/ClientsScreen';
 
-export default function InvoicesScreen() {
+export default function ClientsTab() {
   const theme = useTheme();
   return (
     <View style={styles().container}>

@@ -4,7 +4,7 @@ import { Button, Checkbox, useTheme } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import ProductsScreen from '../components/screens/ProductsScreen';
 
-export default function InvoicesScreen() {
+export default function ProductsTab() {
   const theme = useTheme();
   return (
     <View style={styles().container}>
