@@ -16,10 +16,12 @@ const rootReducer = {
 };
 
 function* rootSaga() {
-  yield all([productsSaga()]);
-  yield all([clientsSaga()]);
-  yield all([invoicesSaga()]);
-  yield all([invoicesItemsSaga()]);
+  yield all([
+    clientsSaga(),
+    productsSaga(),
+    invoicesSaga(),
+    invoicesItemsSaga()
+  ]);
 }
 
 export const store = configureStore({
