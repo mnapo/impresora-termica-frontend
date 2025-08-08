@@ -1,6 +1,8 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 function AppLayout() {
   const { isAuthenticated, loading } = useAuth();
@@ -21,8 +23,10 @@ function AppLayout() {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <AppLayout />
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <AppLayout />
+      </AuthProvider>
+    </Provider>
   );
 }
