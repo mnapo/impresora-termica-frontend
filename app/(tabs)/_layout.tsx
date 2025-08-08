@@ -15,7 +15,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="invoices"
         options={{
-          title: "Facturas",
+          title: "Documentos",
           tabBarIcon: () => <FontAwesome size={30} name="paperclip" color="purple" />,
           tabBarActiveTintColor: "purple",
         }}
