@@ -54,7 +54,7 @@ export default function ProductsScreen() {
             <Card.Actions>
               <IconButton
                 icon="delete"
-                onPress={() => {console.log("ID:"+item.id); handleDelete(item.id)}}
+                onPress={() => handleDelete(item.id)}
               />
             </Card.Actions>
           </Card>

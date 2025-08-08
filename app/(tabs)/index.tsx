@@ -8,10 +8,10 @@ export default function TabsHome() {
   const { user } = useAuth();
   return (
     <View style={styles().container}>
-      <Text style={styles().title2}>{user.email} 👋</Text>
+      <Text style={styles().title2}>Hola {user.firstName} 👋</Text>
       <Divider style={styles().divider} />
       <Text style={styles().title1}>Último cliente visitado</Text>
-      <Text>Sin datos</Text>
+      <Text>-</Text>
     </View>
   );
 }
