@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { Button, SegmentedButtons, Card, IconButton } from 'react-native-paper';
 
-
 export default function InvoicesScreen() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -19,8 +18,8 @@ export default function InvoicesScreen() {
 
     const handleNewInvoice = () => {
         router.push({
-        pathname: '/components/screens/NewInvoiceScreen',
-        params: { type: selectedType },
+            pathname: '/components/screens/NewInvoiceScreen',
+            params: { type: selectedType },
         });
     };
 
@@ -58,7 +57,7 @@ export default function InvoicesScreen() {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                 <Card style={{ marginTop: 12 }}>
-                    <Card.Title title={`Factura del ${item.createdAt}`} subtitle={`para: ${item.clientId}`} />
+                    <Card.Title title={`Factura del ${item.createdAt}`} subtitle={`para: ${item.address}`} />
                     <Card.Actions>
                     <IconButton
                         icon="delete"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigation, useRouter } from 'expo-router';
+import { useLocalSearchParams } from "expo-router";
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { Button, TextInput, IconButton } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
@@ -9,11 +9,10 @@ import { productsActions } from '../../store/products';
 import { clientsActions } from '../../store/clients';
 import client from '../../feathersClient';
 
-export default function NewInvoiceScreen() {
-  const navigation = useNavigation();
-  const router = useRouter();
+export default function NewInvoiceScreen({ navigation }: any) {
   const dispatch = useDispatch();
-
+  const params = useLocalSearchParams();
+  const selectedType = params.type;
   const products = useSelector((state: RootState) => state.products.items || []);
   const clients = useSelector((state: RootState) => state.clients.items || []);
 
@@ -24,12 +23,6 @@ export default function NewInvoiceScreen() {
     dispatch(productsActions.fetchAction());
     dispatch(clientsActions.fetchAction());
   }, [dispatch]);
-
-  useEffect(() => {
-    navigation.setOptions({
-      title: "Nuevo Documento",
-    });
-  }, [navigation]);
 
   const addItem = () => {
     setItems([...items, { productId: '', name: '', price: 0, quantity: 1 }]);
@@ -62,26 +55,24 @@ export default function NewInvoiceScreen() {
 
   const saveInvoice = async () => {
     try {
-      console.log(clientId)
       const invoice = await client.service('invoices').create({
-        type: 'arca',
-        clientId: 3,
-        userId: 1,
-        total: 0,
-        subtotal: 0
+        type: selectedType,
+        address: clientId,
+        subtotal: 0,
+        total: 0
       });
 
       for (const item of items) {
         await client.service('invoices-items').create({
           invoiceId: invoice.id,
-          userId: 1,
           name: item.name,
           price: item.price,
+          quantity: item.quantity,
         });
       }
 
       console.log('Factura y items guardados correctamente');
-      router.push({pathname: '/components/screens/InvoicesScreen'});
+      navigation.goBack();
     } catch (error) {
       console.error('Error guardando factura:', error);
     }
@@ -96,7 +87,7 @@ export default function NewInvoiceScreen() {
       >
         <Picker.Item label="Seleccione un cliente" value="" />
         {clients.map((client: any) => (
-          <Picker.Item key={client.id} label={client.address} value={client.id} />
+          <Picker.Item key={client.id} label={client.address} value={client.address} />
         ))}
       </Picker>
 
