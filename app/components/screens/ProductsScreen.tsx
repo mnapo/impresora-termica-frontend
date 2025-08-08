@@ -47,14 +47,14 @@ export default function ProductsScreen() {
 
       <FlatList
         data={items}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <Card style={{ marginTop: 12 }}>
             <Card.Title title={item.name} subtitle={`$${item.price}`} />
             <Card.Actions>
               <IconButton
                 icon="delete"
-                onPress={() => handleDelete(item._id)}
+                onPress={() => {console.log("ID:"+item.id); handleDelete(item.id)}}
               />
             </Card.Actions>
           </Card>
