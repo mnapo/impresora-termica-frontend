@@ -8,6 +8,7 @@ import { RootState } from '../../store';
 import { productsActions } from '../../store/products';
 import { clientsActions } from '../../store/clients';
 import client from '../../feathersClient';
+import ClientSelector from '../ClientSelector';
 
 export default function NewInvoiceScreen({ navigation }: any) {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
   const selectedType = params.type;
   const products = useSelector((state: RootState) => state.products.items || []);
   const clients = useSelector((state: RootState) => state.clients.items || []);
+  const [selectedClient, setSelectedClient] = useState<any>(null);
 
   const [clientId, setClientId] = useState('');
   const [items, setItems] = useState<any[]>([]);
@@ -81,15 +83,18 @@ export default function NewInvoiceScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Cliente:</Text>
-      <Picker
-        selectedValue={clientId}
-        onValueChange={(value) => setClientId(value)}
-      >
-        <Picker.Item label="Seleccione un cliente" value="" />
-        {clients.map((client: any) => (
-          <Picker.Item key={client.id} label={client.address} value={client.address} />
-        ))}
-      </Picker>
+      <View style={{ flex: 1 }}>
+        <Text></Text>
+        {selectedClient ? (
+          <View style={{ padding: 16 }}>
+            <Text>Cliente:</Text>
+            <Text style={{ fontWeight: 'bold' }}>{selectedClient.address}</Text>
+            <Button onPress={() => setSelectedClient(null)}>Cambiar cliente</Button>
+          </View>
+        ) : (
+          <ClientSelector onSelect={(client) => setSelectedClient(client)} />
+        )}
+      </View>
 
       <FlatList
         data={items}
