@@ -41,7 +41,7 @@ export default function ClientSelector({ onSelect }: ClientSelectorProps) {
   }, [searchQuery]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View>
       <TextInput
         label="Ingrese CUIT, Razón Social o Dirección"
         value={searchQuery}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocalSearchParams } from "expo-router";
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { Button, TextInput, IconButton, Divider } from 'react-native-paper';
+import { Button, TextInput, IconButton, Divider, FAB, SegmentedButtons, Chip } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -9,17 +9,19 @@ import { productsActions } from '../../store/products';
 import { clientsActions } from '../../store/clients';
 import client from '../../feathersClient';
 import ClientSelector from '../ClientSelector';
+import ItemSelector from '../ItemSelector';
 
 export default function NewInvoiceScreen({ navigation }: any) {
   const dispatch = useDispatch();
   const params = useLocalSearchParams();
   const selectedType = params.type;
   const products = useSelector((state: RootState) => state.products.items || []);
-  const clients = useSelector((state: RootState) => state.clients.items || []);
   const [selectedClient, setSelectedClient] = useState<any>(null);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
 
   const [clientId, setClientId] = useState('');
   const [items, setItems] = useState<any[]>([]);
+  const [pricesList, setPricesList] = React.useState('');
 
   useEffect(() => {
     dispatch(productsActions.fetchAction());
@@ -27,7 +29,8 @@ export default function NewInvoiceScreen({ navigation }: any) {
   }, [dispatch]);
 
   const addItem = () => {
-    setItems([...items, { productId: '', name: '', price: 0, quantity: 1 }]);
+    setItems([...items, { productId: selectedItem.id, name: selectedItem.name, price: '', quantity: 1 }]);
+    setSelectedItem(null);
   };
 
   const updateItemProduct = (index: number, productId: string) => {
@@ -81,25 +84,60 @@ export default function NewInvoiceScreen({ navigation }: any) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>CLIENTE</Text>
-      <Divider />
-      <View style={{ flex: 0.2 }}>
+    <View style={{ height:'100%', padding: 16 }}>
+      <View>
         {selectedClient ? (
-          <View style={{ padding: 16 }}>
+          <View style={{ height: '30%', paddingHorizontal: 16 }}>
             <Text style={{ fontWeight: 'bold' }}>CUIT: {selectedClient.cuit}</Text>
             <Text>RAZÓN SOCIAL: {selectedClient.companyName}</Text>
-            <Text>CUIT: {selectedClient.cuit}</Text>
+            <Text>DIRECCIÓN: {selectedClient.address}</Text>
             <Text>CONDICIÓN FRENTE AL IVA: {selectedClient.condIvaType}</Text>
-            <Button onPress={() => setSelectedClient(null)}>Cambiar</Button>
+            <Button onPress={() => setSelectedClient(null)}>Cambiar Cliente</Button>
           </View>
         ) : (
-          <ClientSelector onSelect={(client) => setSelectedClient(client)} />
+          <View style={{ }}>
+            <ClientSelector onSelect={(client) => setSelectedClient(client)} />
+          </View>
         )}
       </View>
-      <Text style={styles.label}>PRODUCTOS</Text>
+      <SegmentedButtons
+        value={pricesList}
+        onValueChange={setPricesList}
+        buttons={[
+          {
+            value: 'list1',
+            label: 'Lista 1',
+          },
+          {
+            value: 'list2',
+            label: 'Lista 2',
+          },
+          { 
+            value: 'list3',
+            label: 'Lista 3'
+          },
+        ]}
+      />
+      <Divider style={{ marginVertical: 10 }} />
+      <View style={{ }}>
+        {selectedItem ? (
+          <View style={{ height: '30%', paddingHorizontal: 16 }}>
+            <Text style={{ fontWeight: 'bold' }}>Producto a agregar: {selectedItem.name}</Text>
+            <Text>Precio: ${selectedItem.price}</Text>
+            <Button onPress={() => setSelectedItem(null)}>Cambiar Item</Button>
+          </View>
+        ) : (
+          <View style={{ }}>
+            <ItemSelector onSelect={(item) => setSelectedItem(item)} />
+          </View>
+        )}
+      </View>
+      <Button mode="contained" onPress={addItem} style={styles.addButton}>
+        Agregar item
+      </Button>
+      <Text style={styles.label}>ITEMS</Text>
       <Divider />
-      <View style={{ flex: 0.8 }}>
+      <View style={{height: '45%'}}>
         <FlatList
           data={items}
           keyExtractor={(_, index) => index.toString()}
@@ -130,22 +168,16 @@ export default function NewInvoiceScreen({ navigation }: any) {
               <IconButton icon="delete" size={20} onPress={() => removeItem(index)} />
             </View>
           )}
-          ListFooterComponent={
-            <Button mode="contained" onPress={addItem} style={styles.addButton}>
-              Agregar producto
-            </Button>
-          }
         />
       </View>
-
-      <Button
-        mode="contained"
+      <Chip icon="information" textStyle={{fontSize: 16}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Total: $0</Chip>
+      <FAB
+        icon="plus"
+        label="Guardar Factura"
+        style={{position: 'absolute', bottom: '2%', left: '52%'}}
         onPress={saveInvoice}
-        disabled={!clientId || items.length === 0}
-        style={styles.saveButton}
-      >
-        Guardar factura
-      </Button>
+        disabled={!selectedClient || items.length === 0}
+      />
     </View>
   );
 }
@@ -157,5 +189,5 @@ const styles = StyleSheet.create({
   inputSmall: { width: 80, marginHorizontal: 5 },
   quantityRow: { flexDirection: 'row', alignItems: 'center' },
   addButton: { marginTop: 5 },
-  saveButton: { marginTop: 20 }
+  saveButton: { marginTop: 20 },
 });
