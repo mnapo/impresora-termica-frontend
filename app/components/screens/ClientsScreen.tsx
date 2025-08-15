@@ -66,7 +66,7 @@ export default function ClientsScreen() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <Card style={{ marginTop: 12 }}>
-            <Card.Title title={`${item.address}`} subtitle={`${item.companyName} | ${item.cuit}`} />
+            <Card.Title title={`CUIT: ${item.cuit}`} subtitle={`RAZÓN SOCIAL: ${item.companyName}`} />
             <Card.Actions>
               <IconButton
                 icon="delete"

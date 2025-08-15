@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useLocalSearchParams } from "expo-router";
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { Button, TextInput, IconButton, Divider, FAB, SegmentedButtons, Chip } from 'react-native-paper';
+import {
+  Button, 
+  TextInput,
+  IconButton,
+  Divider,
+  FAB,
+  SegmentedButtons,
+  Chip,
+  DataTable,
+  Modal,
+  Portal,
+  PaperProvider,
+  Surface,
+  Icon
+} from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -21,7 +35,24 @@ export default function NewInvoiceScreen({ navigation }: any) {
 
   const [clientId, setClientId] = useState('');
   const [items, setItems] = useState<any[]>([]);
-  const [pricesList, setPricesList] = React.useState('');
+  const [pricesList, setPricesList] = React.useState('list1');
+
+  const [page, setPage] = React.useState<number>(0);
+  const [numberOfItemsPerPageList] = React.useState([8, 3, 4]);
+  const [itemsPerPage, onItemsPerPageChange] = React.useState(
+    numberOfItemsPerPageList[0]
+  );
+
+  const [visible, setVisible] = useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
+  const from = page * itemsPerPage;
+  const to = Math.min((page + 1) * itemsPerPage, items.length);
+
+  useEffect(() => {
+    setPage(0);
+  }, [itemsPerPage]);
 
   useEffect(() => {
     dispatch(productsActions.fetchAction());
@@ -29,7 +60,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
   }, [dispatch]);
 
   const addItem = () => {
-    setItems([...items, { productId: selectedItem.id, name: selectedItem.name, price: '', quantity: 1 }]);
+    setItems([...items, { productId: selectedItem.id, name: selectedItem.name, price: selectedItem.price, quantity: 1 }]);
     setSelectedItem(null);
   };
 
@@ -83,111 +114,115 @@ export default function NewInvoiceScreen({ navigation }: any) {
     }
   };
 
-  return (
+  return (<PaperProvider>
+    <Portal>
+      <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
+        <SegmentedButtons
+          value={pricesList}
+          onValueChange={setPricesList}
+          buttons={[
+            {
+              value: 'list1',
+              label: 'Lista 1',
+            },
+            {
+              value: 'list2',
+              label: 'Lista 2',
+            },
+            { 
+              value: 'list3',
+              label: 'Lista 3'
+            },
+          ]}
+        />
+        <View style={{ }}>
+          {selectedItem ? (
+            <View style={{ height: '30%', paddingHorizontal: 16 }}>
+              <Text style={{ fontWeight: 'bold' }}>Descripción: {selectedItem.name}</Text>
+              <Text>Precio: ${selectedItem.price}</Text>
+              <Button onPress={() => setSelectedItem(null)}>BUSCAR OTRO PRODUCTO</Button>
+            </View>
+          ) : (
+            <View style={{ }}>
+              <ItemSelector onSelect={(item) => setSelectedItem(item)} />
+            </View>
+          )}
+        </View>
+        <Button mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem}>
+          Añadir a Factura
+        </Button>
+      </Modal>
+    </Portal>
     <View style={{ height:'100%', padding: 16 }}>
-      <View>
+      <Surface elevation={4} style={{ paddingHorizontal: 16 }}>
         {selectedClient ? (
           <View style={{ height: '30%', paddingHorizontal: 16 }}>
             <Text style={{ fontWeight: 'bold' }}>CUIT: {selectedClient.cuit}</Text>
             <Text>RAZÓN SOCIAL: {selectedClient.companyName}</Text>
             <Text>DIRECCIÓN: {selectedClient.address}</Text>
             <Text>CONDICIÓN FRENTE AL IVA: {selectedClient.condIvaType}</Text>
-            <Button onPress={() => setSelectedClient(null)}>Cambiar Cliente</Button>
+            <Button style={{left: 0}} onPress={() => setSelectedClient(null)}>CAMBIAR DE CLIENTE</Button>
           </View>
         ) : (
           <View style={{ }}>
             <ClientSelector onSelect={(client) => setSelectedClient(client)} />
           </View>
         )}
-      </View>
-      <SegmentedButtons
-        value={pricesList}
-        onValueChange={setPricesList}
-        buttons={[
-          {
-            value: 'list1',
-            label: 'Lista 1',
-          },
-          {
-            value: 'list2',
-            label: 'Lista 2',
-          },
-          { 
-            value: 'list3',
-            label: 'Lista 3'
-          },
-        ]}
-      />
-      <Divider style={{ marginVertical: 10 }} />
-      <View style={{ }}>
-        {selectedItem ? (
-          <View style={{ height: '30%', paddingHorizontal: 16 }}>
-            <Text style={{ fontWeight: 'bold' }}>Producto a agregar: {selectedItem.name}</Text>
-            <Text>Precio: ${selectedItem.price}</Text>
-            <Button onPress={() => setSelectedItem(null)}>Cambiar Item</Button>
-          </View>
-        ) : (
-          <View style={{ }}>
-            <ItemSelector onSelect={(item) => setSelectedItem(item)} />
-          </View>
-        )}
-      </View>
-      <Button mode="contained" onPress={addItem} style={styles.addButton}>
-        Agregar item
-      </Button>
-      <Text style={styles.label}>ITEMS</Text>
-      <Divider />
-      <View style={{height: '45%'}}>
-        <FlatList
-          data={items}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <View style={styles.itemRow}>
-              <Picker
-                selectedValue={item.productId}
-                onValueChange={(value) => updateItemProduct(index, value)}
-                style={{ flex: 1 }}
-              >
-                <Picker.Item label="Seleccione producto" value="" />
-                {products.map((product: any) => (
-                  <Picker.Item key={product.id} label={product.name} value={product.id} />
-                ))}
-              </Picker>
+      </Surface>
 
-              <TextInput
-                mode="outlined"
-                label="Precio"
-                style={styles.inputSmall}
-                value={item.price.toString()}
-              />
-              <View style={styles.quantityRow}>
-                <IconButton icon="minus" size={20} onPress={() => updateQuantity(index, -1)} />
-                <Text>{item.quantity}</Text>
-                <IconButton icon="plus" size={20} onPress={() => updateQuantity(index, 1)} />
-              </View>
-              <IconButton icon="delete" size={20} onPress={() => removeItem(index)} />
-            </View>
-          )}
+      <DataTable>
+        <DataTable.Header>
+          <DataTable.Title>Item</DataTable.Title>
+          <DataTable.Title numeric>Precio</DataTable.Title>
+          <DataTable.Title numeric>Cantidad</DataTable.Title>
+          <DataTable.Title numeric>Eliminar</DataTable.Title>
+        </DataTable.Header>
+
+        {items.slice(from, to).map((item) => (
+          <DataTable.Row key={item.id}>
+            <DataTable.Cell>{item.name}</DataTable.Cell>
+            <DataTable.Cell numeric>${item.price}</DataTable.Cell>
+            <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
+            <DataTable.Cell numeric><IconButton icon="delete" size={20} onPress={() => removeItem} /></DataTable.Cell>
+          </DataTable.Row>
+        ))}
+
+        <DataTable.Pagination
+          page={page}
+          numberOfPages={Math.ceil(items.length / itemsPerPage)}
+          onPageChange={(page) => setPage(page)}
+          label={`${from + 1}-${to} of ${items.length}`}
+          numberOfItemsPerPageList={numberOfItemsPerPageList}
+          numberOfItemsPerPage={itemsPerPage}
+          showFastPaginationControls
+          selectPageDropdownLabel={'Rows per page'}
         />
-      </View>
+      </DataTable>
       <Chip icon="information" textStyle={{fontSize: 16}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Total: $0</Chip>
       <FAB
-        icon="plus"
-        label="Guardar Factura"
-        style={{position: 'absolute', bottom: '2%', left: '52%'}}
+        icon="content-save"
+        label="Guardar"
+        style={{position: 'absolute', bottom: '2%', left: '62%'}}
         onPress={saveInvoice}
         disabled={!selectedClient || items.length === 0}
       />
+      <FAB
+        icon="plus"
+        label="ITEM"
+        style={{position: 'absolute', bottom: '10%', left: '62%'}}
+        onPress={showModal}
+      />
     </View>
-  );
+  </PaperProvider>);
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 10 },
-  label: { fontWeight: 'bold', marginBottom: 5 },
+  label: { fontWeight: 'bold', marginBottom: 5, left: '50%' },
   itemRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   inputSmall: { width: 80, marginHorizontal: 5 },
   quantityRow: { flexDirection: 'row', alignItems: 'center' },
   addButton: { marginTop: 5 },
   saveButton: { marginTop: 20 },
+  modal: {backgroundColor: 'white', padding: 20}
 });

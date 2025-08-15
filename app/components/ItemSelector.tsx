@@ -59,8 +59,8 @@ export default function ItemSelector({ onSelect }: ItemSelectorProps) {
             <TouchableOpacity onPress={() => onSelect(item)}>
               <List.Item
                 title={item.name}
-                description={item.price}
-                left={(props) => <List.Icon {...props} icon="account" />}
+                description={`$${item.price}`}
+                left={(props) => <List.Icon {...props} icon="cart-outline" />}
               />
             </TouchableOpacity>
           )}
