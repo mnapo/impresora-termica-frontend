@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocalSearchParams } from "expo-router";
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { Button, TextInput, IconButton } from 'react-native-paper';
+import { Button, TextInput, IconButton, Divider } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -82,56 +82,61 @@ export default function NewInvoiceScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Cliente:</Text>
-      <View style={{ flex: 1 }}>
-        <Text></Text>
+      <Text style={styles.label}>CLIENTE</Text>
+      <Divider />
+      <View style={{ flex: 0.2 }}>
         {selectedClient ? (
           <View style={{ padding: 16 }}>
-            <Text>Cliente:</Text>
-            <Text style={{ fontWeight: 'bold' }}>{selectedClient.address}</Text>
-            <Button onPress={() => setSelectedClient(null)}>Cambiar cliente</Button>
+            <Text style={{ fontWeight: 'bold' }}>CUIT: {selectedClient.cuit}</Text>
+            <Text>RAZÓN SOCIAL: {selectedClient.companyName}</Text>
+            <Text>CUIT: {selectedClient.cuit}</Text>
+            <Text>CONDICIÓN FRENTE AL IVA: {selectedClient.condIvaType}</Text>
+            <Button onPress={() => setSelectedClient(null)}>Cambiar</Button>
           </View>
         ) : (
           <ClientSelector onSelect={(client) => setSelectedClient(client)} />
         )}
       </View>
+      <Text style={styles.label}>PRODUCTOS</Text>
+      <Divider />
+      <View style={{ flex: 0.8 }}>
+        <FlatList
+          data={items}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <View style={styles.itemRow}>
+              <Picker
+                selectedValue={item.productId}
+                onValueChange={(value) => updateItemProduct(index, value)}
+                style={{ flex: 1 }}
+              >
+                <Picker.Item label="Seleccione producto" value="" />
+                {products.map((product: any) => (
+                  <Picker.Item key={product.id} label={product.name} value={product.id} />
+                ))}
+              </Picker>
 
-      <FlatList
-        data={items}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.itemRow}>
-            <Picker
-              selectedValue={item.productId}
-              onValueChange={(value) => updateItemProduct(index, value)}
-              style={{ flex: 1 }}
-            >
-              <Picker.Item label="Seleccione producto" value="" />
-              {products.map((product: any) => (
-                <Picker.Item key={product.id} label={product.name} value={product.id} />
-              ))}
-            </Picker>
-
-            <TextInput
-              mode="outlined"
-              label="Precio"
-              style={styles.inputSmall}
-              value={item.price.toString()}
-            />
-            <View style={styles.quantityRow}>
-              <IconButton icon="minus" size={20} onPress={() => updateQuantity(index, -1)} />
-              <Text>{item.quantity}</Text>
-              <IconButton icon="plus" size={20} onPress={() => updateQuantity(index, 1)} />
+              <TextInput
+                mode="outlined"
+                label="Precio"
+                style={styles.inputSmall}
+                value={item.price.toString()}
+              />
+              <View style={styles.quantityRow}>
+                <IconButton icon="minus" size={20} onPress={() => updateQuantity(index, -1)} />
+                <Text>{item.quantity}</Text>
+                <IconButton icon="plus" size={20} onPress={() => updateQuantity(index, 1)} />
+              </View>
+              <IconButton icon="delete" size={20} onPress={() => removeItem(index)} />
             </View>
-            <IconButton icon="delete" size={20} onPress={() => removeItem(index)} />
-          </View>
-        )}
-        ListFooterComponent={
-          <Button mode="contained" onPress={addItem} style={styles.addButton}>
-            Agregar producto
-          </Button>
-        }
-      />
+          )}
+          ListFooterComponent={
+            <Button mode="contained" onPress={addItem} style={styles.addButton}>
+              Agregar producto
+            </Button>
+          }
+        />
+      </View>
 
       <Button
         mode="contained"
@@ -151,6 +156,6 @@ const styles = StyleSheet.create({
   itemRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   inputSmall: { width: 80, marginHorizontal: 5 },
   quantityRow: { flexDirection: 'row', alignItems: 'center' },
-  addButton: { marginTop: 10 },
+  addButton: { marginTop: 5 },
   saveButton: { marginTop: 20 }
 });

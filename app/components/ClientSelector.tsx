@@ -43,7 +43,7 @@ export default function ClientSelector({ onSelect }: ClientSelectorProps) {
   return (
     <View style={{ flex: 1 }}>
       <TextInput
-        label="Buscar cliente"
+        label="Ingrese CUIT, Razón Social o Dirección"
         value={searchQuery}
         onChangeText={setSearchQuery}
         mode="outlined"

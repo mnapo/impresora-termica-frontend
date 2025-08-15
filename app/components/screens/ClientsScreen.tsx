@@ -8,9 +8,9 @@ export default function ClientsScreen() {
   const dispatch = useDispatch();
   const { items, loading } = useSelector((state: any) => state.clients);
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [cuit, setCuit] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [condIvaType, setCondIvaType] = useState('');
   const [address, setAddress] = useState('');
 
   useEffect(() => {
@@ -18,11 +18,11 @@ export default function ClientsScreen() {
   }, []);
 
   const handleAdd = () => {
-    if (!firstName || !lastName || !cuit || !address) return;
-    dispatch(clientsActions.createAction({ firstName, lastName, cuit, address }));
-    setFirstName('');
-    setLastName(''); 
+    if (!companyName || !condIvaType || !cuit || !address) return;
+    dispatch(clientsActions.createAction({ cuit, companyName, condIvaType, address }));
     setCuit('');
+    setCompanyName(''); 
+    setCondIvaType('');
     setAddress('');
   };
 
@@ -33,22 +33,22 @@ export default function ClientsScreen() {
   return (
     <View style={{ flex: 1, padding: 16 }}>
       <TextInput
-        label="Nombre"
-        value={firstName}
-        onChangeText={setFirstName}
-        style={{ marginBottom: 8 }}
-      />
-      <TextInput
-        label="Apellido"
-        value={lastName}
-        onChangeText={setLastName}
-        style={{ marginBottom: 8 }}
-      />
-      <TextInput
         label="CUIT"
         value={cuit}
         onChangeText={setCuit}
         keyboardType="numeric"
+        style={{ marginBottom: 8 }}
+      />
+      <TextInput
+        label="Razón Social"
+        value={companyName}
+        onChangeText={setCompanyName}
+        style={{ marginBottom: 8 }}
+      />
+      <TextInput
+        label="Condición IVA"
+        value={condIvaType}
+        onChangeText={setCondIvaType}
         style={{ marginBottom: 8 }}
       />
       <TextInput
@@ -66,7 +66,7 @@ export default function ClientsScreen() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <Card style={{ marginTop: 12 }}>
-            <Card.Title title={`${item.address}`} subtitle={`${item.firstName} ${item.lastName} | ${item.cuit}`} />
+            <Card.Title title={`${item.address}`} subtitle={`${item.companyName} | ${item.cuit}`} />
             <Card.Actions>
               <IconButton
                 icon="delete"
