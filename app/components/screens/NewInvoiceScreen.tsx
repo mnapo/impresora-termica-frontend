@@ -60,7 +60,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
   }, [dispatch]);
 
   const addItem = () => {
-    setItems([...items, { id: items.length, productId: selectedItem.id, name: selectedItem.name, price: selectedItem.price, quantity: 1 }]);
+    setItems([...items, { productId: selectedItem.id, name: selectedItem.name, price: selectedItem.price, quantity: 1 }]);
     setSelectedItem(null);
   };
 
@@ -86,7 +86,8 @@ export default function NewInvoiceScreen({ navigation }: any) {
   };
 
   const removeItem = (index: number) => {
-    setItems(prev => prev.filter((_, i) => i !== index));
+    
+    setItems(prev => prev.filter((i, _) => i.productId !== index));
   };
 
   const saveInvoice = async () => {
@@ -190,11 +191,11 @@ export default function NewInvoiceScreen({ navigation }: any) {
         </DataTable.Header>
 
         {items.slice(from, to).map((item) => (
-          <DataTable.Row key={item.id}>
+          <DataTable.Row key={item.productId}>
             <DataTable.Cell>{item.name}</DataTable.Cell>
             <DataTable.Cell numeric>${item.price}</DataTable.Cell>
             <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
-            <DataTable.Cell numeric><IconButton icon="delete" size={20} onPress={() => removeItem(item.id)} /></DataTable.Cell>
+            <DataTable.Cell numeric><IconButton icon="delete" size={20} onPress={() => removeItem(item.productId)} /></DataTable.Cell>
           </DataTable.Row>
         ))}
 
