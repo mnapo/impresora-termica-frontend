@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList } from 'react-native';
-import { TextInput, Button, Card, IconButton, Text } from 'react-native-paper';
+import { View, FlatList, StyleSheet } from 'react-native';
+import { TextInput, Button, Card, IconButton, Text, FAB, PaperProvider, Portal, Modal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { productsActions } from '../../store/products';
 
@@ -11,6 +11,10 @@ export default function ProductsScreen() {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
 
+  const [visible, setVisible] = useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
   useEffect(() => {
     dispatch(productsActions.fetchAction());
   }, []);
@@ -20,6 +24,7 @@ export default function ProductsScreen() {
     dispatch(productsActions.createAction({ name, price: parseFloat(price) }));
     setName('');
     setPrice('');
+    hideModal();
   };
 
   const handleDelete = (id: string) => {
@@ -27,39 +32,56 @@ export default function ProductsScreen() {
   };
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <TextInput
-        label="Nombre"
-        value={name}
-        onChangeText={setName}
-        style={{ marginBottom: 8 }}
-      />
-      <TextInput
-        label="Precio"
-        value={price}
-        onChangeText={setPrice}
-        keyboardType="numeric"
-        style={{ marginBottom: 8 }}
-      />
-      <Button mode="contained" onPress={handleAdd}>
-        Agregar Producto
-      </Button>
-
-      <FlatList
-        data={items}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Card style={{ marginTop: 12 }}>
-            <Card.Title title={item.name} subtitle={`$${item.price}`} />
-            <Card.Actions>
-              <IconButton
-                icon="delete"
-                onPress={() => handleDelete(item.id)}
-              />
-            </Card.Actions>
-          </Card>
-        )}
-      />
-    </View>
+    <PaperProvider>
+      <Portal>
+        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
+          <View style={{ flex: 1, padding: 16 }}>
+            <TextInput
+              label="Nombre"
+              value={name}
+              onChangeText={setName}
+              style={{ marginBottom: 8 }}
+            />
+            <TextInput
+              label="Precio"
+              value={price}
+              onChangeText={setPrice}
+              keyboardType="numeric"
+              style={{ marginBottom: 8 }}
+            />
+            <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!name || !price}>
+              Agregar Producto
+            </Button>
+          </View>
+        </Modal>
+      </Portal>
+      <View style={{ height: '100%' }}>
+        <FlatList
+          data={items}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <Card style={{ marginTop: 12 }}>
+              <Card.Title title={item.name} subtitle={`$${item.price}`} />
+              <Card.Actions>
+                <IconButton
+                  icon="delete"
+                  onPress={() => handleDelete(item.id)}
+                />
+              </Card.Actions>
+            </Card>
+          )}
+        />
+        <FAB
+          icon="plus"
+          label="NUEVO"
+          onPress={showModal}
+          style={{position: 'absolute', bottom: '5%', left: '62%'}}
+        />
+      </View>
+    </PaperProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  modal: {backgroundColor: 'white', padding: 20},
+});

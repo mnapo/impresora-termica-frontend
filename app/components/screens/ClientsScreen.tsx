@@ -28,6 +28,7 @@ export default function ClientsScreen() {
     setCompanyName(''); 
     setCondIvaType('');
     setAddress('');
+    hideModal();
   };
 
   const handleDelete = (id: string) => {
@@ -64,7 +65,7 @@ export default function ClientsScreen() {
                 onChangeText={setAddress}
                 style={{ marginBottom: 8 }}
               />
-              <Button mode="contained" onPress={handleAdd}>
+              <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!cuit || !companyName || !condIvaType || !address}>
                 Agregar Cliente
               </Button>
             </View>
