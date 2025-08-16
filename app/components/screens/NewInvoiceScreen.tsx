@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, Stack } from "expo-router";
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import {
   Button, 
@@ -115,7 +115,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
     }
   };
 
-  return (<PaperProvider>
+  return (<PaperProvider>{selectedType === 'arca'?(<Stack.Screen options={{ title: 'Nueva Factura' }}/>):(<Stack.Screen options={{ title: 'Nuevo Comprobante' }}/>)}
     <Portal>
       <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
         <SegmentedButtons
