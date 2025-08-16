@@ -60,7 +60,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
   }, [dispatch]);
 
   const addItem = () => {
-    setItems([...items, { productId: selectedItem.id, name: selectedItem.name, price: selectedItem.price, quantity: 1 }]);
+    setItems([...items, { id: items.length, productId: selectedItem.id, name: selectedItem.name, price: selectedItem.price, quantity: 1 }]);
     setSelectedItem(null);
   };
 
@@ -119,6 +119,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
       <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
         <SegmentedButtons
           value={pricesList}
+          style={{ marginBottom: 5 }}
           onValueChange={setPricesList}
           buttons={[
             {
@@ -135,12 +136,19 @@ export default function NewInvoiceScreen({ navigation }: any) {
             },
           ]}
         />
-        <View style={{ }}>
+        <View style={{ maxHeight: '60%', overflow: 'hidden' }}>
           {selectedItem ? (
-            <View style={{ height: '30%', paddingHorizontal: 16 }}>
+            <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'center' }}>
               <Text style={{ fontWeight: 'bold' }}>Descripción: {selectedItem.name}</Text>
               <Text>Precio: ${selectedItem.price}</Text>
-              <Button onPress={() => setSelectedItem(null)}>BUSCAR OTRO PRODUCTO</Button>
+              <TextInput
+                label="Cantidad"
+                mode="outlined"
+                keyboardType="numeric"
+                style={{ width: '30%' }}
+              />
+              <Chip icon="information">Total: $0</Chip>
+              <Button icon="magnify" onPress={() => setSelectedItem(null)}>BUSCAR OTRO PRODUCTO</Button>
             </View>
           ) : (
             <View style={{ }}>
@@ -148,20 +156,23 @@ export default function NewInvoiceScreen({ navigation }: any) {
             </View>
           )}
         </View>
-        <Button mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem}>
+        <Button icon="plus" mode="outlined" onPress={addItem} style={styles.addButton} disabled={!selectedItem}>
           Añadir a Factura
+        </Button>
+        <Button icon="window-close" mode="contained" onPress={hideModal} style={styles.addButton}>
+          Cerrar
         </Button>
       </Modal>
     </Portal>
     <View style={{ height:'100%', padding: 16 }}>
-      <Surface elevation={4} style={{ paddingHorizontal: 16 }}>
+      <Surface elevation={4} style={{ paddingHorizontal: 16, maxHeight: '50%', overflow: 'hidden' }}>
         {selectedClient ? (
           <View style={{ height: '30%', paddingHorizontal: 16 }}>
             <Text style={{ fontWeight: 'bold' }}>CUIT: {selectedClient.cuit}</Text>
             <Text>RAZÓN SOCIAL: {selectedClient.companyName}</Text>
             <Text>DIRECCIÓN: {selectedClient.address}</Text>
             <Text>CONDICIÓN FRENTE AL IVA: {selectedClient.condIvaType}</Text>
-            <Button style={{left: 0}} onPress={() => setSelectedClient(null)}>CAMBIAR DE CLIENTE</Button>
+            <Button style={{left: 0}} icon="magnify" onPress={() => setSelectedClient(null)}>BUSCAR OTRO CLIENTE</Button>
           </View>
         ) : (
           <View style={{ }}>
@@ -183,7 +194,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
             <DataTable.Cell>{item.name}</DataTable.Cell>
             <DataTable.Cell numeric>${item.price}</DataTable.Cell>
             <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
-            <DataTable.Cell numeric><IconButton icon="delete" size={20} onPress={() => removeItem} /></DataTable.Cell>
+            <DataTable.Cell numeric><IconButton icon="delete" size={20} onPress={() => removeItem(item.id)} /></DataTable.Cell>
           </DataTable.Row>
         ))}
 
@@ -191,26 +202,27 @@ export default function NewInvoiceScreen({ navigation }: any) {
           page={page}
           numberOfPages={Math.ceil(items.length / itemsPerPage)}
           onPageChange={(page) => setPage(page)}
-          label={`${from + 1}-${to} of ${items.length}`}
+          label={`${from + 1}-${to} de ${items.length}`}
           numberOfItemsPerPageList={numberOfItemsPerPageList}
           numberOfItemsPerPage={itemsPerPage}
           showFastPaginationControls
-          selectPageDropdownLabel={'Rows per page'}
+          selectPageDropdownLabel={'Filas por pagina'}
         />
       </DataTable>
       <Chip icon="information" textStyle={{fontSize: 16}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Total: $0</Chip>
+      <FAB
+        icon="plus"
+        label="ITEM"
+        style={{position: 'absolute', bottom: '10%', left: '62%'}}
+        onPress={showModal}
+        disabled={!selectedClient}
+      />
       <FAB
         icon="content-save"
         label="Guardar"
         style={{position: 'absolute', bottom: '2%', left: '62%'}}
         onPress={saveInvoice}
         disabled={!selectedClient || items.length === 0}
-      />
-      <FAB
-        icon="plus"
-        label="ITEM"
-        style={{position: 'absolute', bottom: '10%', left: '62%'}}
-        onPress={showModal}
       />
     </View>
   </PaperProvider>);

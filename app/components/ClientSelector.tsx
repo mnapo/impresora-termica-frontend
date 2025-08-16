@@ -1,8 +1,7 @@
-// components/ClientSelector.tsx
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, TouchableOpacity } from 'react-native';
 import { TextInput, List, ActivityIndicator } from 'react-native-paper';
-import client from '../feathersClient'; // Ajustar según tu estructura
+import client from '../feathersClient';
 
 type ClientSelectorProps = {
   onSelect: (client: any) => void;
