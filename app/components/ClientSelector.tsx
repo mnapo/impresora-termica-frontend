@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, TouchableOpacity } from 'react-native';
-import { TextInput, List, ActivityIndicator } from 'react-native-paper';
+import { Text, TextInput, List, ActivityIndicator } from 'react-native-paper';
 import client from '../feathersClient';
 
 type ClientSelectorProps = {
@@ -48,7 +48,7 @@ export default function ClientSelector({ onSelect }: ClientSelectorProps) {
         mode="outlined"
         style={{ margin: 8 }}
       />
-
+      <Text style={{ fontWeight: 'bold' }}>Seleccione un cliente:</Text>
       {loading ? (
         <ActivityIndicator style={{ marginTop: 16 }} />
       ) : (

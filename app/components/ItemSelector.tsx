@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, TouchableOpacity } from 'react-native';
-import { TextInput, List, ActivityIndicator } from 'react-native-paper';
+import { Text, TextInput, List, ActivityIndicator } from 'react-native-paper';
 import client from '../feathersClient'; // Ajustar según tu estructura
 
 type ItemSelectorProps = {
@@ -48,7 +48,7 @@ export default function ItemSelector({ onSelect }: ItemSelectorProps) {
         mode="outlined"
         style={{ margin: 8 }}
       />
-
+      <Text style={{ fontWeight: 'bold' }}>Seleccione un producto:</Text>
       {loading ? (
         <ActivityIndicator style={{ marginTop: 16 }} />
       ) : (
