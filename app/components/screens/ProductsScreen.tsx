@@ -8,6 +8,7 @@ export default function ProductsScreen() {
   const dispatch = useDispatch();
   const { items, loading } = useSelector((state: any) => state.products);
 
+  const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
 
@@ -20,8 +21,9 @@ export default function ProductsScreen() {
   }, []);
 
   const handleAdd = () => {
-    if (!name || !price) return;
-    dispatch(productsActions.createAction({ name, price: parseFloat(price) }));
+    if (!code || !name || !price) return;
+    dispatch(productsActions.createAction({ code, name, price: parseFloat(price) }));
+    setCode('');
     setName('');
     setPrice('');
     hideModal();
@@ -37,7 +39,13 @@ export default function ProductsScreen() {
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
           <View style={{ flex: 1, padding: 16 }}>
             <TextInput
-              label="Nombre"
+              label="Código"
+              value={code}
+              onChangeText={setCode}
+              style={{ marginBottom: 8 }}
+            />
+            <TextInput
+              label="Descripción"
               value={name}
               onChangeText={setName}
               style={{ marginBottom: 8 }}
@@ -49,7 +57,7 @@ export default function ProductsScreen() {
               keyboardType="numeric"
               style={{ marginBottom: 8 }}
             />
-            <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!name || !price}>
+            <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!code || !name || !price}>
               Agregar Producto
             </Button>
           </View>
@@ -61,7 +69,7 @@ export default function ProductsScreen() {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <Card style={{ marginTop: 12 }}>
-              <Card.Title title={item.name} subtitle={`$${item.price}`} />
+              <Card.Title title={`(${item.code}) ${item.name}`} subtitle={`$${item.price}`} />
               <Card.Actions>
                 <IconButton
                   icon="delete"
