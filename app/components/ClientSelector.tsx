@@ -1,43 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, TouchableOpacity } from 'react-native';
-import { Text, TextInput, List, ActivityIndicator } from 'react-native-paper';
-import client from '../feathersClient';
+// components/ClientSelector.tsx
+import React, { useState, useEffect } from "react";
+import { View, FlatList, TouchableOpacity } from "react-native";
+import { Text, TextInput, List, ActivityIndicator } from "react-native-paper";
+import client from "../feathersClient";
+
+type Client = {
+  id: string;
+  cuit: string;
+  companyName: string;
+  address: string;
+};
 
 type ClientSelectorProps = {
-  onSelect: (client: any) => void;
+  onSelect: (client: Client) => void;
 };
 
 export default function ClientSelector({ onSelect }: ClientSelectorProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [clients, setClients] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState<Client[]>([]);
 
   const clientsService = client.service("clients");
 
   useEffect(() => {
     let active = true;
-
     const fetchClients = async () => {
       setLoading(true);
       try {
-        const res = await clientsService.find({
-          query: searchQuery
-            ? { name: { $like: `%${searchQuery}%` } }
-            : {},
-        });
-        if (active) setClients(res.data || []);
+        const res = await clientsService.find({});
+        if (active) {
+          setClients(res.data || []);
+          setResults(res.data || []);
+        }
       } catch (error) {
-        console.error('Error fetching clients:', error);
+        console.error("Error fetching clients:", error);
       }
       setLoading(false);
     };
-
     fetchClients();
-
     return () => {
       active = false;
     };
-  }, [searchQuery]);
+  }, []);
+
+  useEffect(() => {
+    if (!searchQuery) {
+      setResults(clients);
+    } else {
+      const q = searchQuery.toLowerCase();
+      const filtered = clients.filter(
+        (c) =>
+          c.companyName.toLowerCase().includes(q) ||
+          c.cuit.toLowerCase().includes(q) ||
+          c.address.toLowerCase().includes(q)
+      );
+      setResults(filtered);
+    }
+  }, [searchQuery, clients]);
 
   return (
     <View>
@@ -48,18 +68,21 @@ export default function ClientSelector({ onSelect }: ClientSelectorProps) {
         mode="outlined"
         style={{ margin: 8 }}
       />
-      <Text style={{ fontWeight: 'bold' }}>Seleccione un cliente:</Text>
+      <Text style={{ fontWeight: "bold", marginLeft: 8, marginTop: 4 }}>
+        Seleccione un cliente:
+      </Text>
+
       {loading ? (
         <ActivityIndicator style={{ marginTop: 16 }} />
       ) : (
         <FlatList
-          data={clients}
-          keyExtractor={(item) => item.id?.toString()}
+          data={results}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => onSelect(item)}>
               <List.Item
-                title={item.address}
-                description={item.cuit}
+                title={item.companyName}
+                description={`${item.cuit} - ${item.address}`}
                 left={(props) => <List.Icon {...props} icon="account" />}
               />
             </TouchableOpacity>
