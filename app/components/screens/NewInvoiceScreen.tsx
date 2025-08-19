@@ -32,6 +32,8 @@ export default function NewInvoiceScreen() {
   const selectedType = params.type;
   const products = useSelector((state: RootState) => state.products.items || []);
   const [quantity, setQuantity] = React.useState('');
+  const [subtotal, setSubtotal] = React.useState(0);
+  const [total, setTotal] = React.useState(0);
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [clientId, setClientId] = useState('');
@@ -59,8 +61,12 @@ export default function NewInvoiceScreen() {
     dispatch(clientsActions.fetchAction());
   }, [dispatch]);
 
-  const addItem = () => {
+  useEffect(() => {
+    const invoiceTotal = items.reduce((acc, it) => acc + (it.price || 0) * (it.quantity || 1), 0);
+    setTotal(invoiceTotal);
+  }, [items]);
 
+  const addItem = () => {
     setItems([...items, { productId: selectedItem.id, code: selectedItem.code, name: selectedItem.name, price: selectedItem.price, quantity: parseInt(quantity) || 1 }]);
     setSelectedItem(null);
   };
@@ -76,18 +82,13 @@ export default function NewInvoiceScreen() {
     );
   };
 
-  const updateQuantity = (index: number, delta: number) => {
-    setItems(prev =>
-      prev.map((item, i) =>
-        i === index
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
-    );
-  };
+  const updateQuantity = (quantity: string) => {
+    setQuantity(quantity);
+    const subtotal = (parseFloat(quantity)*selectedItem.price).toFixed(2);
+    setSubtotal(parseFloat(subtotal))
+  }
 
   const removeItem = (index: number) => {
-    
     setItems(prev => prev.filter((i, _) => i.productId !== index));
   };
 
@@ -145,13 +146,13 @@ export default function NewInvoiceScreen() {
               <Text>Precio: ${selectedItem.price}</Text>
               <TextInput
                 value={quantity}
-                onChangeText={setQuantity}
+                onChangeText={updateQuantity}
                 label="Cantidad"
                 mode="outlined"
                 keyboardType="numeric"
-                style={{ width: '30%' }}
+                style={{ width: '15%' }}
               />
-              <Chip icon="information">Total: $0</Chip>
+              <Chip icon="information">Total: ${subtotal || 0}</Chip>
               <Button icon="magnify" onPress={() => setSelectedItem(null)}>BUSCAR OTRO PRODUCTO</Button>
             </View>
           ) : (
@@ -192,6 +193,7 @@ export default function NewInvoiceScreen() {
           <DataTable.Title>Item</DataTable.Title>
           <DataTable.Title numeric>Precio</DataTable.Title>
           <DataTable.Title numeric>Cant.</DataTable.Title>
+          <DataTable.Title numeric>Subt.</DataTable.Title>
           <DataTable.Title numeric>Eliminar</DataTable.Title>
         </DataTable.Header>
 
@@ -201,6 +203,7 @@ export default function NewInvoiceScreen() {
             <DataTable.Cell>{item.name}</DataTable.Cell>
             <DataTable.Cell numeric>${item.price}</DataTable.Cell>
             <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
+            <DataTable.Cell numeric>${(item.price*item.quantity).toFixed(2)}</DataTable.Cell>
             <DataTable.Cell numeric><IconButton icon="delete" size={20} onPress={() => removeItem(item.productId)} /></DataTable.Cell>
           </DataTable.Row>
         ))}
@@ -216,7 +219,7 @@ export default function NewInvoiceScreen() {
           selectPageDropdownLabel={'Filas por pagina'}
         />
       </DataTable>
-      <Chip icon="information" textStyle={{fontSize: 16}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Total: $0</Chip>
+      <Chip icon="information" textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Total: ${total || 0}</Chip>
       <FAB
         icon="plus"
         label="ITEM"
