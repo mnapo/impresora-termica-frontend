@@ -31,13 +31,12 @@ export default function NewInvoiceScreen() {
   const params = useLocalSearchParams();
   const selectedType = params.type;
   const products = useSelector((state: RootState) => state.products.items || []);
+  const [quantity, setQuantity] = React.useState('');
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [selectedItem, setSelectedItem] = useState<any>(null);
-
   const [clientId, setClientId] = useState('');
   const [items, setItems] = useState<any[]>([]);
   const [pricesList, setPricesList] = React.useState('list1');
-
   const [page, setPage] = React.useState<number>(0);
   const [numberOfItemsPerPageList] = React.useState([8, 3, 4]);
   const [itemsPerPage, onItemsPerPageChange] = React.useState(
@@ -61,7 +60,8 @@ export default function NewInvoiceScreen() {
   }, [dispatch]);
 
   const addItem = () => {
-    setItems([...items, { productId: selectedItem.id, code: selectedItem.code, name: selectedItem.name, price: selectedItem.price, quantity: 1 }]);
+
+    setItems([...items, { productId: selectedItem.id, code: selectedItem.code, name: selectedItem.name, price: selectedItem.price, quantity: parseInt(quantity) || 1 }]);
     setSelectedItem(null);
   };
 
@@ -144,6 +144,8 @@ export default function NewInvoiceScreen() {
               <Text style={{ fontWeight: 'bold' }}>Descripción: {selectedItem.name}</Text>
               <Text>Precio: ${selectedItem.price}</Text>
               <TextInput
+                value={quantity}
+                onChangeText={setQuantity}
                 label="Cantidad"
                 mode="outlined"
                 keyboardType="numeric"
@@ -158,10 +160,11 @@ export default function NewInvoiceScreen() {
             </View>
           )}
         </View>
-        <Button icon="plus" mode="outlined" onPress={addItem} style={styles.addButton} disabled={!selectedItem}>
+        <Button icon="plus" mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem}>
           Añadir a Factura
         </Button>
-        <Button icon="window-close" mode="contained" onPress={hideModal} style={styles.addButton}>
+        <Divider style={{ marginVertical: 5 }}/>
+        <Button icon="window-close" mode="outlined" onPress={hideModal} style={styles.addButton}>
           Cerrar
         </Button>
       </Modal>
