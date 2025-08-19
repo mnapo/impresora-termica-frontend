@@ -150,7 +150,7 @@ export default function NewInvoiceScreen() {
                 label="Cantidad"
                 mode="outlined"
                 keyboardType="numeric"
-                style={{ width: '15%' }}
+                style={{ width: '23%' }}
               />
               <Chip icon="information">Total: ${subtotal || 0}</Chip>
               <Button icon="magnify" onPress={() => setSelectedItem(null)}>BUSCAR OTRO PRODUCTO</Button>
@@ -219,7 +219,16 @@ export default function NewInvoiceScreen() {
           selectPageDropdownLabel={'Filas por pagina'}
         />
       </DataTable>
-      <Chip icon="information" textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Total: ${total || 0}</Chip>
+      {
+        items.length>0?
+        (
+          <>
+            <Chip disabled={true} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '12%', left: '2%'}}>Total S/ IVA: ${total || 0}</Chip>
+            <Chip disabled={true} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '7%', left: '2%'}}>IVA 21%: ${((21*total)/100).toFixed(2) || 0}</Chip>
+            <Chip icon="information" elevated={true} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Total: ${(total+((21*total)/100)).toFixed(2) || 0}</Chip>
+          </>
+        ):(<Chip icon="information" textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Ningún item añadido</Chip>)
+      }
       <FAB
         icon="plus"
         label="ITEM"
