@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Platform } from "react-native";
-import { useLocalSearchParams, Stack } from "expo-router";
-import { DataTable } from "react-native-paper";
+import { View, Platform } from "react-native";
+import { useLocalSearchParams, useRouter, Stack } from "expo-router";
+import { Divider, Text } from "react-native-paper";
 import client from "../../feathersClient";
 
 export default function PrintInvoiceScreen() {
@@ -11,6 +11,8 @@ export default function PrintInvoiceScreen() {
   const [items, setItems] = useState<any[]>([]);
   const [clientData, setClientData] = useState<any>(null);
   const [shown, setShown] = useState(false);
+  
+  const router = useRouter();
 
   useEffect(() => {
     if (!invoiceId) return;
@@ -43,6 +45,9 @@ export default function PrintInvoiceScreen() {
       setTimeout(() => {
         window.print();
       }, 500);
+      setTimeout(() => {
+        router.push({pathname: '/(tabs)/invoices'});
+      }, 800);
     }
   }, [items, clientData]);
 
@@ -57,38 +62,27 @@ export default function PrintInvoiceScreen() {
 
   return (
     <View style={{ padding: 20}}>
-      {invoice.type === 'arca'?(<Stack.Screen options={{ title: 'Factura A' }}/>):(<Stack.Screen options={{ title: 'Comprobante' }}/>)}
+      <Stack.Screen options={{ headerShown: false }}/>
+      {invoice.type === 'arca'?
+        (<Text>Factura "A"</Text>)
+        :(<Text>Comprobante</Text>)}
       <Text style={{ fontSize: 18, marginBottom: 10 }}>
-        Factura #{invoice.id}
+        Factura #{String(invoice.id).padStart(8, '0')}
       </Text>
       <Text style={{ fontFamily: 'Ticketing' }}>Cliente: {clientData?.name}</Text>
       <Text>CUIT: {clientData?.cuit}</Text>
       <Text>Fecha: {new Date(invoice.createdAt).toLocaleDateString()}</Text>
+      {items.map((item, i) => (
+        <View>
+          <Text>{item.name}</Text>
+          <Text>{item.quantity}</Text>
+          <Text>${item.price}</Text>
+          <Text>
+            ${(item.price * item.quantity).toFixed(2)}
+          </Text>
+        </View>
+      ))}
 
-      <DataTable>
-        <DataTable.Header>
-          <DataTable.Title>Producto</DataTable.Title>
-          <DataTable.Title numeric>Cantidad</DataTable.Title>
-          <DataTable.Title numeric>Precio</DataTable.Title>
-          <DataTable.Title numeric>Subtotal</DataTable.Title>
-        </DataTable.Header>
-
-        {items.map((item, i) => (
-          <DataTable.Row key={i}>
-            <DataTable.Cell>{item.name}</DataTable.Cell>
-            <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
-            <DataTable.Cell numeric>${item.price}</DataTable.Cell>
-            <DataTable.Cell numeric>
-              ${(item.price * item.quantity).toFixed(2)}
-            </DataTable.Cell>
-          </DataTable.Row>
-        ))}
-
-        <DataTable.Row>
-          <DataTable.Cell>Total</DataTable.Cell>
-          <DataTable.Cell numeric>${total.toFixed(2)}</DataTable.Cell>
-        </DataTable.Row>
-      </DataTable>
     </View>
   );
 }
