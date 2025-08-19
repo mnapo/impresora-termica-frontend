@@ -3,6 +3,7 @@ import { View, Platform } from "react-native";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import { Divider, Text } from "react-native-paper";
 import client from "../../feathersClient";
+import pollCondition from "../../../helpers/pollCondition"
 
 export default function PrintInvoiceScreen() {
   const { invoiceId } = useLocalSearchParams<{ invoiceId: string }>();
@@ -10,7 +11,6 @@ export default function PrintInvoiceScreen() {
   const [invoice, setInvoice] = useState<any>(null);
   const [items, setItems] = useState<any[]>([]);
   const [clientData, setClientData] = useState<any>(null);
-  const [shown, setShown] = useState(false);
   
   const router = useRouter();
 
@@ -39,16 +39,15 @@ export default function PrintInvoiceScreen() {
     });
   }, [invoiceId]);
 
+  const checkLoadedInvoice = () => {return invoice};
+
+  const onLoadedInvoice =() => {
+    window.print();
+    setTimeout(() => router.push({pathname: '/(tabs)/invoices'}), 500);
+  }
+
   useEffect(() => {
-    if (Platform.OS === "web" && !shown) {
-      setShown(true);
-      setTimeout(() => {
-        window.print();
-      }, 500);
-      setTimeout(() => {
-        router.push({pathname: '/(tabs)/invoices'});
-      }, 800);
-    }
+    pollCondition(checkLoadedInvoice, 500, onLoadedInvoice);
   }, [items, clientData]);
 
   if (!invoice) {
