@@ -56,14 +56,14 @@ export default function PrintInvoiceScreen() {
   );
 
   return (
-    <View style={{ padding: 20 }}>
+    <View style={{ padding: 20}}>
       {invoice.type === 'arca'?(<Stack.Screen options={{ title: 'Factura A' }}/>):(<Stack.Screen options={{ title: 'Comprobante' }}/>)}
       <Text style={{ fontSize: 18, marginBottom: 10 }}>
         Factura #{invoice.id}
       </Text>
-      <Text>Cliente: {clientData?.name}</Text>
+      <Text style={{ fontFamily: 'Ticketing' }}>Cliente: {clientData?.name}</Text>
       <Text>CUIT: {clientData?.cuit}</Text>
-      <Text>Fecha: {new Date(invoice.createdAt).toLocaleString()}</Text>
+      <Text>Fecha: {new Date(invoice.createdAt).toLocaleDateString()}</Text>
 
       <DataTable>
         <DataTable.Header>
