@@ -150,7 +150,7 @@ export default function NewInvoiceScreen() {
                 label="Cantidad"
                 mode="outlined"
                 keyboardType="numeric"
-                style={{ width: '23%' }}
+                style={{ width: '30%' }}
               />
               <Chip icon="information">Total: ${subtotal || 0}</Chip>
               <Button icon="magnify" onPress={() => setSelectedItem(null)}>BUSCAR OTRO PRODUCTO</Button>
@@ -191,10 +191,10 @@ export default function NewInvoiceScreen() {
         <DataTable.Header>
           <DataTable.Title>Cód.</DataTable.Title>
           <DataTable.Title>Item</DataTable.Title>
-          <DataTable.Title numeric>Precio</DataTable.Title>
+          <DataTable.Title numeric>Pr.</DataTable.Title>
           <DataTable.Title numeric>Cant.</DataTable.Title>
           <DataTable.Title numeric>Subt.</DataTable.Title>
-          <DataTable.Title numeric>Eliminar</DataTable.Title>
+          <DataTable.Title numeric>El.</DataTable.Title>
         </DataTable.Header>
 
         {items.slice(from, to).map((item) => (

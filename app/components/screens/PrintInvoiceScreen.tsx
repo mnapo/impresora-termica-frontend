@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Platform } from "react-native";
+import { View } from "react-native";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
-import { Divider, Text } from "react-native-paper";
+import { DataTable, Text, Divider } from "react-native-paper";
 import client from "../../feathersClient";
 import pollCondition from "../../../helpers/pollCondition"
 
@@ -43,7 +43,7 @@ export default function PrintInvoiceScreen() {
 
   const onLoadedInvoice =() => {
     window.print();
-    setTimeout(() => router.push({pathname: '/(tabs)/invoices'}), 500);
+    setTimeout(() => router.push({pathname: '/(tabs)/invoices'}), 800);
   }
 
   useEffect(() => {
@@ -54,34 +54,43 @@ export default function PrintInvoiceScreen() {
     return <Text>Cargando factura...</Text>;
   }
 
-  const total = items.reduce(
-    (acc, it) => acc + (it.price || 0) * (it.quantity || 1),
-    0
-  );
+  const total = items.reduce((acc, it) => acc + (it.price || 0) * (it.quantity || 1), 0);
 
   return (
-    <View style={{ padding: 20}}>
+    <View style={{ padding: 20, width: '100%' }}>
       <Stack.Screen options={{ headerShown: false }}/>
       {invoice.type === 'arca'?
         (<Text>Factura "A"</Text>)
         :(<Text>Comprobante</Text>)}
-      <Text style={{ fontSize: 18, marginBottom: 10 }}>
-        Factura #{String(invoice.id).padStart(8, '0')}
+      <Text style={{ fontSize: 14, marginBottom: 10 }}>
+        Nro.: #{String(invoice.id).padStart(8, '0')}
       </Text>
-      <Text style={{ fontFamily: 'Ticketing' }}>Cliente: {clientData?.name}</Text>
-      <Text>CUIT: {clientData?.cuit}</Text>
-      <Text>Fecha: {new Date(invoice.createdAt).toLocaleDateString()}</Text>
-      {items.map((item, i) => (
-        <View>
-          <Text>{item.name}</Text>
-          <Text>{item.quantity}</Text>
-          <Text>${item.price}</Text>
-          <Text>
-            ${(item.price * item.quantity).toFixed(2)}
-          </Text>
-        </View>
-      ))}
+      <Text style={{ fontSize: 14}}>Cliente: {clientData?.name}</Text>
+      <Text style={{ fontSize: 14}}>CUIT: {clientData?.cuit}</Text>
+      <Text style={{ fontSize: 14}}>Fecha: {new Date(invoice.createdAt).toLocaleDateString()}</Text>
+      <DataTable style={{ width: '50%', borderBottomWidth: 0 }}>
+        <DataTable.Header style={{ borderBottomWidth: 0 }}>
+          <DataTable.Title textStyle={{ fontSize: 20 }}>Producto</DataTable.Title>
+          <DataTable.Title textStyle={{ fontSize: 20 }} numeric>Cantidad</DataTable.Title>
+          <DataTable.Title textStyle={{ fontSize: 20 }} numeric>Precio</DataTable.Title>
+          <DataTable.Title textStyle={{ fontSize: 20 }} numeric>Subtotal</DataTable.Title>
+        </DataTable.Header>
 
+        {items.map((item, i) => (
+          <DataTable.Row key={i} style={{ borderBottomWidth: 0 }}>
+            <DataTable.Cell textStyle={{ fontSize: 20 }}>{item.name}</DataTable.Cell>
+            <DataTable.Cell textStyle={{ fontSize: 20 }} numeric>{item.quantity}</DataTable.Cell>
+            <DataTable.Cell textStyle={{ fontSize: 20 }} numeric>${item.price}</DataTable.Cell>
+            <DataTable.Cell textStyle={{ fontSize: 20 }} numeric>
+              ${item.price * item.quantity}
+            </DataTable.Cell>
+          </DataTable.Row>
+        ))}
+
+        <DataTable.Row style={{ borderBottomWidth: 0 }}>
+          <DataTable.Cell textStyle={{ fontSize: 24 }}>Total: ${total}</DataTable.Cell>
+        </DataTable.Row>
+      </DataTable>
     </View>
   );
 }
