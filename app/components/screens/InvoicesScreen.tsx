@@ -24,6 +24,10 @@ export default function InvoicesScreen() {
     };
 
     const handlePrint = (id: string) => {
+        router.push({
+            pathname: '/components/screens/PrintInvoiceScreen',
+            params: { invoiceId: id },
+        });
     };
 
     const handleDelete = (id: string) => {
