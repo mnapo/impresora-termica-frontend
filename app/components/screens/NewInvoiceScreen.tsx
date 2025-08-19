@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocalSearchParams, Stack } from "expo-router";
+import { useLocalSearchParams, Stack, useRouter } from "expo-router";
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import {
   Button, 
@@ -25,7 +25,8 @@ import client from '../../feathersClient';
 import ClientSelector from '../ClientSelector';
 import ItemSelector from '../ItemSelector';
 
-export default function NewInvoiceScreen({ navigation }: any) {
+export default function NewInvoiceScreen() {
+  const router = useRouter();
   const dispatch = useDispatch();
   const params = useLocalSearchParams();
   const selectedType = params.type;
@@ -108,9 +109,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
           quantity: item.quantity,
         });
       }
-
-      console.log('Factura y items guardados correctamente');
-      navigation.goBack();
+      router.push({pathname: '/(tabs)/invoices'});
     } catch (error) {
       console.error('Error guardando factura:', error);
     }
