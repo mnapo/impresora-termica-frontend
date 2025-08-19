@@ -79,14 +79,14 @@ export default function PrintInvoiceScreen() {
             <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
             <DataTable.Cell numeric>${item.price}</DataTable.Cell>
             <DataTable.Cell numeric>
-              ${item.price * item.quantity}
+              ${(item.price * item.quantity).toFixed(2)}
             </DataTable.Cell>
           </DataTable.Row>
         ))}
 
         <DataTable.Row>
           <DataTable.Cell>Total</DataTable.Cell>
-          <DataTable.Cell numeric>${total}</DataTable.Cell>
+          <DataTable.Cell numeric>${total.toFixed(2)}</DataTable.Cell>
         </DataTable.Row>
       </DataTable>
     </View>
