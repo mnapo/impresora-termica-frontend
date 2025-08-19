@@ -60,7 +60,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
   }, [dispatch]);
 
   const addItem = () => {
-    setItems([...items, { productId: selectedItem.id, name: selectedItem.name, price: selectedItem.price, quantity: 1 }]);
+    setItems([...items, { productId: selectedItem.id, code: selectedItem.code, name: selectedItem.name, price: selectedItem.price, quantity: 1 }]);
     setSelectedItem(null);
   };
 
@@ -69,7 +69,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
     setItems(prev =>
       prev.map((item, i) =>
         i === index
-          ? { ...item, productId, name: product?.name || '', price: product?.price || 0 }
+          ? { ...item, productId, code: product?.code || '-', name: product?.name || '', price: product?.price || 0 }
           : item
       )
     );
@@ -102,6 +102,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
       for (const item of items) {
         await client.service('invoices-items').create({
           invoiceId: invoice.id,
+          code: item.code,
           name: item.name,
           price: item.price,
           quantity: item.quantity,
@@ -140,6 +141,7 @@ export default function NewInvoiceScreen({ navigation }: any) {
         <View style={{ maxHeight: '60%', overflow: 'hidden' }}>
           {selectedItem ? (
             <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'center' }}>
+              <Text>Código: {selectedItem.code}</Text>
               <Text style={{ fontWeight: 'bold' }}>Descripción: {selectedItem.name}</Text>
               <Text>Precio: ${selectedItem.price}</Text>
               <TextInput
@@ -184,14 +186,16 @@ export default function NewInvoiceScreen({ navigation }: any) {
 
       <DataTable>
         <DataTable.Header>
+          <DataTable.Title>Cód.</DataTable.Title>
           <DataTable.Title>Item</DataTable.Title>
           <DataTable.Title numeric>Precio</DataTable.Title>
-          <DataTable.Title numeric>Cantidad</DataTable.Title>
+          <DataTable.Title numeric>Cant.</DataTable.Title>
           <DataTable.Title numeric>Eliminar</DataTable.Title>
         </DataTable.Header>
 
         {items.slice(from, to).map((item) => (
           <DataTable.Row key={item.productId}>
+            <DataTable.Cell>{item.code}</DataTable.Cell>
             <DataTable.Cell>{item.name}</DataTable.Cell>
             <DataTable.Cell numeric>${item.price}</DataTable.Cell>
             <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
