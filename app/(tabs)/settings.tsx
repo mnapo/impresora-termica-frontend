@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View } from 'react-native';
 import { Button, Chip, Icon } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import { useAuth } from '../context/AuthContext';
@@ -9,8 +9,8 @@ export default function SettingsScreen() {
   return (
     <View style={styles().container}>
       <Chip style={styles().connectionState} icon={() => (
-        <Icon source="circle" size={16} color="#b71c1c" />
-      )}>conexión ARCA no establecida</Chip>
+        <Icon source="circle" size={16} color="green" />
+      )}>conexión ARCA establecida</Chip>
       <Button onPress={signOut} mode="contained">Cerrar sesión</Button>
     </View>
   );
