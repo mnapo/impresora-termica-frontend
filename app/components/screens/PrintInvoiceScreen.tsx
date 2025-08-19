@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Platform } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, Stack } from "expo-router";
 import { DataTable } from "react-native-paper";
 import client from "../../feathersClient";
 
@@ -10,6 +10,7 @@ export default function PrintInvoiceScreen() {
   const [invoice, setInvoice] = useState<any>(null);
   const [items, setItems] = useState<any[]>([]);
   const [clientData, setClientData] = useState<any>(null);
+  const [shown, setShown] = useState(false);
 
   useEffect(() => {
     if (!invoiceId) return;
@@ -37,7 +38,8 @@ export default function PrintInvoiceScreen() {
   }, [invoiceId]);
 
   useEffect(() => {
-    if (Platform.OS === "web") {
+    if (Platform.OS === "web" && !shown) {
+      setShown(true);
       setTimeout(() => {
         window.print();
       }, 500);
@@ -55,6 +57,7 @@ export default function PrintInvoiceScreen() {
 
   return (
     <View style={{ padding: 20 }}>
+      {invoice.type === 'arca'?(<Stack.Screen options={{ title: 'Factura A' }}/>):(<Stack.Screen options={{ title: 'Comprobante' }}/>)}
       <Text style={{ fontSize: 18, marginBottom: 10 }}>
         Factura #{invoice.id}
       </Text>
