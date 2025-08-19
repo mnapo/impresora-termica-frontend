@@ -69,3 +69,6 @@ export function createEntityModule(entityName, service) {
     saga,
   };
 }
+
+const placeHolder = () => {};
+export default placeHolder;

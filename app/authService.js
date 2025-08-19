@@ -15,3 +15,6 @@ export async function logout() {
 export async function reAuthenticate() {
   return await client.reAuthenticate();
 }
+
+const placeHolder = () => {};
+export default placeHolder;

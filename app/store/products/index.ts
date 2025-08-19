@@ -8,3 +8,6 @@ const {
 } = createEntityModule('products', client.service('products'));
 
 export { actions as productsActions, reducer as productsReducer, saga as productsSaga };
+
+const placeHolder = () => {};
+export default placeHolder;

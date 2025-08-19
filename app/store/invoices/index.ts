@@ -8,3 +8,6 @@ const {
 } = createEntityModule('invoices', client.service('invoices'));
 
 export { actions as invoicesActions, reducer as invoicesReducer, saga as invoicesSaga };
+
+const placeHolder = () => {};
+export default placeHolder;
