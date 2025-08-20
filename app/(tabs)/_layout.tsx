@@ -8,15 +8,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Inicio",
-          tabBarIcon: () => <FontAwesome size={30} name="home" color="purple" />,
-          tabBarActiveTintColor: "purple",
-        }}
-      />
-      <Tabs.Screen
-        name="invoices"
-        options={{
-          title: "Documentos",
-          tabBarIcon: () => <FontAwesome size={30} name="paperclip" color="purple" />,
+          tabBarIcon: () => <FontAwesome size={45} name="home" color="purple" />,
           tabBarActiveTintColor: "purple",
         }}
       />
@@ -24,7 +16,15 @@ export default function TabLayout() {
         name="clients"
         options={{
           title: "Clientes",
-          tabBarIcon: () => <FontAwesome size={30} name="id-card-o" color="purple" />,
+          tabBarIcon: () => <FontAwesome size={45} name="id-card-o" color="purple" />,
+          tabBarActiveTintColor: "purple",
+        }}
+      />
+      <Tabs.Screen
+        name="invoices"
+        options={{
+          title: "Documentos",
+          tabBarIcon: () => <FontAwesome size={60} name="paperclip" color="purple" />,
           tabBarActiveTintColor: "purple",
         }}
       />
@@ -32,7 +32,7 @@ export default function TabLayout() {
         name="products"
         options={{
           title: "Productos",
-          tabBarIcon: () => <FontAwesome size={30} name="shopping-cart" color="purple" />,
+          tabBarIcon: () => <FontAwesome size={45} name="shopping-cart" color="purple" />,
           tabBarActiveTintColor: "purple",
         }}
       />
@@ -40,7 +40,7 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: "Cuenta",
-          tabBarIcon: () => <FontAwesome size={30} name="cog" color="purple" />,
+          tabBarIcon: () => <FontAwesome size={45} name="cog" color="purple" />,
           tabBarActiveTintColor: "purple",
         }}
       />
