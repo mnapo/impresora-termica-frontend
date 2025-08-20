@@ -12,7 +12,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -45,6 +46,12 @@
         "projectId": "2fdac53d-3033-44fc-b301-a74c35d1bac3"
       }
     },
+    "fonts": [
+      {
+        "asset": "./assets/fonts/Ticketing.ttf",
+        "name": "Ticketing"
+      }
+    ],
     "owner": "mnap"
   }
 }

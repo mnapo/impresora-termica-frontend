@@ -3,10 +3,15 @@ import { Stack } from 'expo-router';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import { useFonts } from 'expo-font';
 
 function AppLayout() {
   const { isAuthenticated, loading } = useAuth();
   if (loading) return null;
+  useFonts({
+    'Ticketing': require('../assets/fonts/Ticketing.ttf'),
+  });
+
   return (
     <>
       <Stack>
