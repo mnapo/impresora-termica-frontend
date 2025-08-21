@@ -8,9 +8,6 @@ import { useFonts } from 'expo-font';
 function AppLayout() {
   const { isAuthenticated, loading } = useAuth();
   if (loading) return null;
-  useFonts({
-    'Ticketing': require('../assets/fonts/Ticketing.ttf'),
-  });
 
   return (
     <>
@@ -27,6 +24,9 @@ function AppLayout() {
 }
 
 export default function RootLayout() {
+  useFonts({
+    'Ticketing': require('../assets/fonts/Ticketing.ttf'),
+  });
   return (
     <Provider store={store}>
       <AuthProvider>
