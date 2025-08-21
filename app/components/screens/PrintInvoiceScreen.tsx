@@ -70,25 +70,25 @@ export default function PrintInvoiceScreen() {
       <Text style={ styles.invoiceInfo }>Fecha: {new Date(invoice.createdAt).toLocaleDateString()}</Text>
       <DataTable style={{ width: '95%', borderBottomWidth: 0 }}>
         <DataTable.Header style={{ borderBottomWidth: 0 }}>
-          <DataTable.Title textStyle={ styles.itemRow }>Producto</DataTable.Title>
-          <DataTable.Title textStyle={ styles.itemRow } numeric>Cantidad</DataTable.Title>
-          <DataTable.Title textStyle={ styles.itemRow } numeric>Precio</DataTable.Title>
-          <DataTable.Title textStyle={ styles.itemRow } numeric>Subtotal</DataTable.Title>
+          <DataTable.Title style={{ flex: 2}} textStyle={ styles.itemRow }>Producto</DataTable.Title>
+          <DataTable.Title style={{ flex: 1}} textStyle={ styles.itemRow } numeric>Cant.</DataTable.Title>
+          <DataTable.Title style={{ flex: 1}} textStyle={ styles.itemRow } numeric>Precio</DataTable.Title>
+          <DataTable.Title style={{ flex: 1}} textStyle={ styles.itemRow } numeric>Subtotal</DataTable.Title>
         </DataTable.Header>
 
         {items.map((item, i) => (
           <DataTable.Row key={i} style={{ borderBottomWidth: 0 }}>
-            <DataTable.Cell textStyle={ styles.itemRow }>{item.name}</DataTable.Cell>
-            <DataTable.Cell textStyle={ styles.itemRow } numeric>{item.quantity}</DataTable.Cell>
-            <DataTable.Cell textStyle={ styles.itemRow } numeric>${item.price}</DataTable.Cell>
-            <DataTable.Cell textStyle={ styles.itemRow } numeric>
+            <DataTable.Cell style={{ flex: 2}} textStyle={ styles.itemRow }>{item.name}</DataTable.Cell>
+            <DataTable.Cell style={{ flex: 1}} textStyle={ styles.itemRow } numeric>{item.quantity}</DataTable.Cell>
+            <DataTable.Cell style={{ flex: 1}} textStyle={ styles.itemRow } numeric>${item.price}</DataTable.Cell>
+            <DataTable.Cell style={{ flex: 1}} textStyle={ styles.itemRow } numeric>
               ${item.price * item.quantity}
             </DataTable.Cell>
           </DataTable.Row>
         ))}
 
         <DataTable.Row style={{ borderBottomWidth: 0 }}>
-          <DataTable.Cell textStyle={{ fontSize: 26, fontWeight: 800, fontFamily: 'Ticketing' }}>Total: ${total}</DataTable.Cell>
+          <DataTable.Cell textStyle={{ fontSize: 51, fontWeight: 800, fontFamily: 'Ticketing' }}>Total: ${total}</DataTable.Cell>
         </DataTable.Row>
       </DataTable>
       <Divider/>
@@ -98,7 +98,7 @@ export default function PrintInvoiceScreen() {
 
 const styles = StyleSheet.create({
   container: { padding: 1, width: '100%' },
-  invoiceTitle: { fontFamily: 'Ticketing', fontSize: 19, marginBottom: 10 },
-  invoiceInfo: { fontFamily: 'Ticketing', fontSize: 19 },
-  itemRow: { fontFamily: 'Ticketing', fontSize: 23, fontWeight: 500 }
+  invoiceTitle: { fontFamily: 'Ticketing', fontSize: 34, marginBottom: 10 },
+  invoiceInfo: { fontFamily: 'Ticketing', fontSize: 36 },
+  itemRow: { fontFamily: 'Ticketing', fontSize: 44, fontWeight: 500 }
 });
