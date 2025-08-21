@@ -30,10 +30,6 @@ export default function InvoicesScreen() {
         });
     };
 
-    const handleDelete = (id: string) => {
-        dispatch(invoicesActions.removeAction(id));
-    };
-
     return (
         <View style={styles.container}>
         <SegmentedButtons
@@ -64,11 +60,8 @@ export default function InvoicesScreen() {
                     <Card.Title title={`Factura del ${item.createdAt}`} subtitle={`para: ${item.address}`} />
                     <Card.Actions>
                     <IconButton
-                        icon="delete"
-                        onPress={() => handleDelete(item.id)}
-                    />
-                    <IconButton
                         icon="printer"
+                        iconColor="blue"
                         onPress={() => handlePrint(item.id)}
                     />
                     </Card.Actions>
