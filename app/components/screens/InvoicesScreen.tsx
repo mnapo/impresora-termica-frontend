@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { invoicesActions } from '../../store/invoices';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, FlatList } from 'react-native';
-import { Button, SegmentedButtons, Card, IconButton } from 'react-native-paper';
+import { PaperProvider, Portal, Button, SegmentedButtons, Card, IconButton, Text, FAB } from 'react-native-paper';
 
 export default function InvoicesScreen() {
   const router = useRouter();
@@ -11,15 +11,18 @@ export default function InvoicesScreen() {
 
   const [selectedType, setSelectedType] = useState<'arca' | 'comprobante'>('arca');
   const { items, loading } = useSelector((state: any) => state.invoices);
+  const [open, setOpen] = useState(false);
 
     useEffect(() => {
         dispatch(invoicesActions.fetchAction());
     }, []);
 
-    const handleNewInvoice = () => {
+    const handleFabPress = () => {setOpen(!open)};
+
+    const handleNewInvoice = ( type: string ) => {
         router.push({
             pathname: '/components/screens/NewInvoiceScreen',
-            params: { type: selectedType },
+            params: { type: type },
         });
     };
 
@@ -30,59 +33,74 @@ export default function InvoicesScreen() {
         });
     };
 
-    return (
+    return (<PaperProvider>
         <View style={styles.container}>
-        <SegmentedButtons
-            value={selectedType}
-            onValueChange={(value) => setSelectedType(value as 'arca' | 'comprobante')}
-            buttons={[
-            { value: 'arca', label: 'Facturas ARCA' },
-            { value: 'comprobante', label: 'Comprobantes' },
-            ]}
-            style={styles.segmented}
-        />
-
-        <Button
-            mode="contained"
-            onPress={handleNewInvoice}
-            style={styles.newButton}
-        >
-            Nuevo
-        </Button>
-
-        <View style={styles.listContainer}>
-            <FlatList
-                data={items.sort((a: any, b: any) => b.id - a.id).filter((item: any) => item.type === selectedType)}
-                refreshing={loading}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                <Card style={{ marginTop: 12 }}>
-                    <Card.Title title={`Factura del ${item.createdAt}`} subtitle={`para: ${item.address}`} />
-                    <Card.Actions>
-                    <IconButton
-                        icon="printer"
-                        iconColor="blue"
-                        onPress={() => handlePrint(item.id)}
-                    />
-                    </Card.Actions>
-                </Card>
-                )}
+            <SegmentedButtons
+                value={selectedType}
+                onValueChange={(value) => setSelectedType(value as 'arca' | 'comprobante')}
+                buttons={[
+                { value: 'arca', label: 'Facturas ARCA' },
+                { value: 'comprobante', label: 'Comprobantes' },
+                ]}
+                style={styles.segmented}
             />
+            <View style={styles.listContainer}>
+                <FlatList
+                    data={items.sort((a: any, b: any) => b.id - a.id).filter((item: any) => item.type === selectedType)}
+                    refreshing={loading}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                    <Card style={{ marginTop: 12 }}>
+                        <Card.Content>
+                            <Text variant="titleLarge">CUIT: {item.cuit}</Text>
+                            <Text variant="bodyMedium">Total: ${item.total}</Text>
+                            <Text variant="bodyMedium">Emisión: {item.createdAt}</Text>
+                            <Text variant="bodyMedium">Dirección: {item.address}</Text>
+                        </Card.Content>
+                        <Card.Actions>
+                            <IconButton
+                                icon="printer"
+                                iconColor="blue"
+                                onPress={() => handlePrint(item.id)}
+                            />
+                        </Card.Actions>
+                    </Card>
+                    )}
+                />
+            </View>
         </View>
-        </View>
-    );
+        <Portal>
+            <FAB.Group
+            open={open}
+            visible
+            label="NUEVO"
+            icon={open ? 'minus-box' : 'plus'}
+            actions={[
+                {
+                icon: 'content-paste',
+                label: 'factura ARCA',
+                onPress: () => { handleNewInvoice('arca') },
+                },
+                {
+                icon: 'file',
+                label: 'comprobante',
+                onPress: () => { handleNewInvoice('comprobante') },
+                },
+            ]}
+            onStateChange={handleFabPress}
+            />
+        </Portal>
+    </PaperProvider>);
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    height: '100%'
   },
   segmented: {
     marginBottom: 16,
-  },
-  newButton: {
-    marginBottom: 24,
   },
   listContainer: {
     flex: 1,
