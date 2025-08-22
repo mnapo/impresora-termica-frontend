@@ -69,6 +69,7 @@ export default function NewInvoiceScreen() {
   const addItem = () => {
     setItems([...items, { productId: selectedItem.id, code: selectedItem.code, name: selectedItem.name, price: selectedItem.price, quantity: parseInt(quantity) || 1 }]);
     setSelectedItem(null);
+    setQuantity('1');
   };
 
   const updateItemProduct = (index: number, productId: string) => {
