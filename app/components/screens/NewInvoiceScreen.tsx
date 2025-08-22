@@ -29,7 +29,7 @@ export default function NewInvoiceScreen() {
   const router = useRouter();
   const dispatch = useDispatch();
   const params = useLocalSearchParams();
-  const selectedType = params.type;
+  const [selectedType, setSelectedType] = useState(params.type);
   const products = useSelector((state: RootState) => state.products.items || []);
   const [quantity, setQuantity] = React.useState('');
   const [subtotal, setSubtotal] = React.useState(0);
@@ -97,9 +97,11 @@ export default function NewInvoiceScreen() {
     try {
       const invoice = await client.service('invoices').create({
         type: selectedType,
-        address: clientId,
-        subtotal: 0,
-        total: 0
+        cuit: selectedClient.cuit,
+        condIvaTypeId: selectedClient.condIvaTypeId,
+        companyName: selectedClient.companyName,
+        address: selectedClient.address,
+        total: total
       });
 
       for (const item of items) {
