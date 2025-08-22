@@ -28,10 +28,12 @@ export default function RootLayout() {
     'Ticketing': require('../assets/fonts/Ticketing.ttf'),
   });
   return (
-    <Provider store={store}>
-      <AuthProvider>
-        <AppLayout />
-      </AuthProvider>
-    </Provider>
+    <React.StrictMode>
+      <Provider store={store}>
+        <AuthProvider>
+          <AppLayout />
+        </AuthProvider>
+      </Provider>
+    </React.StrictMode>
   );
 }
