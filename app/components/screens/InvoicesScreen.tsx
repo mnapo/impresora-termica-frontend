@@ -25,8 +25,13 @@ export default function InvoicesScreen() {
             params: { type: type },
         });
     };
-
-    const handlePrint = (id: string) => {
+    const handleWatchInvoice = (id: string) => {
+        router.push({
+            pathname: '/components/screens/WatchInvoiceScreen',
+            params: { invoiceId: id },
+        });
+    };
+    const handlePrintInvoice = (id: string) => {
         router.push({
             pathname: '/components/screens/PrintInvoiceScreen',
             params: { invoiceId: id },
@@ -58,11 +63,8 @@ export default function InvoicesScreen() {
                             <Text variant="bodyMedium">Dirección: {item.address}</Text>
                         </Card.Content>
                         <Card.Actions>
-                            <IconButton
-                                icon="printer"
-                                iconColor="blue"
-                                onPress={() => handlePrint(item.id)}
-                            />
+                            <Button icon="eye" onPress={() => handleWatchInvoice(item.id)}>Detalle</Button>
+                            <Button icon="printer" mode="outlined" onPress={() => handlePrintInvoice(item.id)}>Imprimir</Button>
                         </Card.Actions>
                     </Card>
                     )}
