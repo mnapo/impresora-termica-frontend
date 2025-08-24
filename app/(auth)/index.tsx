@@ -9,6 +9,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const { signIn } = useAuth();
   const [error, setError] = useState<string | null>(null);
+  const [passwordShown, setPasswordShown] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -18,6 +19,8 @@ export default function LoginScreen() {
     }
   };
 
+  const handlePasswordShown = () => {setPasswordShown(!passwordShown)}
+
   return (
     <View style={styles().container}>
       <Text style={styles().title}>Iniciar Sesión</Text>
@@ -25,7 +28,8 @@ export default function LoginScreen() {
       <Text>Email</Text>
       <TextInput mode="outlined" value={email} onChangeText={setEmail} autoCapitalize="none" />
       <Text>Contraseña</Text>
-      <TextInput mode="outlined" value={password} onChangeText={setPassword} secureTextEntry />
+      <TextInput mode="outlined" value={password} onChangeText={setPassword} secureTextEntry={!passwordShown} />
+      <Button icon="eye" mode="text" onPress={handlePasswordShown}>{passwordShown?'ocultar contraseña':'mostrar contraseña'}</Button>
       <Button style={styles().button} mode="contained" onPress={handleLogin}>Entrar</Button>
       {error && <Text style={{ color: "red" }}>{error}</Text>}
       <Checkbox.Item label="Recordarme" status="checked" disabled={true} />
