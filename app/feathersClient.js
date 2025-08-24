@@ -4,9 +4,8 @@ import auth from '@feathersjs/authentication-client';
 import io from 'socket.io-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const host = process.env.EXPO_PUBLIC_HOST;
-const port = process.env.EXPO_PUBLIC_PORT;
-const socket = io(`https://${host}:${port}`, {
+const url = process.env.EXPO_PUBLIC_URL;
+const socket = io(url, {
   transports: ['websocket'],
 });
 
