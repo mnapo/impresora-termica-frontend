@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { TextInput, Button, Card, IconButton, Text, FAB, PaperProvider, Portal, Modal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
+import { Stack } from 'expo-router';
 import { clientsActions } from '../../store/clients';
 import { Dropdown } from 'react-native-paper-dropdown';
 
@@ -46,41 +47,42 @@ export default function ClientsScreen() {
 
   return (
     <PaperProvider>
-        <Portal>
-          <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
-            <View style={{ height: '100%', flex: 1, padding: 16 }}>
-              <TextInput
-                label="CUIT"
-                value={cuit}
-                onChangeText={setCuit}
-                keyboardType="numeric"
-                style={{ marginBottom: 8 }}
-              />
-              <Dropdown
-                label="Condición frente al IVA"
-                placeholder="Seleccionar"
-                options={condIvaOptions}
-                value={condIvaTypeId}
-                onSelect={setCondIvaTypeId}
-              />
-              <TextInput
-                label="Razón Social"
-                value={companyName}
-                onChangeText={setCompanyName}
-                style={{ marginBottom: 8 }}
-              />
-              <TextInput
-                label="Dirección"
-                value={address}
-                onChangeText={setAddress}
-                style={{ marginBottom: 8 }}
-              />
-              <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!cuit || !companyName || !condIvaTypeId || !address}>
-                Agregar Cliente
-              </Button>
-            </View>
-          </Modal>
-        </Portal>
+      <Stack.Screen options={{ title: 'Clientes' }}/>
+      <Portal>
+        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
+          <View style={{ height: '100%', flex: 1, padding: 16 }}>
+            <TextInput
+              label="CUIT"
+              value={cuit}
+              onChangeText={setCuit}
+              keyboardType="numeric"
+              style={{ marginBottom: 8 }}
+            />
+            <Dropdown
+              label="Condición frente al IVA"
+              placeholder="Seleccionar"
+              options={condIvaOptions}
+              value={condIvaTypeId}
+              onSelect={setCondIvaTypeId}
+            />
+            <TextInput
+              label="Razón Social"
+              value={companyName}
+              onChangeText={setCompanyName}
+              style={{ marginBottom: 8 }}
+            />
+            <TextInput
+              label="Dirección"
+              value={address}
+              onChangeText={setAddress}
+              style={{ marginBottom: 8 }}
+            />
+            <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!cuit || !companyName || !condIvaTypeId || !address}>
+              Agregar Cliente
+            </Button>
+          </View>
+        </Modal>
+      </Portal>
       <View style={{ height: '100%' }}>
         <FlatList
           data={items}

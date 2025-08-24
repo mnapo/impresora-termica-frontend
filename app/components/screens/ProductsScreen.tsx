@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { TextInput, Button, Card, IconButton, Text, FAB, PaperProvider, Portal, Modal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
+import { Stack } from 'expo-router';
 import { productsActions } from '../../store/products';
 
 export default function ProductsScreen() {
@@ -35,6 +36,7 @@ export default function ProductsScreen() {
 
   return (
     <PaperProvider>
+      <Stack.Screen options={{ title: 'Productos' }}/>
       <Portal>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
           <View style={{ flex: 1, padding: 16 }}>
