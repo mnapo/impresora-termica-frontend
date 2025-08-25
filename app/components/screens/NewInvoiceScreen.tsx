@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useLocalSearchParams, Stack, useRouter } from "expo-router";
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import {
+  PaperProvider,
+  Portal,
+  Modal,
   Button, 
   TextInput,
   IconButton,
+  SegmentedButtons,
   Divider,
   FAB,
-  SegmentedButtons,
   Chip,
   DataTable,
-  Modal,
-  Portal,
-  PaperProvider,
   Surface,
   Icon
 } from 'react-native-paper';
@@ -38,11 +38,11 @@ export default function NewInvoiceScreen() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [clientId, setClientId] = useState('');
   const [items, setItems] = useState<any[]>([]);
-  const [pricesList, setPricesList] = React.useState('list1');
   const [page, setPage] = React.useState<number>(0);
   const [numberOfItemsPerPageList] = React.useState([8, 3, 4]);
   const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0]);
   const [visible, setVisible] = useState(false);
+  const [pricesList, setPricesList] = useState('list1');
   const from = page * itemsPerPage;
   const to = Math.min((page + 1) * itemsPerPage, items.length);
   const condIvaOptions = [
@@ -138,7 +138,7 @@ export default function NewInvoiceScreen() {
 
   return (<PaperProvider>{selectedType === 'arca'?(<Stack.Screen options={{ title: 'Nueva Factura' }}/>):(<Stack.Screen options={{ title: 'Nuevo Comprobante' }}/>)}
     <Portal>
-      <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
+      <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>        
         <SegmentedButtons
           value={pricesList}
           style={{ marginBottom: 5 }}
@@ -146,15 +146,15 @@ export default function NewInvoiceScreen() {
           buttons={[
             {
               value: 'list1',
-              label: 'Lista 1',
+              label: 'Lista #1',
             },
             {
               value: 'list2',
-              label: 'Lista 2',
+              label: 'Lista #2',
             },
             { 
               value: 'list3',
-              label: 'Lista 3'
+              label: 'Lista #3'
             },
           ]}
         />
@@ -177,7 +177,7 @@ export default function NewInvoiceScreen() {
             </View>
           ) : (
             <View style={{ height: '100%', overflow: 'hidden' }}>
-              <ItemSelector onSelect={(item) => handleItemSelect(item)} />
+              <ItemSelector onSelect={(item) => handleItemSelect(item)} pricesList={pricesList} />
             </View>
           )}
         </View>

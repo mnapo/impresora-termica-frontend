@@ -7,14 +7,24 @@ type Item = {
   id: string;
   code: string;
   name: string;
+  price1: number;
+  price2: number;
+  price3: number;
+};
+
+type ProductToItem = {
+  id: string;
+  code: string;
+  name: string;
   price: number;
 };
 
 type ItemSelectorProps = {
-  onSelect: (item: Item) => void;
+  pricesList: string;
+  onSelect: (item: ProductToItem) => void;
 };
 
-export default function ItemSelector({ onSelect }: ItemSelectorProps) {
+export default function ItemSelector({ pricesList, onSelect }: ItemSelectorProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
@@ -77,10 +87,10 @@ export default function ItemSelector({ onSelect }: ItemSelectorProps) {
           data={results}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => onSelect(item)}>
+            <TouchableOpacity onPress={() => onSelect({id: item.id, code: item.code, name: item.name, price: pricesList==='list1'?item.price1:pricesList==='list2'?item.price2:item.price3})}>
               <List.Item
                 title={`${item.code} - ${item.name}`}
-                description={`$${item.price}`}
+                description={`$${pricesList==='list1'?item.price1:pricesList==='list2'?item.price2:item.price3}`}
                 left={(props) => <List.Icon {...props} icon="cart-outline" />}
               />
             </TouchableOpacity>

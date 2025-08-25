@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { TextInput, Button, Card, IconButton, Text, FAB, PaperProvider, Portal, Modal } from 'react-native-paper';
+import { Portal, Modal, TextInput, Button, Card, IconButton, FAB, PaperProvider, SegmentedButtons } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { Stack } from 'expo-router';
 import { productsActions } from '../../store/products';
@@ -11,8 +11,10 @@ export default function ProductsScreen() {
 
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-
+  const [pricesList, setPricesList] = useState('list1');
+  const [price1, setPrice1] = useState('');
+  const [price2, setPrice2] = useState('');
+  const [price3, setPrice3] = useState('');
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -22,11 +24,13 @@ export default function ProductsScreen() {
   }, []);
 
   const handleAdd = () => {
-    if (!code || !name || !price) return;
-    dispatch(productsActions.createAction({ code, name, price: parseFloat(price) }));
+    if (!code || !name || !price1) return;
+    dispatch(productsActions.createAction({ code, name, price1: parseFloat(price1), price2: parseFloat(price2), price3: parseFloat(price3) }));
     setCode('');
     setName('');
-    setPrice('');
+    setPrice1('');
+    setPrice2('');
+    setPrice3('');
   };
 
   const handleDelete = (id: string) => {
@@ -52,25 +56,60 @@ export default function ProductsScreen() {
               style={{ marginBottom: 8 }}
             />
             <TextInput
-              label="Precio"
-              value={price}
-              onChangeText={setPrice}
+              label="Precio de Lista #1"
+              value={price1}
+              onChangeText={setPrice1}
               keyboardType="numeric"
               style={{ marginBottom: 8 }}
             />
-            <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!code || !name || !price}>
+            <TextInput
+              label="Precio de Lista #2"
+              value={price2}
+              onChangeText={setPrice2}
+              keyboardType="numeric"
+              style={{ marginBottom: 8 }}
+            />
+            <TextInput
+              label="Precio de Lista #3"
+              value={price3}
+              onChangeText={setPrice3}
+              keyboardType="numeric"
+              style={{ marginBottom: 8 }}
+            />
+            <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!code || !name || !price1}>
               Agregar Producto
             </Button>
           </View>
         </Modal>
       </Portal>
       <View style={{ height: '100%' }}>
+        <SegmentedButtons
+          value={pricesList}
+          style={{ marginBottom: 5 }}
+          onValueChange={setPricesList}
+          buttons={[
+            {
+              value: 'list1',
+              label: 'Lista #1',
+            },
+            {
+              value: 'list2',
+              label: 'Lista #2',
+            },
+            { 
+              value: 'list3',
+              label: 'Lista #3'
+            },
+          ]}
+        />
         <FlatList
           data={items}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <Card style={{ marginTop: 12 }}>
-              <Card.Title title={`(${item.code}) ${item.name}`} subtitle={`$${item.price}`} />
+              <Card.Title
+                title={`(${item.code}) ${item.name}`}
+                subtitle={`$${pricesList==='list1'?item.price1:pricesList==='list2'?item.price2:item.price3}`}/>
               <Card.Actions>
                 <IconButton
                   icon="delete"
