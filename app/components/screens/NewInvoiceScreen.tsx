@@ -45,6 +45,12 @@ export default function NewInvoiceScreen() {
   const [visible, setVisible] = useState(false);
   const from = page * itemsPerPage;
   const to = Math.min((page + 1) * itemsPerPage, items.length);
+  const condIvaOptions = [
+    { label: 'Responsable Inscripto', value: '1' },
+    { label: 'Monotributo', value: '2' },
+    { label: 'IVA Exento', value: '3' },
+    { label: 'No inscripto en ARCA', value: '4' },
+  ];
 
   const resetSelectedItem = () => {
     setSubtotal(0);
@@ -191,7 +197,7 @@ export default function NewInvoiceScreen() {
             <Text style={{ fontWeight: 'bold' }}>CUIT: {selectedClient.cuit}</Text>
             <Text>RAZÓN SOCIAL: {selectedClient.companyName}</Text>
             <Text>DIRECCIÓN: {selectedClient.address}</Text>
-            <Text>CONDICIÓN FRENTE AL IVA: {selectedClient.condIvaType}</Text>
+            <Text>CONDICIÓN FRENTE AL IVA: {condIvaOptions.find(condIvaType => condIvaType.value === String(selectedClient.condIvaTypeId))?.label}</Text>
             <Button style={{left: 0}} icon="magnify" onPress={() => setSelectedClient(null)}>BUSCAR OTRO CLIENTE</Button>
           </View>
         ) : (
