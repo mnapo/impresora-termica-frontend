@@ -158,7 +158,7 @@ export default function NewInvoiceScreen() {
             },
           ]}
         />
-        <View style={{ maxHeight: '60%', overflow: 'hidden' }}>
+        <View style={{ height: '60%', overflow: 'hidden' }}>
           {selectedItem ? (
             <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'center' }}>
               <Text>Código: {selectedItem.code}</Text>
@@ -176,7 +176,7 @@ export default function NewInvoiceScreen() {
               <Button icon="magnify" onPress={() => setSelectedItem(null)}>BUSCAR OTRO PRODUCTO</Button>
             </View>
           ) : (
-            <View style={{ }}>
+            <View style={{ height: '100%', overflow: 'hidden' }}>
               <ItemSelector onSelect={(item) => handleItemSelect(item)} />
             </View>
           )}
@@ -191,17 +191,17 @@ export default function NewInvoiceScreen() {
       </Modal>
     </Portal>
     <View style={{ height:'100%', padding: 16 }}>
-      <Surface elevation={4} style={{ paddingHorizontal: 16, maxHeight: '50%', overflow: 'hidden' }}>
+      <Surface elevation={2} style={{ paddingHorizontal: 2, maxHeight: '50%', overflow: 'hidden' }}>
         {selectedClient ? (
           <View style={{ height: '30%', paddingHorizontal: 16 }}>
             <Text style={{ fontWeight: 'bold' }}>CUIT: {selectedClient.cuit}</Text>
             <Text>RAZÓN SOCIAL: {selectedClient.companyName}</Text>
             <Text>DIRECCIÓN: {selectedClient.address}</Text>
-            <Text>CONDICIÓN FRENTE AL IVA: {condIvaOptions.find(condIvaType => condIvaType.value === String(selectedClient.condIvaTypeId))?.label}</Text>
+            <Text>CONDICIÓN IVA: {condIvaOptions.find(condIvaType => condIvaType.value === String(selectedClient.condIvaTypeId))?.label}</Text>
             <Button style={{left: 0}} icon="magnify" onPress={() => setSelectedClient(null)}>BUSCAR OTRO CLIENTE</Button>
           </View>
         ) : (
-          <View style={{ }}>
+          <View>
             <ClientSelector onSelect={(client) => setSelectedClient(client)} />
           </View>
         )}
@@ -209,22 +209,22 @@ export default function NewInvoiceScreen() {
 
       <DataTable>
         <DataTable.Header>
-          <DataTable.Title>Cód.</DataTable.Title>
-          <DataTable.Title>Item</DataTable.Title>
-          <DataTable.Title numeric>Pr.</DataTable.Title>
-          <DataTable.Title numeric>Cant.</DataTable.Title>
-          <DataTable.Title numeric>Subt.</DataTable.Title>
-          <DataTable.Title numeric>El.</DataTable.Title>
+          <DataTable.Title>Código</DataTable.Title>
+          <DataTable.Title>|Item</DataTable.Title>
+          <DataTable.Title numeric>|Precio</DataTable.Title>
+          <DataTable.Title numeric>|Cantidad</DataTable.Title>
+          <DataTable.Title numeric>|Subtotal</DataTable.Title>
+          <DataTable.Title numeric>|Borrar</DataTable.Title>
         </DataTable.Header>
 
         {items.slice(from, to).map((item) => (
           <DataTable.Row key={item.productId}>
-            <DataTable.Cell>{item.code}</DataTable.Cell>
-            <DataTable.Cell>{item.name}</DataTable.Cell>
-            <DataTable.Cell numeric>${item.price}</DataTable.Cell>
-            <DataTable.Cell numeric>{item.quantity}</DataTable.Cell>
-            <DataTable.Cell numeric>${(item.price*item.quantity).toFixed(2)}</DataTable.Cell>
-            <DataTable.Cell numeric><IconButton icon="delete" size={20} onPress={() => removeItem(item.productId)} /></DataTable.Cell>
+            <DataTable.Cell style={{ flex: 0.1}}>{item.code}</DataTable.Cell>
+            <DataTable.Cell style={{ flex: 0.3}}>{item.name}</DataTable.Cell>
+            <DataTable.Cell style={{ flex: 0.2}}>${item.price}</DataTable.Cell>
+            <DataTable.Cell style={{ flex: 0.1}}>x{item.quantity}</DataTable.Cell>
+            <DataTable.Cell style={{ flex: 0.2}} numeric>${(item.price*item.quantity).toFixed(2)}</DataTable.Cell>
+            <DataTable.Cell style={{ flex: 0.1}} numeric><IconButton icon="delete" size={20} onPress={() => removeItem(item.productId)} /></DataTable.Cell>
           </DataTable.Row>
         ))}
 
@@ -275,5 +275,5 @@ const styles = StyleSheet.create({
   quantityRow: { flexDirection: 'row', alignItems: 'center' },
   addButton: { marginTop: 5 },
   saveButton: { marginTop: 20 },
-  modal: {backgroundColor: 'white', padding: 20}
+  modal: {backgroundColor: 'white', padding: 20, maxHeight: '80%'}
 });
