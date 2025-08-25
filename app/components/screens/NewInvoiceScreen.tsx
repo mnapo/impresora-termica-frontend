@@ -41,16 +41,22 @@ export default function NewInvoiceScreen() {
   const [pricesList, setPricesList] = React.useState('list1');
   const [page, setPage] = React.useState<number>(0);
   const [numberOfItemsPerPageList] = React.useState([8, 3, 4]);
-  const [itemsPerPage, onItemsPerPageChange] = React.useState(
-    numberOfItemsPerPageList[0]
-  );
-
+  const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0]);
   const [visible, setVisible] = useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
-
   const from = page * itemsPerPage;
   const to = Math.min((page + 1) * itemsPerPage, items.length);
+
+  const resetSelectedItem = () => {
+    setSubtotal(0);
+    setQuantity('1');
+    setSelectedItem(null);
+  };
+
+  const showModal = () => {
+    resetSelectedItem();
+    setVisible(true);
+  }
+  const hideModal = () => setVisible(false);
 
   useEffect(() => {
     setPage(0);
@@ -66,10 +72,15 @@ export default function NewInvoiceScreen() {
     setTotal(invoiceTotal);
   }, [items]);
 
+  const handleItemSelect = (item: any) => {
+    setSelectedItem(item);
+    setQuantity('1');
+    setSubtotal(item.price);
+  };
+
   const addItem = () => {
     setItems([...items, { productId: selectedItem.id, code: selectedItem.code, name: selectedItem.name, price: selectedItem.price, quantity: parseInt(quantity) || 1 }]);
-    setSelectedItem(null);
-    setQuantity('1');
+    resetSelectedItem();
   };
 
   const updateItemProduct = (index: number, productId: string) => {
@@ -160,7 +171,7 @@ export default function NewInvoiceScreen() {
             </View>
           ) : (
             <View style={{ }}>
-              <ItemSelector onSelect={(item) => setSelectedItem(item)} />
+              <ItemSelector onSelect={(item) => handleItemSelect(item)} />
             </View>
           )}
         </View>
