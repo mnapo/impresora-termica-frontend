@@ -11,16 +11,18 @@ export default function TabsHome() {
     <View style={styles.container}>
       <Text style={styles.title2}><Icon source="account-outline" size={32}/>{user.lastName.toUpperCase()} {user.firstName.toUpperCase()}👋</Text>
       <Divider style={styles.divider} />
-      <Option title="Mis Facturas" icon="book-multiple" path="(tabs)/invoices" />
-      <Option title="Datos de Cuenta" icon="pencil" path="(tabs)/settings" />
-      <Option title="Métricas" icon="chart-areaspline" path="" />
+      <View style={{ alignItems: 'center', paddingHorizontal: '10%' }}>
+        <Option title="Mis Facturas" icon="book-multiple" path="(tabs)/invoices" />
+        <Option title="Datos de Cuenta" icon="pencil" path="(tabs)/settings" />
+        <Option title="Métricas" icon="chart-areaspline" path="" />
+      </View>
     </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20
+    padding: 20,
   },
   title1: {
     fontSize: 20,

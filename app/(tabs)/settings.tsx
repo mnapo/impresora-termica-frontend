@@ -14,8 +14,10 @@ export default function SettingsScreen() {
       <Chip style={styles().connectionState} icon={() => (
         <Icon source="circle" size={16} color="green" />
       )}>conexión ARCA establecida</Chip>
-      <Option title="Clientes" icon="account" path="/components/screens/ClientsScreen" />
-      <Option title="Productos" icon="cart" path="/components/screens/ProductsScreen" />
+      <View style={{ alignItems: 'center', paddingHorizontal: '10%' }}>
+        <Option title="Clientes" icon="account" path="/components/screens/ClientsScreen" />
+        <Option title="Productos" icon="cart" path="/components/screens/ProductsScreen" />
+      </View>
       <Divider style={{ marginVertical: 10 }}/>
       <Button onPress={signOut} mode="contained" style={styles().button} buttonColor="red">Cerrar sesión</Button>
     </View>

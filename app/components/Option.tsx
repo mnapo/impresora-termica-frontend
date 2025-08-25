@@ -17,10 +17,10 @@ export default function Option({ title, icon, path }: OptionProps) {
   };
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
-        <View style={styles.arrow}>
-          <IconButton icon="arrow-top-right" size={32} />
-        </View>
+    <TouchableOpacity onPress={handlePress} activeOpacity={0.8} style={{ width: '100%' }}>
+      <View style={styles.arrow}>
+        <IconButton icon="arrow-top-right" size={32} />
+      </View>
       <Card style={styles.card}>
         <Card.Content style={styles.content}>
           <Icon source={icon} size={50} color='lightseagreen' />
