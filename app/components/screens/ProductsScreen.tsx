@@ -27,7 +27,6 @@ export default function ProductsScreen() {
     setCode('');
     setName('');
     setPrice('');
-    hideModal();
   };
 
   const handleDelete = (id: string) => {
