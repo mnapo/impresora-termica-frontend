@@ -31,17 +31,18 @@ export default function NewInvoiceScreen() {
   const params = useLocalSearchParams();
   const [selectedType, setSelectedType] = useState(params.type);
   const products = useSelector((state: RootState) => state.products.items || []);
-  const [quantity, setQuantity] = React.useState('');
-  const [subtotal, setSubtotal] = React.useState(0);
-  const [total, setTotal] = React.useState(0);
+  const [quantity, setQuantity] = useState('');
+  const [subtotal, setSubtotal] = useState(0);
+  const [total, setTotal] = useState(0);
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [clientId, setClientId] = useState('');
   const [items, setItems] = useState<any[]>([]);
-  const [page, setPage] = React.useState<number>(0);
-  const [numberOfItemsPerPageList] = React.useState([8, 3, 4]);
-  const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0]);
+  const [page, setPage] = useState<number>(0);
+  const [numberOfItemsPerPageList] = useState([8, 3, 4]);
+  const [itemsPerPage, onItemsPerPageChange] = useState(numberOfItemsPerPageList[0]);
   const [visible, setVisible] = useState(false);
+  const [maximized, setMaximized] = useState(true);
   const [pricesList, setPricesList] = useState('list1');
   const from = page * itemsPerPage;
   const to = Math.min((page + 1) * itemsPerPage, items.length);
@@ -138,7 +139,8 @@ export default function NewInvoiceScreen() {
 
   return (<PaperProvider>{selectedType === 'arca'?(<Stack.Screen options={{ title: 'Nueva Factura' }}/>):(<Stack.Screen options={{ title: 'Nuevo Comprobante' }}/>)}
     <Portal>
-      <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
+      <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={maximized?styles.maximizedModal:styles.modal}>
+        <Button onPress={()=>setMaximized(!maximized)}>{maximized?'▼ achicar':'▲ agrandar'}</Button>
         <View style={{ height: '60%', overflow: 'hidden' }}>
           {selectedItem ? (
             <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'center' }}>
@@ -181,13 +183,15 @@ export default function NewInvoiceScreen() {
             </View>
           )}
         </View>
-        <Button icon="plus" mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem}>
-          Añadir a Factura
-        </Button>
-        <Divider style={{ marginVertical: 5 }}/>
-        <Button icon="window-close" mode="outlined" onPress={hideModal} style={styles.addButton}>
-          Cerrar
-        </Button>
+        <View style={maximized && { top: '20%' }}>
+          <Button icon="plus" mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem}>
+            Añadir a Factura
+          </Button>
+          <Divider style={{ marginVertical: 5 }}/>
+          <Button icon="window-close" mode="outlined" onPress={hideModal} style={styles.addButton}>
+            Cerrar
+          </Button>
+        </View>
       </Modal>
     </Portal>
     <View style={{ height:'100%', padding: 16 }}>
@@ -275,5 +279,6 @@ const styles = StyleSheet.create({
   quantityRow: { flexDirection: 'row', alignItems: 'center' },
   addButton: { marginTop: 5 },
   saveButton: { marginTop: 20 },
-  modal: {backgroundColor: 'white', padding: 20, maxHeight: '80%'}
+  maximizedModal: {backgroundColor: 'white', padding: 5, height: '100%', justifyContent: 'flex-start'},
+  modal: {backgroundColor: 'white', padding: 5, maxHeight: '70%'},
 });
