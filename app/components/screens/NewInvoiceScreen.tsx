@@ -138,26 +138,7 @@ export default function NewInvoiceScreen() {
 
   return (<PaperProvider>{selectedType === 'arca'?(<Stack.Screen options={{ title: 'Nueva Factura' }}/>):(<Stack.Screen options={{ title: 'Nuevo Comprobante' }}/>)}
     <Portal>
-      <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>        
-        <SegmentedButtons
-          value={pricesList}
-          style={{ marginBottom: 5 }}
-          onValueChange={setPricesList}
-          buttons={[
-            {
-              value: 'list1',
-              label: 'Lista #1',
-            },
-            {
-              value: 'list2',
-              label: 'Lista #2',
-            },
-            { 
-              value: 'list3',
-              label: 'Lista #3'
-            },
-          ]}
-        />
+      <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
         <View style={{ height: '60%', overflow: 'hidden' }}>
           {selectedItem ? (
             <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'center' }}>
@@ -177,6 +158,25 @@ export default function NewInvoiceScreen() {
             </View>
           ) : (
             <View style={{ height: '100%', overflow: 'hidden' }}>
+              <SegmentedButtons
+                value={pricesList}
+                style={{ marginBottom: 5 }}
+                onValueChange={setPricesList}
+                buttons={[
+                  {
+                    value: 'list1',
+                    label: 'Lista #1',
+                  },
+                  {
+                    value: 'list2',
+                    label: 'Lista #2',
+                  },
+                  { 
+                    value: 'list3',
+                    label: 'Lista #3'
+                  },
+                ]}
+              />
               <ItemSelector onSelect={(item) => handleItemSelect(item)} pricesList={pricesList} />
             </View>
           )}
