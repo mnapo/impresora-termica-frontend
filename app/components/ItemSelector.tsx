@@ -89,8 +89,7 @@ export default function ItemSelector({ pricesList, onSelect }: ItemSelectorProps
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => onSelect({id: item.id, code: item.code, name: item.name, price: pricesList==='list1'?item.price1:pricesList==='list2'?item.price2:item.price3})}>
               <List.Item
-                title={`${item.code} - ${item.name}`}
-                description={`$${pricesList==='list1'?item.price1:pricesList==='list2'?item.price2:item.price3}`}
+                title={`${item.code} | ${item.name} | $${pricesList==='list1'?item.price1:pricesList==='list2'?item.price2:item.price3}`}
                 left={(props) => <List.Icon {...props} icon="cart-outline" />}
               />
             </TouchableOpacity>
