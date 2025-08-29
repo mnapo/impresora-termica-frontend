@@ -86,7 +86,29 @@ export default function NewInvoiceScreen() {
   };
 
   const addItem = () => {
-    setItems([...items, { productId: selectedItem.id, code: selectedItem.code, name: selectedItem.name, price: selectedItem.price, quantity: parseInt(quantity) || 1 }]);
+    setItems(prevItems => {
+      const existingIndex = prevItems.findIndex(item => item.code === selectedItem.code);
+
+      if (existingIndex !== -1) {
+        const updatedItems = [...prevItems];
+        updatedItems[existingIndex] = {
+          ...updatedItems[existingIndex],
+          quantity: updatedItems[existingIndex].quantity + (parseInt(quantity) || 1)
+        };
+        return updatedItems;
+      } else {
+        return [
+          ...prevItems,
+          { 
+            productId: selectedItem.id,
+            code: selectedItem.code,
+            name: selectedItem.name,
+            price: selectedItem.price,
+            quantity: parseInt(quantity) || 1
+          }
+        ];
+      }
+    });
     resetSelectedItem();
   };
 
@@ -141,12 +163,23 @@ export default function NewInvoiceScreen() {
     <Portal>
       <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={maximized?styles.maximizedModal:styles.modal}>
         <Button onPress={()=>setMaximized(!maximized)}>{maximized?'▼ achicar':'▲ agrandar'}</Button>
-        <View style={{ height: '60%', overflow: 'hidden' }}>
+        <View style={{ height: '60%' }}>
           {selectedItem ? (
             <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'center' }}>
               <Text>Código: {selectedItem.code}</Text>
               <Text style={{ fontWeight: 'bold' }}>Descripción: {selectedItem.name}</Text>
               <Text>Precio: ${selectedItem.price}</Text>
+              {(() => {
+                const existing = items.find(item => item.code === selectedItem.code);
+                if (existing) {
+                  return (
+                    <Text style={{ color: 'green', marginVertical: 4 }}>
+                      Ya agregado: {existing.quantity} unidades
+                    </Text>
+                  );
+                }
+                return null;
+              })()}
               <TextInput
                 value={quantity}
                 onChangeText={updateQuantity}
@@ -159,7 +192,7 @@ export default function NewInvoiceScreen() {
               <Button icon="magnify" onPress={() => setSelectedItem(null)}>BUSCAR OTRO PRODUCTO</Button>
             </View>
           ) : (
-            <View style={{ height: '100%', overflow: 'hidden' }}>
+            <View style={{ height: '100%' }}>
               <SegmentedButtons
                 value={pricesList}
                 style={{ marginBottom: 5 }}
@@ -183,7 +216,7 @@ export default function NewInvoiceScreen() {
             </View>
           )}
         </View>
-        <View style={maximized && { top: '20%' }}>
+        <View style={{ marginTop: '10%' }}>
           <Button icon="plus" mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem}>
             Añadir a Factura
           </Button>
