@@ -4,12 +4,14 @@ export function createEntityModule(entityName, service) {
   const FETCH = `${entityName}/FETCH`;
   const SET = `${entityName}/SET`;
   const CREATE = `${entityName}/CREATE`;
+  const UPDATE = `${entityName}/UPDATE`;
   const REMOVE = `${entityName}/REMOVE`;
   const LOADING = `${entityName}/LOADING`;
 
-  const fetchAction = () => ({ type: FETCH });
+  const fetchAction = (params) => ({ type: FETCH, payload: params });
   const setAction = (data) => ({ type: SET, payload: data });
   const createAction = (payload) => ({ type: CREATE, payload });
+  const updateAction = (payload) => ({ type: UPDATE, payload });
   const removeAction = (id) => ({ type: REMOVE, payload: id });
   const setLoading = (loading) => ({ type: LOADING, payload: loading });
 
@@ -29,11 +31,15 @@ export function createEntityModule(entityName, service) {
     }
   }
 
-  function* fetchSaga() {
+  function* fetchSaga(action) {
     try {
       yield put(setLoading(true));
-      const res = yield call([service, 'find']);
-      yield put(setAction(res.data));
+
+      const params = action.payload || {};
+      const res = yield call([service, 'find'], params);
+
+      const data = Array.isArray(res) ? res : res.data;
+      yield put(setAction(data));
     } finally {
       yield put(setLoading(false));
     }
@@ -45,6 +51,15 @@ export function createEntityModule(entityName, service) {
       yield put(fetchAction());
     } catch (err) {
       console.log('Create error', err);
+    }
+  }
+
+  function* updateSaga(action) {
+    try {
+      yield call([service, 'patch'], action.payload.id, action.payload);
+      yield put(fetchAction());
+    } catch (err) {
+      console.log('Update error', err);
     }
   }
 
@@ -60,11 +75,12 @@ export function createEntityModule(entityName, service) {
   function* saga() {
     yield takeLatest(FETCH, fetchSaga);
     yield takeLatest(CREATE, createSaga);
+    yield takeLatest(UPDATE, updateSaga);
     yield takeLatest(REMOVE, removeSaga);
   }
 
   return {
-    actions: { fetchAction, createAction, removeAction },
+    actions: { fetchAction, createAction, updateAction, removeAction },
     reducer,
     saga,
   };
