@@ -58,9 +58,8 @@ export default function ProductsScreen() {
       price2: parseFloat(price2),
       price3: parseFloat(price3),
     };
-
     if (selectedProduct) {
-      dispatch(productsActions.updateAction({ ...selectedProduct, ...payload }));
+      dispatch(productsActions.updateAction({ id: selectedProduct.id, ...payload }));
     } else {
       dispatch(productsActions.createAction(payload));
     }
@@ -119,17 +118,17 @@ export default function ProductsScreen() {
             disabled={currentPage === 1}
             onPress={() => setCurrentPage((prev) => prev - 1)}
           >
-            Anterior
+          {'<'}
           </Button>
           <Text style={{ marginHorizontal: 8 }}>
-            Página {currentPage} de {totalPages || 1}
+            Página {currentPage}/{totalPages || 1}
           </Text>
           <Button
             mode="outlined"
             disabled={currentPage === totalPages || totalPages === 0}
             onPress={() => setCurrentPage((prev) => prev + 1)}
           >
-            Siguiente
+          {'>'}
           </Button>
         </View>
         <FlatList
