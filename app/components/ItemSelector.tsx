@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, TouchableOpacity } from "react-native";
-import { Text, TextInput, List, ActivityIndicator } from "react-native-paper";
-import client from "../feathersClient";
+import { Text, TextInput, List, ActivityIndicator, Button } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { productsActions } from '../store/products';
 
 type Item = {
   id: string;
@@ -25,32 +26,21 @@ type ItemSelectorProps = {
 };
 
 export default function ItemSelector({ pricesList, onSelect }: ItemSelectorProps) {
+  const dispatch = useDispatch();
+  const { items, loading } = useSelector((state: any) => state.products);
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [items, setItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<Item[]>([]);
 
-  const itemsService = client.service("products");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 7;
+  const totalPages = Math.ceil(results.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedItems = results.slice(startIndex, endIndex);
 
   useEffect(() => {
-    let active = true;
-    const fetchItems = async () => {
-      setLoading(true);
-      try {
-        const res = await itemsService.find({});
-        if (active) {
-          setItems(res.data || []);
-          setResults(res.data || []);
-        }
-      } catch (error) {
-        console.error("Error fetching items:", error);
-      }
-      setLoading(false);
-    };
-    fetchItems();
-    return () => {
-      active = false;
-    };
+    dispatch(productsActions.fetchAction({ paginate: false }));
   }, []);
 
   useEffect(() => {
@@ -58,17 +48,30 @@ export default function ItemSelector({ pricesList, onSelect }: ItemSelectorProps
       setResults(items);
     } else {
       const q = searchQuery.toLowerCase();
-      const filtered = items.filter(
-        (i) =>
-          i.name.toLowerCase().includes(q) ||
-          i.code.toLowerCase().includes(q)
+      setResults(
+        items.filter(
+          (i: Item) =>
+            i.name.toLowerCase().includes(q) ||
+            i.code.toLowerCase().includes(q)
+        )
       );
-      setResults(filtered);
     }
+    setCurrentPage(1);
   }, [searchQuery, items]);
 
   return (
-    <View>
+    <View style={{ height: '100%' }}>
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginVertical: 8 }}>
+        <Button disabled={currentPage === 1} onPress={() => setCurrentPage((prev) => prev - 1)}>
+          Anterior
+        </Button>
+        <Text style={{ marginHorizontal: 8 }}>
+          Página {currentPage} de {totalPages || 1}
+        </Text>
+        <Button disabled={currentPage === totalPages || totalPages === 0} onPress={() => setCurrentPage((prev) => prev + 1)}>
+          Siguiente
+        </Button>
+      </View>
       <TextInput
         label="Ingrese Código o Nombre del producto"
         value={searchQuery}
@@ -83,18 +86,35 @@ export default function ItemSelector({ pricesList, onSelect }: ItemSelectorProps
       {loading ? (
         <ActivityIndicator style={{ marginTop: 16 }} />
       ) : (
-        <FlatList
-          data={results}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => onSelect({id: item.id, code: item.code, name: item.name, price: pricesList==='list1'?item.price1:pricesList==='list2'?item.price2:item.price3})}>
-              <List.Item
-                title={`${item.code} | ${item.name} | $${pricesList==='list1'?item.price1:pricesList==='list2'?item.price2:item.price3}`}
-                left={(props) => <List.Icon {...props} icon="cart-outline" />}
-              />
-            </TouchableOpacity>
-          )}
-        />
+        <>
+          <FlatList
+            data={paginatedItems}
+            keyExtractor={(item) => item.id.toString()}
+            style={{ height: '100%' }}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() =>
+                  onSelect({
+                    id: item.id,
+                    code: item.code,
+                    name: item.name,
+                    price:
+                      pricesList === "list1"
+                        ? item.price1
+                        : pricesList === "list2"
+                        ? item.price2
+                        : item.price3,
+                  })
+                }
+              >
+                <List.Item
+                  title={`${item.code} | ${item.name} | $${pricesList==='list1'?item.price1:pricesList==='list2'?item.price2:item.price3}`}
+                  left={(props) => <List.Icon {...props} icon="cart-outline" />}
+                />
+              </TouchableOpacity>
+            )}
+          />
+        </>
       )}
     </View>
   );
