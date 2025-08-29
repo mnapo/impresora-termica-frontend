@@ -56,7 +56,8 @@ export function createEntityModule(entityName, service) {
 
   function* updateSaga(action) {
     try {
-      yield call([service, 'patch'], action.payload.id, action.payload);
+      const { id, ...fields } = action.payload;
+      yield call([service, 'patch'], id, fields); 
       yield put(fetchAction());
     } catch (err) {
       console.log('Update error', err);
