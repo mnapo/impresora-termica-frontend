@@ -31,7 +31,8 @@ export default function InvoicesScreen() {
             params: { invoiceId: id },
         });
     };
-    const handlePrintInvoice = (id: string) => {
+
+    const handlePrintInvoice = async (id: string) => {
         const token = localStorage.getItem('feathers-jwt');
         if (!token) {
             alert('No estás autenticado');
@@ -68,7 +69,7 @@ export default function InvoicesScreen() {
                             </View>
                         </Card.Content>
                         <Card.Actions>
-                            <Button icon="eye" onPress={() => handleWatchInvoice(item.id)} textColor='lightseagreen' >Detalle</Button>
+                            <Button icon="eye" onPress={() => handleWatchInvoice(item.id)} buttonColor= 'black' textColor='white' >Detalle</Button>
                             <Button icon="printer" mode="outlined" onPress={() => handlePrintInvoice(item.id)} textColor='lightseagreen' >Imprimir</Button>
                         </Card.Actions>
                     </Card>
