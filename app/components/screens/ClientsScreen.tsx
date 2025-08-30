@@ -58,13 +58,6 @@ export default function ClientsScreen() {
               keyboardType="numeric"
               style={{ marginBottom: 8 }}
             />
-            <Dropdown
-              label="Condición frente al IVA"
-              placeholder="Seleccionar"
-              options={condIvaOptions}
-              value={condIvaTypeId}
-              onSelect={setCondIvaTypeId}
-            />
             <TextInput
               label="Razón Social"
               value={companyName}
@@ -76,6 +69,13 @@ export default function ClientsScreen() {
               value={address}
               onChangeText={setAddress}
               style={{ marginBottom: 8 }}
+            />
+            <Dropdown
+              label="Condición frente al IVA"
+              placeholder="Seleccionar"
+              options={condIvaOptions}
+              value={condIvaTypeId}
+              onSelect={setCondIvaTypeId}
             />
             <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!cuit || !companyName || !condIvaTypeId || !address}>
               Agregar Cliente
@@ -89,10 +89,12 @@ export default function ClientsScreen() {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <Card style={{ marginTop: 12 }}>
-              <Card.Title
-                title={`CUIT: ${item.cuit} | RAZÓN SOCIAL: ${item.companyName}`}
-                subtitle={`DIRECCIÓN: ${item.companyName} | CONDICIÓN IVA: ${condIvaOptions.find(condIvaType => condIvaType.value === String(item.condIvaTypeId))?.label}`}
-              />
+              <Card.Content>
+                  <Text variant="titleLarge">CUIT: {item.cuit}</Text>
+                  <Text variant="bodyMedium">RAZÓN SOCIAL: {item.companyName}</Text>
+                  <Text variant="bodyMedium">DIRECCIÓN: {item.address}</Text>
+                  <Text variant="bodyMedium">CONDICION IVA: {condIvaOptions.find(condIvaType => condIvaType.value === String(item.condIvaTypeId))?.label}</Text>
+              </Card.Content>
               <Card.Actions>
                 <IconButton
                   icon="delete"
