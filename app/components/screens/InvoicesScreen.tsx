@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router';
+import { useRouter, Stack } from 'expo-router';
 import { invoicesActions } from '../../store/invoices';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, FlatList } from 'react-native';
@@ -9,7 +9,7 @@ export default function InvoicesScreen() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [selectedType, setSelectedType] = useState<'arca' | 'comprobante'>('arca');
+  const [selectedType, setSelectedType] = useState<'arca' | 'comprobante'>('comprobante');
   const { items, loading } = useSelector((state: any) => state.invoices);
   const [open, setOpen] = useState(false);
 
@@ -42,14 +42,16 @@ export default function InvoicesScreen() {
         window.open(url, '_blank');
     };
 
-    return (<PaperProvider>
+    return (<PaperProvider>{selectedType=='arca'?
+        <Stack.Screen options={{ title: 'Facturas ARCA' }} />
+        :<Stack.Screen options={{ title: 'Comprobantes' }} />}
         <View style={styles.container}>
             <SegmentedButtons
                 value={selectedType}
                 onValueChange={(value) => setSelectedType(value as 'arca' | 'comprobante')}
                 buttons={[
-                { value: 'arca', label: 'Facturas ARCA' },
-                { value: 'comprobante', label: 'Comprobantes' },
+                    { value: 'comprobante', label: 'Comprobantes' },
+                    { value: 'arca', label: 'Facturas ARCA' },
                 ]}
                 style={styles.segmented}
             />
