@@ -16,6 +16,8 @@ export default function ClientsScreen() {
   const [address, setAddress] = useState('');
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [visibleImportFromCsvModal, setVisibleImportFromCsvModal] = useState(false);
+  const [csvContent, setCsvContent] = useState('');
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
@@ -45,9 +47,51 @@ export default function ClientsScreen() {
     dispatch(clientsActions.removeAction(id));
   };
 
+  function capitalize( text: string ) {
+    return text.split(' ').map(word => {
+      if (word.length === 0) {
+        return '';
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(' ');
+  }
+
+  const handleCsvImport = () => {
+    const lines = capitalize(csvContent).split('\n');
+    lines.forEach(line => {
+      let [address, companyName, cuit] = line.split(',').map(item => item.trim());
+      let condIvaTypeId = 1;
+      if (!cuit) { cuit = '0'; condIvaTypeId = NON_REGISTERED_CONDIVATYPE_ID }
+      if (!companyName) { companyName = '-' }
+      if (!address) { cuit = '-' }
+      if (cuit && companyName && address) {
+        dispatch(clientsActions.createAction({ cuit, companyName, condIvaTypeId, address }));
+      }
+    });
+    setCsvContent('');
+    setVisibleImportFromCsvModal(false);
+  };
+
   return (
     <PaperProvider>
       <Stack.Screen options={{ title: 'Clientes' }}/>
+      <Portal>
+        <Modal visible={visibleImportFromCsvModal} onDismiss={ ()=>{ setVisibleImportFromCsvModal(false) } } contentContainerStyle={styles.modal}>
+          <View style={{ height: '100%', flex: 1, padding: 16 }}>
+            <TextInput
+              label="CSV de Clientes"
+              value={csvContent}
+              onChangeText={text => setCsvContent(text)}
+              multiline={true}
+              numberOfLines={4}
+              style={{ minHeight: 100 }}
+            />
+            <Button mode="contained" onPress={handleCsvImport} icon='file-import' disabled={!csvContent}>
+              Cargar CSV
+            </Button>
+          </View>
+        </Modal>
+      </Portal>
       <Portal>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
           <View style={{ height: '100%', flex: 1, padding: 16 }}>
@@ -128,7 +172,7 @@ export default function ClientsScreen() {
               {
               icon: 'paperclip',
               label: 'importar desde CSV',
-              onPress: ()=>{}
+              onPress: ()=>{ setVisibleImportFromCsvModal(true) }
               },
           ]}
           onStateChange={ () => { setOpen(!open) }}
