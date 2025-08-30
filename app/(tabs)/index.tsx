@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../context/AuthContext';
 import { View } from 'react-native';
-import { PaperProvider, Portal, Modal, Text, Button, Divider, Icon } from 'react-native-paper';
+import { PaperProvider, Portal, Modal, Text, Chip, Button, Divider, Icon } from 'react-native-paper';
 import Option from '../components/Option'
 import InvoiceOption from '../components/InvoiceOption'
 
@@ -23,6 +23,9 @@ export default function TabsHome() {
   return (<PaperProvider><Portal>
     <Modal visible={visible} onDismiss={ () => { setVisible(false) } } contentContainerStyle={styles.modal}>
       <Button mode="contained" onPress={() => handlePress('arca') } icon="file" style={{ marginVertical: 5}} uppercase={true} labelStyle={{ fontSize: 24 }} buttonColor='lightseagreen' >factura ARCA</Button>
+      <Chip ellipsizeMode='tail' icon={() => (
+        <Icon source="circle" size={16} color="yellow" />
+      )}>crear una factura ARCA genera un CAE único</Chip>
       <Button mode="contained" onPress={() => handlePress('comprobante') } icon="content-paste" style={{ marginVertical: 5}} uppercase={true} labelStyle={{ fontSize: 24 }}  buttonColor='lightseagreen' >comprobante</Button>
       <Button mode="outlined" onPress={() => setVisible(false) } icon="window-close" style={{ marginVertical: 5}} uppercase={true} labelStyle={{ fontSize: 24 }} textColor='black' >Cerrar</Button>
     </Modal>
