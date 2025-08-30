@@ -19,20 +19,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="invoices"
-        options={{
-          title: "Facturas",
-          tabBarShowLabel: false,
-            tabBarIcon: ({ focused, color, size }) => (
-              <Icon
-                source={focused ? 'book-multiple' : 'book-multiple-outline'}
-                size={focused ? 55 : 42}
-                color={focused ? 'lightseagreen' : 'black'}
-              />
-            )
-        }}
-      />
-      <Tabs.Screen
         name="settings"
         options={{
           title: "Configuración",
