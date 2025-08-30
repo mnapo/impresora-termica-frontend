@@ -25,7 +25,7 @@ export default function TabLayout() {
           tabBarShowLabel: false,
             tabBarIcon: ({ focused, color, size }) => (
               <Icon
-                source={focused ? 'plus-circle' : 'plus-circle-outline'}
+                source={focused ? 'book-multiple' : 'book-multiple-outline'}
                 size={focused ? 55 : 42}
                 color={focused ? 'purple' : 'black'}
               />
