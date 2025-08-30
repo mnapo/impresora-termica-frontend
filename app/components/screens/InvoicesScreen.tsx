@@ -50,8 +50,8 @@ export default function InvoicesScreen() {
                 value={selectedType}
                 onValueChange={(value) => setSelectedType(value as 'arca' | 'comprobante')}
                 buttons={[
-                    { value: 'comprobante', label: 'Comprobantes' },
-                    { value: 'arca', label: 'Facturas ARCA' },
+                    { value: 'comprobante', label: 'Comprobantes', style: { backgroundColor: selectedType === 'comprobante' ? 'black' : 'white' }, labelStyle: { color: selectedType==='arca'?'black':'white' } },
+                    { value: 'arca', label: 'Facturas ARCA', style: { backgroundColor: selectedType === 'comprobante' ? 'white' : 'black' }, labelStyle: { color: selectedType==='arca'?'white':'black' } },
                 ]}
                 style={styles.segmented}
             />
@@ -84,7 +84,9 @@ export default function InvoicesScreen() {
             <FAB.Group
             open={open}
             visible
-            color="black"
+            style={{ paddingBottom: '10%' }}
+            fabStyle={{ backgroundColor: 'black' }}
+            color="white"
             label="NUEVO"
             variant="surface"
             icon={open ? 'minus-box' : 'plus'}
@@ -114,7 +116,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   segmented: {
-    color: 'lightseagreen',
     marginBottom: 16,
   },
   listContainer: {

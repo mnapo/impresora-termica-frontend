@@ -183,6 +183,7 @@ export default function NewInvoiceScreen() {
                 }
                 return null;
               })()}
+              <Divider />
               <TextInput
                 value={quantity}
                 onChangeText={updateQuantity}
@@ -191,8 +192,8 @@ export default function NewInvoiceScreen() {
                 keyboardType="numeric"
                 style={{ width: '30%' }}
               />
-              <Chip icon="information">Total: ${subtotal || 0}</Chip>
-              <Button icon="magnify" onPress={() => setSelectedItem(null)}>BUSCAR OTRO PRODUCTO</Button>
+              <Chip icon="information" style={{ backgroundColor: 'black' }} textStyle={{ color: 'white' }} >Total: ${subtotal || 0}</Chip>
+              <Button icon="magnify" onPress={() => setSelectedItem(null)} textColor='lightseagreen' >BUSCAR OTRO PRODUCTO</Button>
             </View>
           ) : (
             <View style={{ height: '100%' }}>
@@ -204,14 +205,17 @@ export default function NewInvoiceScreen() {
                   {
                     value: 'list1',
                     label: 'Lista #1',
+                    style: { backgroundColor: pricesList === 'list1' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list1' ? 'white' : 'black' }
                   },
                   {
                     value: 'list2',
                     label: 'Lista #2',
+                    style: { backgroundColor: pricesList === 'list2' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list2' ? 'white' : 'black' }
                   },
                   { 
                     value: 'list3',
-                    label: 'Lista #3'
+                    label: 'Lista #3',
+                    style: { backgroundColor: pricesList === 'list3' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list3' ? 'white' : 'black' }
                   },
                 ]}
               />
@@ -220,7 +224,7 @@ export default function NewInvoiceScreen() {
           )}
         </View>
         <View style={{ marginTop: '10%' }}>
-          <Button icon="plus" mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem}>
+          <Button icon="plus" mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem} buttonColor='black' labelStyle={{ color: 'white' }} >
             Añadir a Factura
           </Button>
           <Divider style={{ marginVertical: 5 }}/>
@@ -231,14 +235,14 @@ export default function NewInvoiceScreen() {
       </Modal>
     </Portal>
     <View style={{ height:'100%', padding: 16 }}>
-      <Surface elevation={2} style={{ paddingHorizontal: 2, maxHeight: '50%', overflow: 'hidden' }}>
+      <Surface elevation={2} style={{ paddingHorizontal: 2, maxHeight: '50%', overflow: 'hidden', backgroundColor: 'white' }}>
         {selectedClient ? (
           <View style={{ height: '30%', paddingHorizontal: 16 }}>
             <Text style={{ fontWeight: 'bold' }}>CUIT: {selectedClient.cuit}</Text>
             <Text>RAZÓN SOCIAL: {selectedClient.companyName}</Text>
             <Text>DIRECCIÓN: {selectedClient.address}</Text>
             <Text>CONDICIÓN IVA: {condIvaOptions.find(condIvaType => condIvaType.value === String(selectedClient.condIvaTypeId))?.label}</Text>
-            <Button style={{left: 0}} icon="magnify" onPress={() => setSelectedClient(null)}>BUSCAR OTRO CLIENTE</Button>
+            <Button style={{left: 0}} icon="magnify" onPress={() => setSelectedClient(null)} textColor='lightseagreen' >BUSCAR OTRO CLIENTE</Button>
           </View>
         ) : (
           <View>
@@ -283,23 +287,25 @@ export default function NewInvoiceScreen() {
         items.length>0?
         (
           <>
-            <Chip disabled={true} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '12%', left: '2%'}}>Total S/ IVA: ${total || 0}</Chip>
-            <Chip disabled={true} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '7%', left: '2%'}}>IVA 21%: ${((21*total)/100).toFixed(2) || 0}</Chip>
-            <Chip icon="information" elevated={true} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Total: ${(total+((21*total)/100)).toFixed(2) || 0}</Chip>
+            <Chip disabled={true} elevated={false} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '12%', left: '2%'}}>Total S/ IVA: ${total || 0}</Chip>
+            <Chip disabled={true} elevated={false} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '7%', left: '2%'}}>IVA 21%: ${((21*total)/100).toFixed(2) || 0}</Chip>
+            <Chip icon="information" elevated={true} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', backgroundColor: 'black', bottom: '2%', left: '2%' }}>Total: ${(total+((21*total)/100)).toFixed(2) || 0}</Chip>
           </>
         ):(<Chip icon="information" textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Ningún item añadido</Chip>)
       }
       <FAB
         icon="plus"
         label="ITEM"
-        style={{position: 'absolute', bottom: '10%', left: '62%'}}
+        color="white"
+        style={{ position: 'absolute', backgroundColor: `${!selectedClient?'grey':'black'}`, bottom: '10%', right: '6%' }}
         onPress={showModal}
         disabled={!selectedClient}
       />
       <FAB
         icon="content-save"
         label="Guardar"
-        style={{position: 'absolute', bottom: '2%', left: '62%'}}
+        color="white"
+        style={{position: 'absolute', backgroundColor: `${(!selectedClient || items.length === 0)?'grey':'green'}`, bottom: '2%', right: '6%'}}
         onPress={saveInvoice}
         disabled={!selectedClient || items.length === 0}
       />
@@ -317,7 +323,6 @@ const styles = StyleSheet.create({
   inputSmall: { width: 80, marginHorizontal: 5 },
   quantityRow: { flexDirection: 'row', alignItems: 'center' },
   addButton: { marginTop: 5 },
-  saveButton: { marginTop: 20 },
   maximizedModal: {backgroundColor: 'white', padding: 5, height: '100%', justifyContent: 'flex-start'},
   modal: {backgroundColor: 'white', padding: 5, maxHeight: '70%'},
 });
