@@ -14,7 +14,7 @@ export default function ClientsScreen() {
   const [companyName, setCompanyName] = useState('');
   const [condIvaTypeId, setCondIvaTypeId] = useState<string>();
   const [address, setAddress] = useState('');
-
+  const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -104,12 +104,36 @@ export default function ClientsScreen() {
             </Card>
           )}
         />
-        <FAB
-          icon="plus"
-          label="NUEVO"
-          onPress={showModal}
-          style={{position: 'absolute', bottom: '5%', left: '62%'}}
-        />
+        <Portal>
+          <FAB.Group
+          open={open}
+          visible
+          style={{ paddingBottom: '10%' }}
+          fabStyle={{ backgroundColor: 'black' }}
+          color="white"
+          label=""
+          variant="surface"
+          icon={open ? 'minus-box' : 'plus'}
+          actions={[
+              {
+              icon: 'plus',
+              label: 'nuevo cliente',
+              onPress: ()=>{}
+              },
+              {
+              icon: 'phone',
+              label: 'importar desde contactos',
+              onPress: ()=>{}
+              },
+              {
+              icon: 'paperclip',
+              label: 'importar desde CSV',
+              onPress: ()=>{}
+              },
+          ]}
+          onStateChange={ () => { setOpen(!open) }}
+          />
+        </Portal>
       </View>
     </PaperProvider>
   );
