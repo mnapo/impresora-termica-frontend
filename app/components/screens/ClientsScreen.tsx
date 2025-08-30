@@ -29,15 +29,35 @@ export default function ClientsScreen() {
     { label: 'No inscripto en ARCA', value: '4' },
   ];
 
+  // 👇 PAGINACIÓN
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
+  const totalPages = Math.ceil(items.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedItems = items.slice(startIndex, endIndex);
+
   useEffect(() => {
-    dispatch(clientsActions.fetchAction());
+    dispatch(clientsActions.fetchAction({ paginate: false }));
   }, []);
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [items]);
 
   const handleAdd = () => {
     if (!companyName || !condIvaTypeId || !cuit || !address) return;
-    dispatch(clientsActions.createAction({ cuit, companyName, condIvaTypeId: parseInt(condIvaTypeId) || NON_REGISTERED_CONDIVATYPE_ID, address }));
+    dispatch(clientsActions.createAction({
+      cuit,
+      companyName,
+      condIvaTypeId: parseInt(condIvaTypeId) || NON_REGISTERED_CONDIVATYPE_ID,
+      address
+    }));
     setCuit('');
-    setCompanyName(''); 
+    setCompanyName('');
     setCondIvaTypeId('');
     setAddress('');
     hideModal();
@@ -47,7 +67,7 @@ export default function ClientsScreen() {
     dispatch(clientsActions.removeAction(id));
   };
 
-  function capitalize( text: string ) {
+  function capitalize(text: string) {
     return text.split(' ').map(word => {
       if (word.length === 0) {
         return '';
@@ -72,84 +92,105 @@ export default function ClientsScreen() {
     setVisibleImportFromCsvModal(false);
   };
 
-  return (
-    <PaperProvider>
-      <Stack.Screen options={{ title: 'Clientes' }}/>
+  return (<PaperProvider>
+    <Stack.Screen options={{ title: 'Clientes' }}/>
+    <Portal>
+      <Modal visible={visibleImportFromCsvModal} onDismiss={ ()=>{ setVisibleImportFromCsvModal(false) } } contentContainerStyle={styles.modal}>
+        <View style={{ height: '100%', flex: 1, padding: 16 }}>
+          <TextInput
+            label="CSV de Clientes"
+            value={csvContent}
+            onChangeText={text => setCsvContent(text)}
+            multiline={true}
+            numberOfLines={4}
+            style={{ minHeight: 100 }}
+          />
+          <Button mode="contained" onPress={handleCsvImport} icon='file-import' disabled={!csvContent}>
+            Cargar CSV
+          </Button>
+        </View>
+      </Modal>
+    </Portal>
+
+    <Portal>
+      <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
+        <View style={{ height: '100%', flex: 1, padding: 16 }}>
+          <TextInput
+            label="CUIT"
+            value={cuit}
+            onChangeText={setCuit}
+            keyboardType="numeric"
+            style={{ marginBottom: 8 }}
+          />
+          <TextInput
+            label="Razón Social"
+            value={companyName}
+            onChangeText={setCompanyName}
+            style={{ marginBottom: 8 }}
+          />
+          <TextInput
+            label="Dirección"
+            value={address}
+            onChangeText={setAddress}
+            style={{ marginBottom: 8 }}
+          />
+          <Dropdown
+            label="Condición frente al IVA"
+            placeholder="Seleccionar"
+            options={condIvaOptions}
+            value={condIvaTypeId}
+            onSelect={setCondIvaTypeId}
+          />
+          <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!cuit || !companyName || !condIvaTypeId || !address}>
+            Agregar Cliente
+          </Button>
+        </View>
+      </Modal>
+    </Portal>
+
+    <View style={{ flex: 1 }}>
+      <View style={styles.paginationContainer}>
+        <Button
+          mode="outlined"
+          disabled={currentPage === 1}
+          onPress={() => setCurrentPage(prev => prev - 1)}
+        >
+          {'<'}
+        </Button>
+        <Text style={{ marginHorizontal: 8 }}>
+          Página {currentPage}/{totalPages || 1}
+        </Text>
+        <Button
+          mode="outlined"
+          disabled={currentPage === totalPages || totalPages === 0}
+          onPress={() => setCurrentPage(prev => prev + 1)}
+        >
+          {'>'}
+        </Button>
+      </View>
+
+      <FlatList
+        data={paginatedItems}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Card style={{ marginTop: 1 }}>
+            <Card.Content>
+                <Text variant="titleLarge">CUIT: {item.cuit}</Text>
+                <Text variant="bodyMedium">RAZÓN SOCIAL: {item.companyName}</Text>
+                <Text variant="bodyMedium">DIRECCIÓN: {item.address}</Text>
+                <Text variant="bodyMedium">
+                  CONDICION IVA: {condIvaOptions.find(condIvaType => condIvaType.value === String(item.condIvaTypeId))?.label}
+                </Text>
+            </Card.Content>
+            <Card.Actions>
+              <IconButton icon="delete" onPress={() => handleDelete(item.id)} />
+            </Card.Actions>
+          </Card>
+        )}
+      />
+
       <Portal>
-        <Modal visible={visibleImportFromCsvModal} onDismiss={ ()=>{ setVisibleImportFromCsvModal(false) } } contentContainerStyle={styles.modal}>
-          <View style={{ height: '100%', flex: 1, padding: 16 }}>
-            <TextInput
-              label="CSV de Clientes"
-              value={csvContent}
-              onChangeText={text => setCsvContent(text)}
-              multiline={true}
-              numberOfLines={4}
-              style={{ minHeight: 100 }}
-            />
-            <Button mode="contained" onPress={handleCsvImport} icon='file-import' disabled={!csvContent}>
-              Cargar CSV
-            </Button>
-          </View>
-        </Modal>
-      </Portal>
-      <Portal>
-        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
-          <View style={{ height: '100%', flex: 1, padding: 16 }}>
-            <TextInput
-              label="CUIT"
-              value={cuit}
-              onChangeText={setCuit}
-              keyboardType="numeric"
-              style={{ marginBottom: 8 }}
-            />
-            <TextInput
-              label="Razón Social"
-              value={companyName}
-              onChangeText={setCompanyName}
-              style={{ marginBottom: 8 }}
-            />
-            <TextInput
-              label="Dirección"
-              value={address}
-              onChangeText={setAddress}
-              style={{ marginBottom: 8 }}
-            />
-            <Dropdown
-              label="Condición frente al IVA"
-              placeholder="Seleccionar"
-              options={condIvaOptions}
-              value={condIvaTypeId}
-              onSelect={setCondIvaTypeId}
-            />
-            <Button mode="contained" onPress={handleAdd} icon='plus' disabled={!cuit || !companyName || !condIvaTypeId || !address}>
-              Agregar Cliente
-            </Button>
-          </View>
-        </Modal>
-      </Portal>
-      <View style={{ height: '100%' }}>
-        <FlatList
-          data={items}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <Card style={{ marginTop: 1 }}>
-              <Card.Content>
-                  <Text variant="titleLarge">CUIT: {item.cuit}</Text>
-                  <Text variant="bodyMedium">RAZÓN SOCIAL: {item.companyName}</Text>
-                  <Text variant="bodyMedium">DIRECCIÓN: {item.address}</Text>
-                  <Text variant="bodyMedium">CONDICION IVA: {condIvaOptions.find(condIvaType => condIvaType.value === String(item.condIvaTypeId))?.label}</Text>
-              </Card.Content>
-              <Card.Actions>
-                <IconButton
-                  icon="delete"
-                  onPress={() => handleDelete(item.id)}
-                />
-              </Card.Actions>
-            </Card>
-          )}
-        />
-        <Portal>
-          <FAB.Group
+        <FAB.Group
           open={open}
           visible
           style={{ paddingBottom: '10%' }}
@@ -159,30 +200,23 @@ export default function ClientsScreen() {
           variant="surface"
           icon={open ? 'minus-box' : 'plus'}
           actions={[
-              {
-              icon: 'plus',
-              label: 'nuevo cliente',
-              onPress: ()=>{}
-              },
-              {
-              icon: 'phone',
-              label: 'importar desde contactos',
-              onPress: ()=>{}
-              },
-              {
-              icon: 'paperclip',
-              label: 'importar desde CSV',
-              onPress: ()=>{ setVisibleImportFromCsvModal(true) }
-              },
+              { icon: 'plus', label: 'nuevo cliente', onPress: showModal },
+              { icon: 'phone', label: 'importar desde contactos', onPress: ()=>{} },
+              { icon: 'paperclip', label: 'importar desde CSV', onPress: ()=>{ setVisibleImportFromCsvModal(true) } },
           ]}
           onStateChange={ () => { setOpen(!open) }}
-          />
-        </Portal>
-      </View>
-    </PaperProvider>
-  );
+        />
+      </Portal>
+    </View>
+  </PaperProvider>);
 }
 
 const styles = StyleSheet.create({
   modal: {backgroundColor: 'white', padding: 20},
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
 });
