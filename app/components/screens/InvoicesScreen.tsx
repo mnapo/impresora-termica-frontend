@@ -69,8 +69,9 @@ export default function InvoicesScreen() {
                             </View>
                         </Card.Content>
                         <Card.Actions>
+                            <Button icon="content-save" buttonColor= 'black' textColor='white' >PDF</Button>
                             <Button icon="eye" onPress={() => handleWatchInvoice(item.id)} buttonColor= 'black' textColor='white' >Detalle</Button>
-                            <Button icon="printer" mode="outlined" onPress={() => handlePrintInvoice(item.id)} textColor='lightseagreen' >Imprimir</Button>
+                            <Button icon="printer" mode="outlined" onPress={() => handlePrintInvoice(item.id)} buttonColor= 'black' textColor='white' >Imprimir</Button>
                         </Card.Actions>
                     </Card>
                     )}
