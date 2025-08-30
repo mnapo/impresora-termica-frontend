@@ -153,7 +153,10 @@ export default function NewInvoiceScreen() {
           quantity: item.quantity,
         });
       }
-      router.push({pathname: '/(tabs)/invoices'});
+      setQuantity('0')
+      setSelectedClient(null);
+      setItems([]);
+      router.push({pathname: '/components/screens/InvoicesScreen' });
     } catch (error) {
       console.error('Error guardando factura:', error);
     }
