@@ -32,7 +32,7 @@ export default function TabsHome() {
     <Divider style={styles.divider} />
     <View style={{ alignItems: 'center', paddingHorizontal: '10%' }}>
       <InvoiceOption title="Nuevo Comprobante" onOpenModal={() => setVisible(true)} />
-      <Option title="Datos de Cuenta" icon="pencil" path="(tabs)/settings" />
+      <Option title="Comprobantes" icon="book-multiple" path="(tabs)/invoices" />
       <Option title="Métricas" icon="chart-areaspline" path="" />
     </View>
   </View>
