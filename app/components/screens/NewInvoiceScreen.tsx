@@ -305,7 +305,10 @@ export default function NewInvoiceScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10 },
+  container: { flex: 1,
+    padding: 10,
+    backgroundColor: 'white',
+  },
   label: { fontWeight: 'bold', marginBottom: 5, left: '50%' },
   itemRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   inputSmall: { width: 80, marginHorizontal: 5 },

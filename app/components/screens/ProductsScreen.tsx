@@ -101,7 +101,7 @@ export default function ProductsScreen() {
         </Modal>
       </Portal>
 
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <SegmentedButtons
           value={pricesList}
           style={{ marginBottom: 5 }}
@@ -135,7 +135,7 @@ export default function ProductsScreen() {
           data={paginatedItems}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <Card style={{ marginTop: 12 }}>
+            <Card style={{ marginTop: 1 }}>
               <Card.Title
                 title={`(${item.code}) ${item.name}`}
                 subtitle={`$${pricesList === 'list1' ? item.price1 : pricesList === 'list2' ? item.price2 : item.price3}`}

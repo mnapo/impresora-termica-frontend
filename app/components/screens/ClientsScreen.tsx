@@ -88,7 +88,7 @@ export default function ClientsScreen() {
           data={items}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <Card style={{ marginTop: 12 }}>
+            <Card style={{ marginTop: 1 }}>
               <Card.Content>
                   <Text variant="titleLarge">CUIT: {item.cuit}</Text>
                   <Text variant="bodyMedium">RAZÓN SOCIAL: {item.companyName}</Text>

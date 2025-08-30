@@ -32,10 +32,13 @@ export default function InvoicesScreen() {
         });
     };
     const handlePrintInvoice = (id: string) => {
-        router.push({
-            pathname: '/components/screens/PrintInvoiceScreen',
-            params: { invoiceId: id },
-        });
+        const token = localStorage.getItem('feathers-jwt');
+        if (!token) {
+            alert('No estás autenticado');
+            return;
+        }
+        const url = `${process.env.EXPO_PUBLIC_URL}/print?invoiceId=${id}&access_token=${token}`;
+        window.open(url, '_blank');
     };
 
     return (<PaperProvider>
@@ -55,7 +58,7 @@ export default function InvoicesScreen() {
                     refreshing={loading}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                    <Card style={{ marginTop: 12 }}>
+                    <Card style={{ marginTop: 1 }}>
                         <Card.Content>
                             <Text variant="titleLarge">CUIT: {item.cuit}</Text>
                             <Text variant="bodyMedium">Total: ${item.total}</Text>
@@ -99,7 +102,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    height: '100%'
+    height: '100%',
+    backgroundColor: 'white',
   },
   segmented: {
     marginBottom: 16,
