@@ -13,7 +13,7 @@ export default function TabLayout() {
             <Icon
               source={focused ? 'home' : 'home-outline'}
               size={focused ? 55 : 42}
-              color={focused ? 'purple' : 'black'}
+              color={focused ? 'lightseagreen' : 'black'}
             />
           )
         }}
@@ -27,7 +27,7 @@ export default function TabLayout() {
               <Icon
                 source={focused ? 'book-multiple' : 'book-multiple-outline'}
                 size={focused ? 55 : 42}
-                color={focused ? 'purple' : 'black'}
+                color={focused ? 'lightseagreen' : 'black'}
               />
             )
         }}
@@ -41,7 +41,7 @@ export default function TabLayout() {
             <Icon
               source={focused ? 'cog' : 'cog-outline'}
               size={focused ? 55 : 42}
-              color={focused ? 'purple' : 'black'}
+              color={focused ? 'lightseagreen' : 'black'}
             />
           )
         }}

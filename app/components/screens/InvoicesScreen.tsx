@@ -58,16 +58,18 @@ export default function InvoicesScreen() {
                     refreshing={loading}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                    <Card style={{ marginTop: 1 }}>
+                    <Card style={{ marginTop: 1, backgroundColor: 'white' }}>
                         <Card.Content>
-                            <Text variant="titleLarge">CUIT: {item.cuit}</Text>
-                            <Text variant="bodyMedium">Total: ${item.total}</Text>
-                            <Text variant="bodyMedium">Emisión: {item.createdAt}</Text>
-                            <Text variant="bodyMedium">Dirección: {item.address}</Text>
+                            <View style={{ backgroundColor: 'white' }} >
+                                <Text variant="titleLarge">CUIT: {item.cuit}</Text>
+                                <Text variant="bodyMedium">Total: ${item.total}</Text>
+                                <Text variant="bodyMedium">Emisión: {item.createdAt}</Text>
+                                <Text variant="bodyMedium">Dirección: {item.address}</Text>
+                            </View>
                         </Card.Content>
                         <Card.Actions>
-                            <Button icon="eye" onPress={() => handleWatchInvoice(item.id)}>Detalle</Button>
-                            <Button icon="printer" mode="outlined" onPress={() => handlePrintInvoice(item.id)}>Imprimir</Button>
+                            <Button icon="eye" onPress={() => handleWatchInvoice(item.id)} textColor='lightseagreen' >Detalle</Button>
+                            <Button icon="printer" mode="outlined" onPress={() => handlePrintInvoice(item.id)} textColor='lightseagreen' >Imprimir</Button>
                         </Card.Actions>
                     </Card>
                     )}
@@ -78,7 +80,9 @@ export default function InvoicesScreen() {
             <FAB.Group
             open={open}
             visible
+            color="black"
             label="NUEVO"
+            variant="surface"
             icon={open ? 'minus-box' : 'plus'}
             actions={[
                 {
@@ -106,6 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   segmented: {
+    color: 'lightseagreen',
     marginBottom: 16,
   },
   listContainer: {

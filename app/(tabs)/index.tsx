@@ -22,9 +22,9 @@ export default function TabsHome() {
 
   return (<PaperProvider><Portal>
     <Modal visible={visible} onDismiss={ () => { setVisible(false) } } contentContainerStyle={styles.modal}>
-      <Button mode="contained" onPress={() => handlePress('arca') } icon="file" style={{ marginVertical: 5}} uppercase={true} labelStyle={{ fontSize: 24 }} >Nueva factura ARCA</Button>
-      <Button mode="contained" onPress={() => handlePress('comprobante') } icon="content-paste" style={{ marginVertical: 5}} uppercase={true} labelStyle={{ fontSize: 24 }} >Nuevo comprobante</Button>
-      <Button mode="outlined" onPress={() => setVisible(false) } icon="window-close" style={{ marginVertical: 5}} uppercase={true} labelStyle={{ fontSize: 24 }} >Cerrar</Button>
+      <Button mode="contained" onPress={() => handlePress('arca') } icon="file" style={{ marginVertical: 5}} uppercase={true} labelStyle={{ fontSize: 24 }} buttonColor='lightseagreen' >factura ARCA</Button>
+      <Button mode="contained" onPress={() => handlePress('comprobante') } icon="content-paste" style={{ marginVertical: 5}} uppercase={true} labelStyle={{ fontSize: 24 }}  buttonColor='lightseagreen' >comprobante</Button>
+      <Button mode="outlined" onPress={() => setVisible(false) } icon="window-close" style={{ marginVertical: 5}} uppercase={true} labelStyle={{ fontSize: 24 }} textColor='black' >Cerrar</Button>
     </Modal>
   </Portal>
   <View style={styles.container}>
