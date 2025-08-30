@@ -22,10 +22,11 @@ type ProductToItem = {
 
 type ItemSelectorProps = {
   pricesList: string;
+  invoiceType: any;
   onSelect: (item: ProductToItem) => void;
 };
 
-export default function ItemSelector({ pricesList, onSelect }: ItemSelectorProps) {
+export default function ItemSelector({ pricesList, invoiceType, onSelect }: ItemSelectorProps) {
   const dispatch = useDispatch();
   const { items, loading } = useSelector((state: any) => state.products);
 
@@ -58,6 +59,14 @@ export default function ItemSelector({ pricesList, onSelect }: ItemSelectorProps
     }
     setCurrentPage(1);
   }, [searchQuery, items]);
+
+  const addTaxesByType = (price: number) => {
+    if (invoiceType === 'arca') {
+      return price;
+    } else {
+      return parseFloat((price + price * 0.21).toFixed(2));
+    }
+  };
 
   return (
     <View style={{ height: '100%' }}>
@@ -100,15 +109,15 @@ export default function ItemSelector({ pricesList, onSelect }: ItemSelectorProps
                     name: item.name,
                     price:
                       pricesList === "list1"
-                        ? item.price1
+                        ? addTaxesByType(item.price1)
                         : pricesList === "list2"
-                        ? item.price2
-                        : item.price3,
+                        ? addTaxesByType(item.price2)
+                        : addTaxesByType(item.price3),
                   })
                 }
               >
                 <List.Item
-                  title={`${item.code} | ${item.name} | $${pricesList==='list1'?item.price1:pricesList==='list2'?item.price2:item.price3}`}
+                  title={`${item.code} | ${item.name} | $${pricesList==='list1'?addTaxesByType(item.price1):pricesList==='list2'?addTaxesByType(item.price2):addTaxesByType(item.price3)}`}
                   left={(props) => <List.Icon {...props} icon="cart-outline" />}
                 />
               </TouchableOpacity>

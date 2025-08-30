@@ -219,7 +219,7 @@ export default function NewInvoiceScreen() {
                   },
                 ]}
               />
-              <ItemSelector onSelect={(item) => handleItemSelect(item)} pricesList={pricesList} />
+              <ItemSelector onSelect={(item) => handleItemSelect(item)} pricesList={pricesList} invoiceType={selectedType} />
             </View>
           )}
         </View>
@@ -287,9 +287,14 @@ export default function NewInvoiceScreen() {
         items.length>0?
         (
           <>
+          {selectedType==='arca'?
+          (<>
             <Chip disabled={true} elevated={false} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '12%', left: '2%'}}>Total S/ IVA: ${total || 0}</Chip>
             <Chip disabled={true} elevated={false} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '7%', left: '2%'}}>IVA 21%: ${((21*total)/100).toFixed(2) || 0}</Chip>
             <Chip icon="information" elevated={true} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', backgroundColor: 'black', bottom: '2%', left: '2%' }}>Total: ${(total+((21*total)/100)).toFixed(2) || 0}</Chip>
+          </>)
+            :(<Chip icon="information" elevated={true} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', backgroundColor: 'black', bottom: '2%', left: '2%' }}>Total: ${(total+((21*total)/100)).toFixed(2) || 0}</Chip>)
+          }
           </>
         ):(<Chip icon="information" textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Ningún item añadido</Chip>)
       }
