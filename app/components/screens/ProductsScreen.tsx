@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
-import { Portal, Modal, TextInput, Button, Card, IconButton, FAB, PaperProvider, SegmentedButtons, Text } from 'react-native-paper';
+import { View, FlatList, StyleSheet, ScrollView } from 'react-native';
+import {
+  PaperProvider,
+  Portal,
+  Modal,
+  DataTable,
+  TextInput,
+  Searchbar,
+  Button,
+  IconButton,
+  FAB,
+  SegmentedButtons,
+  Text,
+  Divider
+} from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { Stack } from 'expo-router';
 import { productsActions } from '../../store/products';
@@ -9,18 +22,25 @@ export default function ProductsScreen() {
   const dispatch = useDispatch();
   const { items, loading } = useSelector((state: any) => state.products);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
+  const [page, setPage] = useState(0);
+  const itemsPerPage = 100;
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
-
+  const [searchQuery, setSearchQuery] = useState('');
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [pricesList, setPricesList] = useState('list1');
   const [price1, setPrice1] = useState('');
   const [price2, setPrice2] = useState('');
   const [price3, setPrice3] = useState('');
+  const filteredItems = items.filter((item: any) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.code.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const paginatedItems = filteredItems.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
   useEffect(() => {
     dispatch(productsActions.fetchAction({ paginate: false }));
@@ -66,14 +86,9 @@ export default function ProductsScreen() {
     setModalVisible(false);
   };
 
-  const totalPages = Math.ceil(items.length / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const paginatedItems = items.slice(startIndex, endIndex);
-
   useEffect(() => {
-    if (currentPage > totalPages && totalPages > 0) {
-      setCurrentPage(totalPages);
+    if (page > totalPages && totalPages > 0) {
+      setPage(0);
     }
   }, [items]);
 
@@ -101,58 +116,105 @@ export default function ProductsScreen() {
         </Modal>
       </Portal>
 
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, backgroundColor: 'white', height: '100%' }}>
         <SegmentedButtons
           value={pricesList}
           style={{ marginBottom: 5 }}
           onValueChange={setPricesList}
           buttons={[
-            { value: 'list1', label: 'Lista #1' },
-            { value: 'list2', label: 'Lista #2' },
-            { value: 'list3', label: 'Lista #3' },
+            {
+              value: 'list1',
+              label: 'Lista #1',
+              style: { backgroundColor: pricesList === 'list1' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list1' ? 'white' : 'black' }
+            },
+            {
+              value: 'list2',
+              label: 'Lista #2',
+              style: { backgroundColor: pricesList === 'list2' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list2' ? 'white' : 'black' }
+            },
+            { 
+              value: 'list3',
+              label: 'Lista #3',
+              style: { backgroundColor: pricesList === 'list3' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list3' ? 'white' : 'black' }
+            },
           ]}
         />
-        <View style={styles.paginationContainer}>
-          <Button
-            mode="outlined"
-            disabled={currentPage === 1}
-            onPress={() => setCurrentPage((prev) => prev - 1)}
-          >
-          {'<'}
-          </Button>
-          <Text style={{ marginHorizontal: 8 }}>
-            Página {currentPage}/{totalPages || 1}
-          </Text>
-          <Button
-            mode="outlined"
-            disabled={currentPage === totalPages || totalPages === 0}
-            onPress={() => setCurrentPage((prev) => prev + 1)}
-          >
-          {'>'}
-          </Button>
-        </View>
-        <FlatList
-          data={paginatedItems}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <Card style={{ marginTop: 1 }}>
-              <Card.Title
-                title={`(${item.code}) ${item.name}`}
-                subtitle={`$${pricesList === 'list1' ? item.price1 : pricesList === 'list2' ? item.price2 : item.price3}`}
-              />
-              <Card.Actions>
-                <IconButton icon="pencil" onPress={() => handleEdit(item)} />
-                <IconButton icon="delete" onPress={() => handleDelete(item.id)} />
-              </Card.Actions>
-            </Card>
-          )}
+        <Searchbar
+          placeholder="Buscar producto..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          style={{ marginBottom: 8, marginTop: 8 }}
         />
-
+        <View style={{ height: '75%'}} >
+          <ScrollView>
+            <DataTable>
+              <DataTable.Header style={{ borderWidth: 0, backgroundColor: 'white' }}>
+                <DataTable.Title style={{ flex: 0.6, minWidth: 0, justifyContent: 'flex-start' }}>Cod.</DataTable.Title>
+                <DataTable.Title style={{ flex: 1, minWidth: 0, justifyContent: 'flex-start' }}>Descripción</DataTable.Title>
+                <DataTable.Title style={{ flex: 1, minWidth: 0, justifyContent: 'center', alignItems: 'center' }}>Precio</DataTable.Title>
+                <DataTable.Title style={{ flex: 1, minWidth: 0, justifyContent: 'flex-end', alignItems: 'center' }}>Acciones</DataTable.Title>
+              </DataTable.Header>
+              {paginatedItems.map((item: any, idx: number) => (
+                <React.Fragment key={item.id}>
+                  <DataTable.Row style={{ borderWidth: 0, backgroundColor: 'white' }}>
+                    <DataTable.Cell style={{ flex: 0.6, minWidth: 0 }}>
+                      <Text variant="bodyMedium">{item.code}</Text>
+                    </DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 1, minWidth: 0 }}>
+                      <Text variant="bodyMedium">{item.name}</Text>
+                    </DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 1, minWidth: 0, alignItems: 'center', justifyContent: 'center' }}>
+                      <Text variant="bodyMedium" style={{ textAlign: 'right' }}>
+                        ${pricesList === 'list1' ? item.price1 : pricesList === 'list2' ? item.price2 : item.price3}
+                      </Text>
+                    </DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 1, minWidth: 0 }}>
+                      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                        <IconButton
+                          icon="pencil"
+                          size={24}
+                          style={{ backgroundColor: 'lightseagreen', marginRight: 8 }}
+                          iconColor="white"
+                          onPress={() => handleEdit(item)}
+                        />
+                        <IconButton
+                          icon="delete"
+                          size={24}
+                          style={{ backgroundColor: 'red' }}
+                          iconColor="white"
+                          onPress={() => handleDelete(item.id)}
+                        />
+                      </View>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  {idx < paginatedItems.length - 1 && (
+                    <Divider style={{ height: 1, backgroundColor: '#eee', marginHorizontal: 8 }} />
+                  )}
+                </React.Fragment>
+              ))}
+              <DataTable.Pagination
+                page={page}
+                numberOfPages={totalPages}
+                onPageChange={setPage}
+                label={`Página ${page + 1} de ${totalPages}`}
+                showFastPaginationControls
+                numberOfItemsPerPage={itemsPerPage}
+                selectPageDropdownLabel={'Filas por página'}
+              />
+            </DataTable>
+          </ScrollView>
+        </View>
+        <View style={{ height: '12%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 }}>
+          <Text variant="bodyMedium" style={{ marginBottom: 8 }}>
+            {items.length} productos añadidos
+          </Text>
+        </View>
         <FAB
           icon="plus"
-          label="NUEVO"
+          label=""
+          color="white"
           onPress={handleAdd}
-          style={{ position: 'absolute', bottom: '5%', left: '62%' }}
+          style={{ position: 'absolute', bottom: '2%', right: '10%', backgroundColor: 'black' }}
         />
       </View>
     </PaperProvider>
@@ -161,10 +223,4 @@ export default function ProductsScreen() {
 
 const styles = StyleSheet.create({
   modal: { backgroundColor: 'white', padding: 20 },
-  paginationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 16,
-  },
 });
