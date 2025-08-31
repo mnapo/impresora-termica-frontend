@@ -14,7 +14,7 @@ export default function InvoicesScreen() {
   const [open, setOpen] = useState(false);
 
   const [page, setPage] = useState(0);
-  const itemsPerPage = 10;
+  const itemsPerPage = 100;
 
   useEffect(() => {
     dispatch(invoicesActions.fetchAction({}));
