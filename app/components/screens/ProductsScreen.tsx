@@ -24,7 +24,7 @@ export default function ProductsScreen() {
 
   const [page, setPage] = useState(0);
   const itemsPerPage = 100;
-
+  const [sortDirection, setSortDirection] = useState<'ascending' | 'descending'>('ascending');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -39,8 +39,16 @@ export default function ProductsScreen() {
     item.code.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-  const paginatedItems = filteredItems.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+  const sortedItems = [...filteredItems].sort((a, b) => {
+    if (sortDirection === 'ascending') {
+      return a.code.localeCompare(b.code);
+    } else {
+      return b.code.localeCompare(a.code);
+    }
+  });
+
+  const totalPages = Math.ceil(sortedItems.length / itemsPerPage);
+  const paginatedItems = sortedItems.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
   useEffect(() => {
     dispatch(productsActions.fetchAction({ paginate: false }));
@@ -149,7 +157,7 @@ export default function ProductsScreen() {
           <ScrollView>
             <DataTable>
               <DataTable.Header style={{ borderWidth: 0, backgroundColor: 'white' }}>
-                <DataTable.Title style={{ flex: 0.6, minWidth: 0, justifyContent: 'flex-start' }}>Cod.</DataTable.Title>
+                <DataTable.Title sortDirection={sortDirection} onPress={() => setSortDirection(sortDirection === 'ascending' ? 'descending' : 'ascending')} style={{ flex: 0.6, minWidth: 0, justifyContent: 'flex-start' }}>Cod.</DataTable.Title>
                 <DataTable.Title style={{ flex: 1, minWidth: 0, justifyContent: 'flex-start' }}>Descripción</DataTable.Title>
                 <DataTable.Title style={{ flex: 1, minWidth: 0, justifyContent: 'center', alignItems: 'center' }}>Precio</DataTable.Title>
                 <DataTable.Title style={{ flex: 1, minWidth: 0, justifyContent: 'flex-end', alignItems: 'center' }}>Acciones</DataTable.Title>
@@ -205,7 +213,7 @@ export default function ProductsScreen() {
           </ScrollView>
         </View>
         <View style={{ height: '25%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 }}>
-          <Text variant="bodyMedium" style={{ marginBottom: 8 }}>
+          <Text variant="bodyMedium" style={{ marginBottom: 120 }}>
             {items.length} productos añadidos
           </Text>
         </View>
