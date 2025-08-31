@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocalSearchParams, Stack, useRouter } from "expo-router";
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, FlatList } from 'react-native';
 import {
   PaperProvider,
   Portal,
@@ -165,13 +165,15 @@ export default function NewInvoiceScreen() {
   return (<PaperProvider>{selectedType === 'arca'?(<Stack.Screen options={{ title: 'Nueva Factura' }}/>):(<Stack.Screen options={{ title: 'Nuevo Comprobante' }}/>)}
     <Portal>
       <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={maximized?styles.maximizedModal:styles.modal}>
-        <Button onPress={()=>setMaximized(!maximized)}>{maximized?'▼ achicar':'▲ agrandar'}</Button>
+        <Button onPress={()=>setMaximized(!maximized)}>{maximized?'▼ reducir':'▲ expandir'}</Button>
         <View style={{ height: '60%' }}>
           {selectedItem ? (
-            <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'center' }}>
-              <Text>Código: {selectedItem.code}</Text>
-              <Text style={{ fontWeight: 'bold' }}>Descripción: {selectedItem.name}</Text>
-              <Text>Precio: ${selectedItem.price}</Text>
+            <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'flex-start' }}>
+              <Button icon="arrow-left" onPress={() => setSelectedItem(null)} textColor='lightseagreen' >Regresar</Button>
+              <Text style={ styles.productTitle }>{selectedItem.name}</Text>
+              <Divider />
+              <Text style={ styles.productInfo } >Código: {selectedItem.code}</Text>
+              <Text style={ styles.productInfo }>Precio: ${selectedItem.price}</Text>
               {(() => {
                 const existing = items.find(item => item.code === selectedItem.code);
                 if (existing) {
@@ -184,16 +186,17 @@ export default function NewInvoiceScreen() {
                 return null;
               })()}
               <Divider />
-              <TextInput
-                value={quantity}
-                onChangeText={updateQuantity}
-                label="Cantidad"
-                mode="outlined"
-                keyboardType="numeric"
-                style={{ width: '30%' }}
-              />
-              <Chip icon="information" style={{ backgroundColor: 'black' }} textStyle={{ color: 'white' }} >Total: ${subtotal || 0}</Chip>
-              <Button icon="magnify" onPress={() => setSelectedItem(null)} textColor='lightseagreen' >BUSCAR OTRO PRODUCTO</Button>
+              <View>
+                  <TextInput
+                    value={quantity}
+                    onChangeText={updateQuantity}
+                    label="Cantidad"
+                    mode="outlined"
+                    keyboardType="numeric"
+                    style={{ width: '30%' }}
+                  />
+              </View>
+              <Text style={ styles.productInfo } >Subtotal: ${subtotal || 0}</Text>
             </View>
           ) : (
             <View style={{ height: '100%' }}>
@@ -242,7 +245,7 @@ export default function NewInvoiceScreen() {
             <Text>RAZÓN SOCIAL: {selectedClient.companyName}</Text>
             <Text>DIRECCIÓN: {selectedClient.address}</Text>
             <Text>CONDICIÓN IVA: {condIvaOptions.find(condIvaType => condIvaType.value === String(selectedClient.condIvaTypeId))?.label}</Text>
-            <Button style={{left: 0}} icon="magnify" onPress={() => setSelectedClient(null)} textColor='lightseagreen' >BUSCAR OTRO CLIENTE</Button>
+            <Button style={{left: 0}} icon="arrow-left" onPress={() => setSelectedClient(null)} textColor='lightseagreen' >Regresar</Button>
           </View>
         ) : (
           <View>
@@ -293,7 +296,7 @@ export default function NewInvoiceScreen() {
             <Chip disabled={true} elevated={false} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '7%', left: '2%'}}>IVA 21%: ${((21*total)/100).toFixed(2) || 0}</Chip>
             <Chip icon="information" elevated={true} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', backgroundColor: 'black', bottom: '2%', left: '2%' }}>Total: ${(total+((21*total)/100)).toFixed(2) || 0}</Chip>
           </>)
-            :(<Chip icon="information" elevated={true} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', backgroundColor: 'black', bottom: '2%', left: '2%' }}>Total: ${(total+((21*total)/100)).toFixed(2) || 0}</Chip>)
+            :(<Chip icon="information" elevated={true} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', backgroundColor: 'black', bottom: '2%', left: '2%' }}>Total: ${total.toFixed(2) || 0}</Chip>)
           }
           </>
         ):(<Chip icon="information" textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Ningún item añadido</Chip>)
@@ -328,6 +331,8 @@ const styles = StyleSheet.create({
   inputSmall: { width: 80, marginHorizontal: 5 },
   quantityRow: { flexDirection: 'row', alignItems: 'center' },
   addButton: { marginTop: 5 },
-  maximizedModal: {backgroundColor: 'white', padding: 5, height: '100%', justifyContent: 'flex-start'},
+  maximizedModal: {backgroundColor: 'white', padding: 5, height: '100%', justifyContent: 'flex-start' },
   modal: {backgroundColor: 'white', padding: 5, maxHeight: '70%'},
+  productTitle: { fontSize: 24, fontWeight: 'bold', marginVertical: 2, textAlign: 'center' },
+  productInfo: { fontSize: 14, marginVertical: 2, textAlign: 'center' }
 });

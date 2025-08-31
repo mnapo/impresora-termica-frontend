@@ -29,7 +29,6 @@ export default function ClientsScreen() {
     { label: 'No inscripto en ARCA', value: '4' },
   ];
 
-  // 👇 PAGINACIÓN
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
