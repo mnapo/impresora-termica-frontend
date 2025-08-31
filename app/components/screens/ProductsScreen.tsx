@@ -23,7 +23,7 @@ export default function ProductsScreen() {
   const { items, loading } = useSelector((state: any) => state.products);
 
   const [page, setPage] = useState(0);
-  const itemsPerPage = 100;
+  const itemsPerPage = 1000;
   const [sortDirection, setSortDirection] = useState<'ascending' | 'descending'>('ascending');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
@@ -79,12 +79,14 @@ export default function ProductsScreen() {
   };
 
   const handleSave = () => {
+    const priceTwo = price2 || '0'
+    const priceThree = price3 || '0'
     const payload = {
       code,
       name,
       price1: parseFloat(price1),
-      price2: parseFloat(price2),
-      price3: parseFloat(price3),
+      price2: parseFloat(priceTwo),
+      price3: parseFloat(priceThree),
     };
     if (selectedProduct) {
       dispatch(productsActions.updateAction({ id: selectedProduct.id, ...payload }));
@@ -200,15 +202,6 @@ export default function ProductsScreen() {
                   )}
                 </React.Fragment>
               ))}
-              <DataTable.Pagination
-                page={page}
-                numberOfPages={totalPages}
-                onPageChange={setPage}
-                label={`Página ${page + 1} de ${totalPages}`}
-                showFastPaginationControls
-                numberOfItemsPerPage={itemsPerPage}
-                selectPageDropdownLabel={'Filas por página'}
-              />
             </DataTable>
           </ScrollView>
         </View>
