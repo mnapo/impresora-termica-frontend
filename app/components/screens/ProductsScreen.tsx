@@ -204,7 +204,7 @@ export default function ProductsScreen() {
             </DataTable>
           </ScrollView>
         </View>
-        <View style={{ height: '12%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 }}>
+        <View style={{ height: '25%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 }}>
           <Text variant="bodyMedium" style={{ marginBottom: 8 }}>
             {items.length} productos añadidos
           </Text>
