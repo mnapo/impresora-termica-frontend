@@ -252,7 +252,7 @@ export default function NewInvoiceScreen() {
             <Button style={{left: 0}} icon="arrow-left" onPress={() => setSelectedClient(null)} textColor='#429E9D' >Cambiar cliente</Button>
           </View>
         ) : (
-          <View>
+          <View style={{ height: '100%' }} >
             <ClientSelector onSelect={(client) => setSelectedClient(client)} />
           </View>
         )}

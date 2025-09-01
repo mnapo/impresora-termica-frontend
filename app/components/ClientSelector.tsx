@@ -60,7 +60,7 @@ export default function ClientSelector({ onSelect }: ClientSelectorProps) {
   }, [searchQuery, clients]);
 
   return (
-    <View>
+    <View style={{ height: '100%' }}>
       <Searchbar
         placeholder="Buscar cliente..."
         value={searchQuery}

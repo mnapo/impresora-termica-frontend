@@ -73,14 +73,14 @@ export default function InvoicesScreen() {
             {
               value: 'comprobante',
               label: 'Comprobantes',
-              style: { backgroundColor: selectedType === 'comprobante' ? '#429E9D' : 'black' },
-              labelStyle: { color: selectedType === 'arca' ? '#429E9D' : 'black' },
+              style: { backgroundColor: selectedType === 'comprobante' ? '#429E9D' : 'white' },
+              labelStyle: { color: selectedType === 'arca' ? 'black' : 'white' },
             },
             {
               value: 'arca',
               label: 'Facturas ARCA',
-              style: { backgroundColor: selectedType === 'comprobante' ? 'black' : '#429E9D' },
-              labelStyle: { color: selectedType === 'arca' ? 'black' : '#429E9D' },
+              style: { backgroundColor: selectedType === 'comprobante' ? 'white' : '#429E9D' },
+              labelStyle: { color: selectedType === 'arca' ? 'white' : 'black' },
             },
           ]}
           style={styles.segmented}
