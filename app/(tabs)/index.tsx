@@ -31,10 +31,11 @@ export default function TabsHome() {
     </Modal>
   </Portal>
   <View style={styles.container}>
-    <Text style={styles.title2}><Icon source="account-outline" size={32}/>{user.lastName.toUpperCase()} {user.firstName.toUpperCase()}👋</Text>
+    <Text style={styles.title2}><Icon source="account-outline" size={32}/>{user.lastName.toUpperCase()} {user.firstName.toUpperCase()}</Text>
     <Divider style={styles.divider} />
     <View style={{ alignItems: 'center', paddingHorizontal: '10%' }}>
       <InvoiceOption title="Nuevo Comprobante" onOpenModal={() => setVisible(true)} />
+      <Divider />
       <Option title="Comprobantes" icon="book-multiple" path="/components/screens/InvoicesScreen" />
       <Option title="Métricas" icon="chart-areaspline" path="" />
     </View>
