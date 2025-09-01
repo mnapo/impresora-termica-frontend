@@ -170,7 +170,7 @@ export default function NewInvoiceScreen() {
     <Portal>
       <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={maximized?styles.maximizedModal:styles.modal}>
         <Button onPress={()=>setMaximized(!maximized)}>{maximized?'▼ reducir':'▲ expandir'}</Button>
-        <View style={{ height: '60%' }}>
+        <View style={{ height: '75%' }}>
           {selectedItem ? (
             <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'flex-start' }}>
               <Button icon="arrow-left" onPress={() => setSelectedItem(null)} textColor='lightseagreen' >Regresar</Button>
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   quantityRow: { flexDirection: 'row', alignItems: 'center' },
   addButton: { marginTop: 5 },
   maximizedModal: {backgroundColor: 'white', padding: 5, height: '100%', justifyContent: 'flex-start' },
-  modal: {backgroundColor: 'white', padding: 5, maxHeight: '70%'},
+  modal: {backgroundColor: 'white', padding: 5, maxHeight: '80%'},
   productTitle: { fontSize: 24, fontWeight: 'bold', marginVertical: 2, textAlign: 'center' },
   productInfo: { fontSize: 14, marginVertical: 2, textAlign: 'center' }
 });

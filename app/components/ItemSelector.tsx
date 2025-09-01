@@ -34,7 +34,7 @@ export default function ItemSelector({ pricesList, invoiceType, onSelect }: Item
   const [results, setResults] = useState<Item[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 7;
+  const pageSize = 1000;
   const totalPages = Math.ceil(results.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
@@ -70,17 +70,6 @@ export default function ItemSelector({ pricesList, invoiceType, onSelect }: Item
 
   return (
     <View style={{ height: '100%' }}>
-      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginVertical: 8 }}>
-        <Button disabled={currentPage === 1} onPress={() => setCurrentPage((prev) => prev - 1)}>
-          Anterior
-        </Button>
-        <Text style={{ marginHorizontal: 8 }}>
-          Página {currentPage} de {totalPages || 1}
-        </Text>
-        <Button disabled={currentPage === totalPages || totalPages === 0} onPress={() => setCurrentPage((prev) => prev + 1)}>
-          Siguiente
-        </Button>
-      </View>
       <TextInput
         label="Ingrese Código o Nombre del producto"
         value={searchQuery}
