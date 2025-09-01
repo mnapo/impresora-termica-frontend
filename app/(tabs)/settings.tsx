@@ -18,12 +18,6 @@ export default function SettingsScreen() {
         <Option title="Clientes" icon="account" path="/components/screens/ClientsScreen" />
         <Option title="Productos" icon="cart" path="/components/screens/ProductsScreen" />
       </View>
-      <Divider style={{ marginVertical: 10 }} />
-      <TextInput label="CUIT" keyboardType="numeric" style={{ marginBottom: 1 }} />
-      <TextInput label="Razón Social" style={{ marginBottom: 1 }} />
-      <TextInput label="Dirección" keyboardType="numeric" style={{ marginBottom: 1 }} />
-      <TextInput label="CBU" keyboardType="numeric" style={{ marginBottom: 1 }} />
-      <TextInput label="Alias" style={{ marginBottom: 1 }} />
       <FAB icon="power" color="red" label="Cerrar Sesión" style={{position: 'absolute', bottom: '1%', left: '62%'}} onPress={signOut} />
     </View>
   );
