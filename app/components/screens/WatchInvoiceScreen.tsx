@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { useLocalSearchParams, useRouter, Stack } from "expo-router";
-import { DataTable, Text, Divider } from "react-native-paper";
-import client from "../../feathersClient";
+import React, { useEffect, useState } from 'react';
+import { ScrollView, View, StyleSheet } from 'react-native';
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
+import { DataTable, Button, Text, Divider } from 'react-native-paper';
+import client from '../../feathersClient';
 
 export default function WatchInvoiceScreen() {
   const { invoiceId } = useLocalSearchParams<{ invoiceId: string }>();
@@ -14,11 +14,11 @@ export default function WatchInvoiceScreen() {
   useEffect(() => {
     if (!invoiceId) return;
 
-    client.service("invoices").get(invoiceId).then((inv: any) => {
+    client.service('invoices').get(invoiceId).then((inv: any) => {
       setInvoice(inv);
 
       client
-        .service("invoices-items")
+        .service('invoices-items')
         .find({
           query: {
             invoiceId: invoiceId,
@@ -36,47 +36,61 @@ export default function WatchInvoiceScreen() {
 
   const total = items.reduce((acc, it) => acc + (it.price || 0) * (it.quantity || 1), 0);
 
-  return (<>
-    <Stack.Screen options={{ title: "Regresar" }}/>
-    <View style={ styles.container }>
-      {invoice.type === 'arca'?
-        (<Text style={ styles.invoiceType }>Factura "A"</Text>)
-        :(<Text style={ styles.invoiceType }>Comprobante</Text>)}
-      <Text style={ styles.invoiceTitle }>
-        Nro.: #{String(invoice.id).padStart(8, '0')}
-      </Text>
-      <Text style={ styles.invoiceInfo }>Fecha: {new Date(invoice.createdAt).toLocaleDateString()}</Text>
-      <Text style={ styles.invoiceInfo }>CUIT: {invoice.cuit}</Text>
-      <Text style={ styles.invoiceInfo }>Razón Social: {invoice.companyName}</Text>
-      <Divider/>
-      <DataTable style={{ width: '95%', borderBottomWidth: 0 }}>
-        <DataTable.Header style={{ borderBottomWidth: 0 }}>
-          <DataTable.Title style={{ flex: 2 }} textStyle={ styles.itemRow }>Producto</DataTable.Title>
-          <DataTable.Title style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>Cant.</DataTable.Title>
-          <DataTable.Title style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>Precio</DataTable.Title>
-          <DataTable.Title style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>Subtotal</DataTable.Title>
-        </DataTable.Header>
+  const handlePrint = async () => {
+    const token = localStorage.getItem('feathers-jwt');
+    if (!token) {
+      alert('No estás autenticado');
+      return;
+    }
+    const url = `${process.env.EXPO_PUBLIC_URL}/print?invoiceId=${invoiceId}&access_token=${token}`;
+    window.open(url, '_blank');
+    router.push("/(tabs)");
+  }
 
-        {items.map((item, i) => (
-          <DataTable.Row key={i} style={{ borderBottomWidth: 0 }}>
-            <DataTable.Cell style={{ flex: 2 }} textStyle={ styles.itemRow }>{item.name}</DataTable.Cell>
-            <DataTable.Cell style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>{item.quantity}</DataTable.Cell>
-            <DataTable.Cell style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>${item.price}</DataTable.Cell>
-            <DataTable.Cell style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>
-              ${item.price * item.quantity}
-            </DataTable.Cell>
-          </DataTable.Row>
-        ))}
-      </DataTable>
-      <Divider/>
-      {invoice.type === 'arca'?
-        (<>
-          <Text style={{ fontSize: 24, fontWeight: 400 }}>Total S/ IVA: ${total}</Text>
-          <Text style={{ fontSize: 24, fontWeight: 400 }}>IVA 21%: ${(total * 0.21).toFixed(2)}</Text>
-          <Text style={{ fontSize: 26, fontWeight: 800 }}>Total: ${(total * 1.21).toFixed(2)}</Text>
-        </>)
-        :(<Text style={{ fontSize: 26, fontWeight: 800 }}>Total: ${total}</Text>)
-      }
+  return (<>
+    <Stack.Screen options={{ title: 'Regresar' }}/>
+    <View style={ styles.container }>
+      <ScrollView>
+        <Button mode='contained' icon='printer' onPress={handlePrint} style={{ marginBottom: 10, backgroundColor: '#429E9D' }}>IMPRIMIR</Button>
+        {invoice.type === 'arca'?
+          (<Text style={ styles.invoiceType }>Factura "A"</Text>)
+          :(<Text style={ styles.invoiceType }>Comprobante</Text>)}
+        <Text style={ styles.invoiceTitle }>
+          Nro.: #{String(invoice.id).padStart(8, '0')}
+        </Text>
+        <Text style={ styles.invoiceInfo }>Fecha: {new Date(invoice.createdAt).toLocaleDateString()}</Text>
+        <Text style={ styles.invoiceInfo }>CUIT: {invoice.cuit}</Text>
+        <Text style={ styles.invoiceInfo }>Razón Social: {invoice.companyName}</Text>
+        <Divider/>
+        <DataTable style={{ width: '95%', borderBottomWidth: 0 }}>
+          <DataTable.Header style={{ borderBottomWidth: 0 }}>
+            <DataTable.Title style={{ flex: 2 }} textStyle={ styles.itemRow }>Producto</DataTable.Title>
+            <DataTable.Title style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>Cant.</DataTable.Title>
+            <DataTable.Title style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>Precio</DataTable.Title>
+            <DataTable.Title style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>Subtotal</DataTable.Title>
+          </DataTable.Header>
+
+          {items.map((item, i) => (
+            <DataTable.Row key={i} style={{ borderBottomWidth: 0 }}>
+              <DataTable.Cell style={{ flex: 2 }} textStyle={ styles.itemRow }>{item.name}</DataTable.Cell>
+              <DataTable.Cell style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>{item.quantity}</DataTable.Cell>
+              <DataTable.Cell style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>${item.price}</DataTable.Cell>
+              <DataTable.Cell style={{ flex: 1 }} textStyle={ styles.itemRow } numeric>
+                ${item.price * item.quantity}
+              </DataTable.Cell>
+            </DataTable.Row>
+          ))}
+        </DataTable>
+        <Divider/>
+        {invoice.type === 'arca'?
+          (<>
+            <Text style={{ fontSize: 24, fontWeight: 400 }}>Total S/ IVA: ${total}</Text>
+            <Text style={{ fontSize: 24, fontWeight: 400 }}>IVA 21%: ${(total * 0.21).toFixed(2)}</Text>
+            <Text style={{ fontSize: 26, fontWeight: 800 }}>Total: ${(total * 1.21).toFixed(2)}</Text>
+          </>)
+          :(<Text style={{ fontSize: 26, fontWeight: 800 }}>Total: ${total}</Text>)
+        }
+      </ScrollView>
     </View>
   </>);
 }
