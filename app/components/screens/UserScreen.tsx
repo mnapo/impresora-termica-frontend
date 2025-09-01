@@ -34,5 +34,9 @@ export default function UserScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 10, width: '100%' },
+  container: {
+    padding: 10,
+    width: '100%',
+    backgroundColor: 'white'
+  },
 });

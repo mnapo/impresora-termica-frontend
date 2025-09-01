@@ -169,11 +169,11 @@ export default function NewInvoiceScreen() {
   return (<PaperProvider>{selectedType === 'arca'?(<Stack.Screen options={{ title: 'Nueva Factura' }}/>):(<Stack.Screen options={{ title: 'Nuevo Comprobante' }}/>)}
     <Portal>
       <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={maximized?styles.maximizedModal:styles.modal}>
-        <Button onPress={()=>setMaximized(!maximized)}>{maximized?'▼ ocultar listas de precios':'▲ ver listas de precios'}</Button>
+        <Button textColor='#429E9D' onPress={()=>setMaximized(!maximized)}>{maximized?'▼ ocultar listas de precios':'▲ ver listas de precios'}</Button>
         <View style={{ height: '75%' }}>
           {selectedItem ? (
             <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'flex-start' }}>
-              <Button icon="arrow-left" onPress={() => setSelectedItem(null)} textColor='lightseagreen' >Regresar</Button>
+              <Button icon="arrow-left" onPress={() => setSelectedItem(null)} textColor='#429E9D' >Regresar</Button>
               <Text style={ styles.productTitle }>{selectedItem.name}</Text>
               <Divider />
               <Text style={ styles.productInfo } >Código: {selectedItem.code}</Text>
@@ -212,17 +212,17 @@ export default function NewInvoiceScreen() {
                   {
                     value: 'list1',
                     label: 'Lista #1',
-                    style: { backgroundColor: pricesList === 'list1' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list1' ? 'white' : 'black' }
+                    style: { backgroundColor: pricesList === 'list1' ? '#429E9D' : 'white' }, labelStyle: { color: pricesList === 'list1' ? 'white' : 'black' }
                   },
                   {
                     value: 'list2',
                     label: 'Lista #2',
-                    style: { backgroundColor: pricesList === 'list2' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list2' ? 'white' : 'black' }
+                    style: { backgroundColor: pricesList === 'list2' ? '#429E9D' : 'white' }, labelStyle: { color: pricesList === 'list2' ? 'white' : 'black' }
                   },
                   { 
                     value: 'list3',
                     label: 'Lista #3',
-                    style: { backgroundColor: pricesList === 'list3' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list3' ? 'white' : 'black' }
+                    style: { backgroundColor: pricesList === 'list3' ? '#429E9D' : 'white' }, labelStyle: { color: pricesList === 'list3' ? 'white' : 'black' }
                   },
                 ]}
               />)}
@@ -231,17 +231,17 @@ export default function NewInvoiceScreen() {
           )}
         </View>
         <View style={ maximized?{marginTop: '10%'}:{} }>
-          <Button icon="plus" mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem} buttonColor='black' labelStyle={{ color: 'white' }} >
+          <Button icon="plus" mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem} buttonColor='#429E9D' labelStyle={{ color: 'white' }} >
             Añadir a Factura
           </Button>
           <Divider style={{ marginVertical: 5 }}/>
-          <Button icon="window-close" mode="outlined" onPress={hideModal} style={styles.addButton}>
+          <Button icon="window-close" mode="outlined" textColor="black" onPress={hideModal} style={styles.addButton}>
             Cerrar
           </Button>
         </View>
       </Modal>
     </Portal>
-    <View style={{ height:'100%', padding: 16 }}>
+    <View style={ styles.container }>
       <Surface elevation={2} style={{ paddingHorizontal: 2, maxHeight: '50%', overflow: 'hidden', backgroundColor: 'white' }}>
         {selectedClient ? (
           <View style={{ height: '30%', paddingHorizontal: 16 }}>
@@ -249,7 +249,7 @@ export default function NewInvoiceScreen() {
             <Text>RAZÓN SOCIAL: {selectedClient.companyName}</Text>
             <Text>DIRECCIÓN: {selectedClient.address}</Text>
             <Text>CONDICIÓN IVA: {condIvaOptions.find(condIvaType => condIvaType.value === String(selectedClient.condIvaTypeId))?.label}</Text>
-            <Button style={{left: 0}} icon="arrow-left" onPress={() => setSelectedClient(null)} textColor='lightseagreen' >Regresar</Button>
+            <Button style={{left: 0}} icon="arrow-left" onPress={() => setSelectedClient(null)} textColor='#429E9D' >Cambiar cliente</Button>
           </View>
         ) : (
           <View>
@@ -298,18 +298,18 @@ export default function NewInvoiceScreen() {
           (<>
             <Chip disabled={true} elevated={false} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '12%', left: '2%'}}>Total S/ IVA: ${total || 0}</Chip>
             <Chip disabled={true} elevated={false} textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '7%', left: '2%'}}>IVA 21%: ${((21*total)/100).toFixed(2) || 0}</Chip>
-            <Chip icon="information" elevated={true} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', backgroundColor: 'black', bottom: '2%', left: '2%' }}>Total: ${(total+((21*total)/100)).toFixed(2) || 0}</Chip>
+            <Chip icon={() => <Icon source="information" size={20} color="white" />} elevated={true} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', backgroundColor: '#429E9D', bottom: '2%', left: '2%' }}>Total: ${(total+((21*total)/100)).toFixed(2) || 0}</Chip>
           </>)
-            :(<Chip icon="information" elevated={true} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', backgroundColor: 'black', bottom: '2%', left: '2%' }}>Total: ${total.toFixed(2) || 0}</Chip>)
+            :(<Chip icon={() => <Icon source="information" size={20} color="white" />} elevated={true} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', backgroundColor: '#429E9D', bottom: '2%', left: '2%' }}>Total: ${total.toFixed(2) || 0}</Chip>)
           }
           </>
-        ):(<Chip icon="information" textStyle={{fontSize: 18}} style={{position: 'absolute', bottom: '2%', left: '2%'}}>Ningún item añadido</Chip>)
+        ):(<Chip icon={() => <Icon source="information" size={20} color="white" />} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', bottom: '2%', left: '2%', backgroundColor: '#429E9D' }}>Ningún item añadido</Chip>)
       }
       <FAB
         icon="plus"
-        label="ITEM"
+        label="Productos"
         color="white"
-        style={{ position: 'absolute', backgroundColor: `${!selectedClient?'grey':'black'}`, bottom: '10%', right: '6%' }}
+        style={{ position: 'absolute', backgroundColor: `${!selectedClient?'grey':'#429E9D'}`, bottom: '10%', right: '6%' }}
         onPress={showModal}
         disabled={!selectedClient}
       />
@@ -326,8 +326,9 @@ export default function NewInvoiceScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1,
-    padding: 10,
+  container: {
+    height: '100%',
+    padding: 16,
     backgroundColor: 'white',
   },
   label: { fontWeight: 'bold', marginBottom: 5, left: '50%' },

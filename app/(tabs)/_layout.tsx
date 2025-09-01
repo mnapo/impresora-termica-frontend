@@ -13,7 +13,7 @@ export default function TabLayout() {
             <Icon
               source={focused ? 'home' : 'home-outline'}
               size={focused ? 55 : 42}
-              color={focused ? 'lightseagreen' : 'black'}
+              color={focused ? '#429E9D' : 'black'}
             />
           )
         }}
@@ -27,7 +27,7 @@ export default function TabLayout() {
             <Icon
               source={focused ? 'cog' : 'cog-outline'}
               size={focused ? 55 : 42}
-              color={focused ? 'lightseagreen' : 'black'}
+              color={focused ? '#429E9D' : 'black'}
             />
           )
         }}

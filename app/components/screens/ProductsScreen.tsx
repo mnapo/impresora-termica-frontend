@@ -135,17 +135,17 @@ export default function ProductsScreen() {
             {
               value: 'list1',
               label: 'Lista #1',
-              style: { backgroundColor: pricesList === 'list1' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list1' ? 'white' : 'black' }
+              style: { backgroundColor: pricesList === 'list1' ? '#429E9D' : 'white' }, labelStyle: { color: pricesList === 'list1' ? 'white' : 'black' }
             },
             {
               value: 'list2',
               label: 'Lista #2',
-              style: { backgroundColor: pricesList === 'list2' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list2' ? 'white' : 'black' }
+              style: { backgroundColor: pricesList === 'list2' ? '#429E9D' : 'white' }, labelStyle: { color: pricesList === 'list2' ? 'white' : 'black' }
             },
             { 
               value: 'list3',
               label: 'Lista #3',
-              style: { backgroundColor: pricesList === 'list3' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list3' ? 'white' : 'black' }
+              style: { backgroundColor: pricesList === 'list3' ? '#429E9D' : 'white' }, labelStyle: { color: pricesList === 'list3' ? 'white' : 'black' }
             },
           ]}
         />
@@ -153,7 +153,7 @@ export default function ProductsScreen() {
           placeholder="Buscar producto..."
           value={searchQuery}
           onChangeText={setSearchQuery}
-          style={{ marginBottom: 8, marginTop: 8 }}
+          style={{ marginBottom: 8, marginTop: 8, backgroundColor: 'white', borderColor: 'lightgray', borderWidth: 1, marginHorizontal: 16 }}
         />
         <View style={{ height: '75%'}} >
           <ScrollView>
@@ -183,7 +183,7 @@ export default function ProductsScreen() {
                         <IconButton
                           icon="pencil"
                           size={24}
-                          style={{ backgroundColor: 'lightseagreen', marginRight: 8 }}
+                          style={{ backgroundColor: '#429E9D', marginRight: 8 }}
                           iconColor="white"
                           onPress={() => handleEdit(item)}
                         />
@@ -215,7 +215,7 @@ export default function ProductsScreen() {
           label=""
           color="white"
           onPress={handleAdd}
-          style={{ position: 'absolute', bottom: '2%', right: '10%', backgroundColor: 'black' }}
+          style={{ position: 'absolute', bottom: '2%', right: '10%', backgroundColor: '#429E9D' }}
         />
       </View>
     </PaperProvider>

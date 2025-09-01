@@ -73,14 +73,14 @@ export default function InvoicesScreen() {
             {
               value: 'comprobante',
               label: 'Comprobantes',
-              style: { backgroundColor: selectedType === 'comprobante' ? 'black' : 'white' },
-              labelStyle: { color: selectedType === 'arca' ? 'black' : 'white' },
+              style: { backgroundColor: selectedType === 'comprobante' ? '#429E9D' : 'black' },
+              labelStyle: { color: selectedType === 'arca' ? '#429E9D' : 'black' },
             },
             {
               value: 'arca',
               label: 'Facturas ARCA',
-              style: { backgroundColor: selectedType === 'comprobante' ? 'white' : 'black' },
-              labelStyle: { color: selectedType === 'arca' ? 'white' : 'black' },
+              style: { backgroundColor: selectedType === 'comprobante' ? 'black' : '#429E9D' },
+              labelStyle: { color: selectedType === 'arca' ? 'black' : '#429E9D' },
             },
           ]}
           style={styles.segmented}
@@ -116,14 +116,14 @@ export default function InvoicesScreen() {
                       <IconButton
                         icon="eye"
                         size={28}
-                        style={{ backgroundColor: 'lightseagreen', marginRight: 8 }}
+                        style={{ backgroundColor: '#429E9D', marginRight: 8 }}
                         iconColor="white"
                         onPress={() => handleWatchInvoice(item.id)}
                       />
                       <IconButton
                         icon="printer"
                         size={28}
-                        style={{ backgroundColor: 'lightseagreen' }}
+                        style={{ backgroundColor: '#429E9D' }}
                         iconColor="white"
                         onPress={() => handlePrintInvoice(item.id)}
                       />

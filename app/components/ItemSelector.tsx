@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, TouchableOpacity } from "react-native";
-import { Text, TextInput, List, ActivityIndicator, Button } from "react-native-paper";
+import { Text, Searchbar, List, ActivityIndicator } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { productsActions } from '../store/products';
 
@@ -70,12 +70,11 @@ export default function ItemSelector({ pricesList, invoiceType, onSelect }: Item
 
   return (
     <View style={{ height: '100%' }}>
-      <TextInput
-        label="Ingrese Código o Nombre del producto"
+      <Searchbar
+        placeholder="Buscar producto..."
         value={searchQuery}
         onChangeText={setSearchQuery}
-        mode="outlined"
-        style={{ margin: 8 }}
+        style={{ margin: 8, backgroundColor: 'white', borderColor: 'lightgray', borderWidth: 1, marginHorizontal: 16 }}
       />
       <Text style={{ fontWeight: "bold", marginLeft: 8, marginTop: 4 }}>
         Seleccione un producto:

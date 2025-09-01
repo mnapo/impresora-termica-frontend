@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'expo-router'
 import { View } from 'react-native';
-import { Button, TextInput, Chip, Icon, Divider, FAB } from 'react-native-paper';
+import { Button, TextInput, Chip, Icon, Divider } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import Option from '../components/Option'
@@ -11,16 +11,14 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles().container}>
-      <Chip style={styles().connectionState} icon={() => (
-        <Icon source="circle" size={16} color="green" />
-      )}>conexión ARCA establecida</Chip>
       <View style={{ alignItems: 'center', paddingHorizontal: '10%' }}>
         <Option title="Clientes" icon="account" path="/components/screens/ClientsScreen" />
         <Option title="Productos" icon="cart" path="/components/screens/ProductsScreen" />
         <Divider style={{ width: '100%' }} /> 
         <Option title="Mis Datos" icon="email" path="/components/screens/UserScreen" />
       </View>
-      <FAB icon="power" color="red" label="Cerrar Sesión" style={{position: 'absolute', bottom: '1%', left: '62%'}} onPress={signOut} />
+      <Divider style={{ width: '100%', marginVertical: 10 }} />
+      <Button mode="contained" icon="power" style={{ backgroundColor: 'red' }} onPress={signOut} >Cerrar Sesión</Button>
     </View>
   );
 }

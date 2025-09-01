@@ -23,7 +23,7 @@ export default function Option({ title, icon, path }: OptionProps) {
       </View>
       <Card style={styles.card}>
         <Card.Content style={styles.content}>
-          <Icon source={icon} size={50} color='lightseagreen' />
+          <Icon source={icon} size={50} color='#429E9D' />
           <Text style={styles.title}>{title}</Text>
         </Card.Content>
       </Card>

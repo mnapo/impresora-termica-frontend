@@ -1,7 +1,7 @@
 // components/ClientSelector.tsx
 import React, { useState, useEffect } from "react";
 import { View, FlatList, TouchableOpacity } from "react-native";
-import { Text, TextInput, List, ActivityIndicator } from "react-native-paper";
+import { Text, Searchbar, List, ActivityIndicator } from "react-native-paper";
 import client from "../feathersClient";
 
 type Client = {
@@ -61,12 +61,11 @@ export default function ClientSelector({ onSelect }: ClientSelectorProps) {
 
   return (
     <View>
-      <TextInput
-        label="Ingrese CUIT, Razón Social o Dirección"
+      <Searchbar
+        placeholder="Buscar cliente..."
         value={searchQuery}
         onChangeText={setSearchQuery}
-        mode="outlined"
-        style={{ margin: 8 }}
+        style={{ margin: 8, backgroundColor: 'white', borderColor: 'lightgray', borderWidth: 1, marginHorizontal: 16 }}
       />
       <Text style={{ fontWeight: "bold", marginLeft: 8, marginTop: 4 }}>
         Seleccione un cliente:

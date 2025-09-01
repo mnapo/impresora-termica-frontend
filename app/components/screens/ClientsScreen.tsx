@@ -146,7 +146,7 @@ export default function ClientsScreen() {
           placeholder="Buscar cliente..."
           value={searchQuery}
           onChangeText={setSearchQuery}
-          style={{ marginBottom: 8, marginTop: 8 }}
+          style={{ marginBottom: 8, marginTop: 8, backgroundColor: 'white', borderColor: 'lightgray', borderWidth: 1, marginHorizontal: 16 }}
         />
         <View style={{ height: '85%' }}>
           <ScrollView>
@@ -178,7 +178,7 @@ export default function ClientsScreen() {
                         <IconButton
                           icon="pencil"
                           size={24}
-                          style={{ backgroundColor: 'lightseagreen', marginRight: 8 }}
+                          style={{ backgroundColor: '#429E9D', marginRight: 8 }}
                           iconColor="white"
                           onPress={() => handleEdit(item)}
                         />
@@ -210,7 +210,7 @@ export default function ClientsScreen() {
           label=""
           color="white"
           onPress={showModal}
-          style={{ position: 'absolute', bottom: '2%', right: '10%', backgroundColor: 'black' }}
+          style={{ position: 'absolute', bottom: '2%', right: '10%', backgroundColor: '#429E9D' }}
         />
       </View>
     </PaperProvider>

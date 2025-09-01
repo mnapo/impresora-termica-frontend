@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     margin: 8,
     paddingVertical: 20,
     elevation: 4,
-    backgroundColor: 'lightseagreen',
+    backgroundColor: '#429E9D',
   },
   content: {
     alignItems: "center",
