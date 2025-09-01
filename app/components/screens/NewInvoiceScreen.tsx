@@ -44,14 +44,13 @@ export default function NewInvoiceScreen() {
   const [visible, setVisible] = useState(false);
   const [maximized, setMaximized] = useState(true);
   const [pricesList, setPricesList] = useState('list1');
+  const [isEditingQuantity, setIsEditingQuantity] = useState(false);
+
+  const handleQuantityFocus = () => setIsEditingQuantity(true);
+  const handleQuantityBlur = () => setIsEditingQuantity(false);
+  
   const from = page * itemsPerPage;
   const to = Math.min((page + 1) * itemsPerPage, items.length);
-  const condIvaOptions = [
-    { label: 'Responsable Inscripto', value: '1' },
-    { label: 'Monotributo', value: '2' },
-    { label: 'IVA Exento', value: '3' },
-    { label: 'No inscripto en ARCA', value: '4' },
-  ];
 
   const resetSelectedItem = () => {
     setSubtotal(0);
@@ -277,7 +276,9 @@ export default function NewInvoiceScreen() {
                             const subtotalValue = (parseFloat(text) * item.price) || 0;
                             setSubtotal(subtotalValue);
                           }}
+                          onFocus={handleQuantityFocus}
                           onBlur={() => {
+                            handleQuantityBlur();
                             if (parseFloat(quantity) > 0) {
                               setItems(prev =>
                                 prev.map(it =>
@@ -290,13 +291,14 @@ export default function NewInvoiceScreen() {
                             setSelectedItem(null);
                             setQuantity('');
                           }}
-                          style={{ width: 60, height: 35 }}
+                          style={{ width: 60, height: 35, marginLeft: -16 }}
+                          outlineStyle={{ borderColor: '#429E9D' }}
                         />
                       ) : (
                         `${item.quantity}`
                       )}
                     </DataTable.Cell>
-                    <DataTable.Cell style={{ flex: 0.35 }}>{item.name}</DataTable.Cell>
+                    <DataTable.Cell style={ isEditing?{marginLeft: 9, flex: 0.35}:{flex: 0.35} } >{item.name}</DataTable.Cell>
                     <DataTable.Cell style={{ flex: 0.2 }}>${item.price}</DataTable.Cell>
                     <DataTable.Cell style={{ flex: 0.25 }} numeric>
                       ${(item.price * item.quantity).toFixed(2)}
@@ -315,7 +317,7 @@ export default function NewInvoiceScreen() {
           </DataTable>
         </ScrollView>
       </View>
-      {
+      { isEditingQuantity?null:
         items.length>0?
         (
           <>
@@ -330,22 +332,26 @@ export default function NewInvoiceScreen() {
           </>
         ):(<Chip icon={() => <Icon source="information" size={20} color="white" />} textStyle={{ fontSize: 18, color: 'white' }} style={{ position: 'absolute', bottom: '2%', left: '2%', backgroundColor: '#429E9D' }}>Ningún item añadido</Chip>)
       }
-      <FAB
-        icon="plus"
-        label="Productos"
-        color="white"
-        style={{ position: 'absolute', backgroundColor: `${!selectedClient?'grey':'#429E9D'}`, bottom: '10%', right: '6%' }}
-        onPress={showModal}
-        disabled={!selectedClient}
-      />
-      <FAB
-        icon="content-save"
-        label="Guardar"
-        color="white"
-        style={{position: 'absolute', backgroundColor: `${(!selectedClient || items.length === 0)?'grey':'green'}`, bottom: '2%', right: '6%'}}
-        onPress={saveInvoice}
-        disabled={!selectedClient || items.length === 0}
-      />
+      {!isEditingQuantity && (
+        <>
+          <FAB
+            icon="plus"
+            label="Productos"
+            color="white"
+            style={{ position: 'absolute', backgroundColor: `${!selectedClient?'grey':'#429E9D'}`, bottom: '10%', right: '6%' }}
+            onPress={showModal}
+            disabled={!selectedClient}
+          />
+          <FAB
+            icon="content-save"
+            label="Guardar"
+            color="white"
+            style={{position: 'absolute', backgroundColor: `${(!selectedClient || items.length === 0)?'grey':'green'}`, bottom: '2%', right: '6%'}}
+            onPress={saveInvoice}
+            disabled={!selectedClient || items.length === 0}
+          />
+        </>
+      )}
     </View>
   </PaperProvider>);
 }

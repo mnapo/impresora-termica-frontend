@@ -135,6 +135,7 @@ export default function ItemSelector({ pricesList, invoiceType, onSelectMany }: 
                         <Checkbox
                           status={isSelected ? "checked" : "unchecked"}
                           onPress={() => toggleSelect(item.id)}
+                          color='#429E9D'
                         />
                       )}
                     />
@@ -145,11 +146,11 @@ export default function ItemSelector({ pricesList, invoiceType, onSelectMany }: 
           />
           <Button
             mode="contained"
-            style={{ margin: 10 }}
+            style={{ margin: 10, backgroundColor: '#429E9D' }}
             onPress={confirmSelection}
             disabled={selectedIds.size === 0}
           >
-            AÑADIR {selectedIds.size} {selectedIds.size===1?'ITEM':'ITEMS'}
+            {selectedIds.size===0?'-':`AÑADIR ${selectedIds.size} ${selectedIds.size===1?'ITEM':'ITEMS'}`}
           </Button>
         </>
       )}
