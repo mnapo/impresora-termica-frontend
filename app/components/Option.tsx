@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     margin: 8,
     paddingVertical: 20,
     elevation: 4,
+    backgroundColor: 'white',
   },
   content: {
     alignItems: "center",
