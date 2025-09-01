@@ -138,7 +138,6 @@ export default function NewInvoiceScreen() {
         address: selectedClient.address,
         total: taxedOrSameTotal
       });
-
       for (const item of items) {
         await client.service('invoices-items').create({
           invoiceId: invoice.id,
@@ -151,7 +150,10 @@ export default function NewInvoiceScreen() {
       setQuantity('0')
       setSelectedClient(null);
       setItems([]);
-      router.push({pathname: '/components/screens/InvoicesScreen' });
+      router.push({
+        pathname: '/components/screens/WatchInvoiceScreen',
+        params: { invoiceId: invoice.id },
+      });
     } catch (error) {
       console.error('Error guardando factura:', error);
     }
