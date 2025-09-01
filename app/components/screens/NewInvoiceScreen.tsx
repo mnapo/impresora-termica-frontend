@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocalSearchParams, Stack, useRouter } from "expo-router";
-import { TouchableOpacity, View, Text, StyleSheet, FlatList } from 'react-native';
+import { TouchableOpacity, ScrollView, View, Text, StyleSheet } from 'react-native';
 import {
   PaperProvider,
   Portal,
@@ -242,89 +242,79 @@ export default function NewInvoiceScreen() {
           </View>
         )}
       </Surface>
+      <View style={{ height: '75%' }} >
+        <ScrollView>
+          <DataTable>
+            <DataTable.Header>
+              <DataTable.Title style={{ flex: 0.1 }} >Can</DataTable.Title>
+              <DataTable.Title style={{ flex: 0.35 }} >Des</DataTable.Title>
+              <DataTable.Title style={{ flex: 0.2 }} >Pr</DataTable.Title>
+              <DataTable.Title style={{ flex: 0.25 }} >Subtotal</DataTable.Title>
+              <DataTable.Title style={{ flex: 0.1 }} >-</DataTable.Title>
+            </DataTable.Header>
 
-<DataTable>
-  <DataTable.Header>
-    <DataTable.Title style={{ flex: 0.1 }} >Cód</DataTable.Title>
-    <DataTable.Title style={{ flex: 0.1 }} >Can</DataTable.Title>
-    <DataTable.Title style={{ flex: 0.25 }} >Des</DataTable.Title>
-    <DataTable.Title style={{ flex: 0.2 }} >Pr</DataTable.Title>
-    <DataTable.Title style={{ flex: 0.25 }} >Subtotal</DataTable.Title>
-    <DataTable.Title style={{ flex: 0.1 }} >-</DataTable.Title>
-  </DataTable.Header>
-
-  {items.slice(from, to).map((item, index) => {
-    const isEditing = selectedItem?.productId === item.productId;
-    return (
-      <TouchableOpacity
-        key={item.productId}
-        onPress={() => {
-          setSelectedItem(item);
-          setQuantity('');
-        }}
-      >
-        <DataTable.Row>
-          <DataTable.Cell style={{ flex: 0.1 }}>{item.code}</DataTable.Cell>
-          <DataTable.Cell style={{ flex: 0.1 }}>
-            {isEditing ? (
-              <TextInput
-                mode="outlined"
-                dense
-                keyboardType="numeric"
-                autoFocus
-                value={quantity}
-                onChangeText={(text) => {
-                  setQuantity(text);
-                  const subtotalValue = (parseFloat(text) * item.price) || 0;
-                  setSubtotal(subtotalValue);
-                }}
-                onBlur={() => {
-                  if (parseFloat(quantity) > 0) {
-                    setItems(prev =>
-                      prev.map(it =>
-                        it.productId === item.productId
-                          ? { ...it, quantity: parseFloat(quantity) }
-                          : it
-                      )
-                    );
-                  }
-                  setSelectedItem(null);
-                  setQuantity('');
-                }}
-                style={{ width: 60, height: 35 }}
-              />
-            ) : (
-              `${item.quantity}`
-            )}
-          </DataTable.Cell>
-          <DataTable.Cell style={{ flex: 0.25 }}>{(item.name).split(' ')[0]}</DataTable.Cell>
-          <DataTable.Cell style={{ flex: 0.2 }}>${item.price}</DataTable.Cell>
-          <DataTable.Cell style={{ flex: 0.25 }} numeric>
-            ${(item.price * item.quantity).toFixed(2)}
-          </DataTable.Cell>
-          <DataTable.Cell style={{ flex: 0.1 }} numeric>
-            <IconButton
-              icon="delete"
-              size={20}
-              onPress={() => removeItem(item.productId)}
-            />
-          </DataTable.Cell>
-        </DataTable.Row>
-      </TouchableOpacity>
-    );
-  })}
-
-  <DataTable.Pagination
-    page={page}
-    numberOfPages={Math.ceil(items.length / itemsPerPage)}
-    onPageChange={(page) => setPage(page)}
-    label={`${from + 1}-${to} de ${items.length}`}
-    numberOfItemsPerPageList={numberOfItemsPerPageList}
-    numberOfItemsPerPage={itemsPerPage}
-    showFastPaginationControls
-    selectPageDropdownLabel={'Filas por pagina'}
-  />
-</DataTable>
+            {items.slice(from, to).map((item, index) => {
+              const isEditing = selectedItem?.productId === item.productId;
+              return (
+                <TouchableOpacity
+                  key={item.productId}
+                  onPress={() => {
+                    setSelectedItem(item);
+                    setQuantity('');
+                  }}
+                >
+                  <DataTable.Row>
+                    <DataTable.Cell style={{ flex: 0.1 }}>
+                      {isEditing ? (
+                        <TextInput
+                          mode="outlined"
+                          dense
+                          keyboardType="numeric"
+                          autoFocus
+                          value={quantity}
+                          onChangeText={(text) => {
+                            setQuantity(text);
+                            const subtotalValue = (parseFloat(text) * item.price) || 0;
+                            setSubtotal(subtotalValue);
+                          }}
+                          onBlur={() => {
+                            if (parseFloat(quantity) > 0) {
+                              setItems(prev =>
+                                prev.map(it =>
+                                  it.productId === item.productId
+                                    ? { ...it, quantity: parseFloat(quantity) }
+                                    : it
+                                )
+                              );
+                            }
+                            setSelectedItem(null);
+                            setQuantity('');
+                          }}
+                          style={{ width: 60, height: 35 }}
+                        />
+                      ) : (
+                        `${item.quantity}`
+                      )}
+                    </DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 0.35 }}>{item.name}</DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 0.2 }}>${item.price}</DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 0.25 }} numeric>
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </DataTable.Cell>
+                    <DataTable.Cell style={{ flex: 0.1 }} numeric>
+                      <IconButton
+                        icon="delete"
+                        size={20}
+                        onPress={() => removeItem(item.productId)}
+                      />
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                </TouchableOpacity>
+              );
+            })}
+          </DataTable>
+        </ScrollView>
+      </View>
       {
         items.length>0?
         (

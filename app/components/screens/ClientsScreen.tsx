@@ -148,7 +148,7 @@ export default function ClientsScreen() {
           onChangeText={setSearchQuery}
           style={{ marginBottom: 8, marginTop: 8, backgroundColor: 'white', borderColor: 'lightgray', borderWidth: 1, marginHorizontal: 16 }}
         />
-        <View style={{ height: '85%' }}>
+        <View style={{ height: '85%' }} >
           <ScrollView>
             <DataTable>
               <DataTable.Header style={{ borderWidth: 0, backgroundColor: 'white' }}>
