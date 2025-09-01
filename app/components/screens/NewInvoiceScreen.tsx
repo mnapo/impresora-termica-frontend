@@ -161,7 +161,7 @@ export default function NewInvoiceScreen() {
   return (<PaperProvider>{selectedType === 'arca'?(<Stack.Screen options={{ title: 'Nueva Factura' }}/>):(<Stack.Screen options={{ title: 'Nuevo Comprobante' }}/>)}
     <Portal>
       <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={maximized?styles.maximizedModal:styles.modal}>
-        <View style={{ height: '80%' }}>
+        <View style={{ height: '85%' }}>
           {selectedItem ? (
             <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'flex-start' }}>
               <Button icon="arrow-left" onPress={() => setSelectedItem(null)} textColor='#429E9D' >Regresar</Button>

@@ -149,7 +149,7 @@ export default function ItemSelector({ pricesList, invoiceType, onSelectMany }: 
             onPress={confirmSelection}
             disabled={selectedIds.size === 0}
           >
-            Confirmar selección
+            AÑADIR {selectedIds.size} {selectedIds.size===1?'ITEM':'ITEMS'}
           </Button>
         </>
       )}
