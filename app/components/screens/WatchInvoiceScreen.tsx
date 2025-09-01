@@ -67,12 +67,16 @@ export default function WatchInvoiceScreen() {
             </DataTable.Cell>
           </DataTable.Row>
         ))}
-
-        <DataTable.Row style={{ borderBottomWidth: 0 }}>
-          <DataTable.Cell textStyle={{ fontSize: 26, fontWeight: 600 }}>Total: ${total}</DataTable.Cell>
-        </DataTable.Row>
       </DataTable>
       <Divider/>
+      {invoice.type === 'arca'?
+        (<>
+          <Text style={{ fontSize: 24, fontWeight: 400 }}>Total S/ IVA: ${total}</Text>
+          <Text style={{ fontSize: 24, fontWeight: 400 }}>IVA 21%: ${(total / 0.21).toFixed(2)}</Text>
+          <Text style={{ fontSize: 26, fontWeight: 800 }}>Total: ${(total / 1.21).toFixed(2)}</Text>
+        </>)
+        :(<Text style={{ fontSize: 26, fontWeight: 800 }}>Total: ${total}</Text>)
+      }
     </View>
   </>);
 }

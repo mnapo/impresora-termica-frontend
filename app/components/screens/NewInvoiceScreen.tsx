@@ -135,13 +135,17 @@ export default function NewInvoiceScreen() {
 
   const saveInvoice = async () => {
     try {
+      let taxedOrSameTotal = total;
+      if (selectedType == 'arca'){
+        taxedOrSameTotal = taxedOrSameTotal + ((21*taxedOrSameTotal)/100);
+      }
       const invoice = await client.service('invoices').create({
         type: selectedType,
         cuit: selectedClient.cuit,
         condIvaTypeId: selectedClient.condIvaTypeId,
         companyName: selectedClient.companyName,
         address: selectedClient.address,
-        total: total
+        total: taxedOrSameTotal
       });
 
       for (const item of items) {
