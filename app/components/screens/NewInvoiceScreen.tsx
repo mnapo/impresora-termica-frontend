@@ -204,7 +204,7 @@ export default function NewInvoiceScreen() {
             </View>
           ) : (
             <View style={{ height: '100%' }}>
-              <SegmentedButtons
+              {maximized && (<SegmentedButtons
                 value={pricesList}
                 style={{ marginBottom: 5 }}
                 onValueChange={setPricesList}
@@ -225,12 +225,12 @@ export default function NewInvoiceScreen() {
                     style: { backgroundColor: pricesList === 'list3' ? 'black' : 'white' }, labelStyle: { color: pricesList === 'list3' ? 'white' : 'black' }
                   },
                 ]}
-              />
+              />)}
               <ItemSelector onSelect={(item) => handleItemSelect(item)} pricesList={pricesList} invoiceType={selectedType} />
             </View>
           )}
         </View>
-        <View style={{ marginTop: '10%' }}>
+        <View style={ maximized?{marginTop: '10%'}:{} }>
           <Button icon="plus" mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem} buttonColor='black' labelStyle={{ color: 'white' }} >
             Añadir a Factura
           </Button>
