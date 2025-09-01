@@ -17,6 +17,7 @@ export default function SettingsScreen() {
       <View style={{ alignItems: 'center', paddingHorizontal: '10%' }}>
         <Option title="Clientes" icon="account" path="/components/screens/ClientsScreen" />
         <Option title="Productos" icon="cart" path="/components/screens/ProductsScreen" />
+        <Option title="Mis Datos" icon="email" path="/components/screens/UserScreen" />
       </View>
       <FAB icon="power" color="red" label="Cerrar Sesión" style={{position: 'absolute', bottom: '1%', left: '62%'}} onPress={signOut} />
     </View>
