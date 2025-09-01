@@ -18,7 +18,7 @@ export default function InvoiceOption({ title, onOpenModal }: InvoiceOptionProps
       </View>
       <Card style={styles.card}>
         <Card.Content style={styles.content}>
-          <Icon source="plus" size={50} color='lightseagreen' />
+          <Icon source="plus" size={50} color='white' />
           <Text style={styles.title}>{title}</Text>
         </Card.Content>
       </Card>
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     margin: 8,
     paddingVertical: 20,
     elevation: 4,
+    backgroundColor: 'lightseagreen',
   },
   content: {
     alignItems: "center",
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
+    color: 'white'
   },
   arrow: {
     position: "absolute",
