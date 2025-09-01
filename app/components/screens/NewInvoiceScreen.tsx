@@ -39,7 +39,7 @@ export default function NewInvoiceScreen() {
   const [clientId, setClientId] = useState('');
   const [items, setItems] = useState<any[]>([]);
   const [page, setPage] = useState<number>(0);
-  const [numberOfItemsPerPageList] = useState([8, 3, 4]);
+  const [numberOfItemsPerPageList] = useState([1000, 3, 4]);
   const [itemsPerPage, onItemsPerPageChange] = useState(numberOfItemsPerPageList[0]);
   const [visible, setVisible] = useState(false);
   const [maximized, setMaximized] = useState(true);
@@ -79,37 +79,29 @@ export default function NewInvoiceScreen() {
     setTotal(invoiceTotal);
   }, [items]);
 
-  const handleItemSelect = (item: any) => {
-    setSelectedItem(item);
-    setQuantity('1');
-    setSubtotal(item.price);
-  };
-
-  const addItem = () => {
+  const handleItemsSelect = (selectedProducts: any[]) => {
     setItems(prevItems => {
-      const existingIndex = prevItems.findIndex(item => item.code === selectedItem.code);
-
-      if (existingIndex !== -1) {
-        const updatedItems = [...prevItems];
-        updatedItems[existingIndex] = {
-          ...updatedItems[existingIndex],
-          quantity: updatedItems[existingIndex].quantity + (parseInt(quantity) || 1)
-        };
-        return updatedItems;
-      } else {
-        return [
-          ...prevItems,
-          { 
-            productId: selectedItem.id,
-            code: selectedItem.code,
-            name: selectedItem.name,
-            price: selectedItem.price,
-            quantity: parseInt(quantity) || 1
-          }
-        ];
-      }
+      const updated = [...prevItems];
+      selectedProducts.forEach(prod => {
+        const existingIndex = updated.findIndex(item => item.code === prod.code);
+        if (existingIndex !== -1) {
+          updated[existingIndex] = {
+            ...updated[existingIndex],
+            quantity: updated[existingIndex].quantity + 1,
+          };
+        } else {
+          updated.push({
+            productId: prod.id,
+            code: prod.code,
+            name: prod.name,
+            price: prod.price,
+            quantity: 1,
+          });
+        }
+      });
+      return updated;
     });
-    resetSelectedItem();
+    setVisible(false);
   };
 
   const updateItemProduct = (index: number, productId: string) => {
@@ -169,7 +161,7 @@ export default function NewInvoiceScreen() {
   return (<PaperProvider>{selectedType === 'arca'?(<Stack.Screen options={{ title: 'Nueva Factura' }}/>):(<Stack.Screen options={{ title: 'Nuevo Comprobante' }}/>)}
     <Portal>
       <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={maximized?styles.maximizedModal:styles.modal}>
-        <View style={{ height: '75%' }}>
+        <View style={{ height: '80%' }}>
           {selectedItem ? (
             <View style={{ height: '30%', paddingHorizontal: 16, marginTop: 5, alignItems: 'flex-start' }}>
               <Button icon="arrow-left" onPress={() => setSelectedItem(null)} textColor='#429E9D' >Regresar</Button>
@@ -225,14 +217,11 @@ export default function NewInvoiceScreen() {
                   },
                 ]}
               />)}
-              <ItemSelector onSelect={(item) => handleItemSelect(item)} pricesList={pricesList} invoiceType={selectedType} />
+              <ItemSelector onSelectMany={handleItemsSelect} pricesList={pricesList} invoiceType={selectedType} />
             </View>
           )}
         </View>
         <View style={ maximized?{marginTop: '10%'}:{} }>
-          <Button icon="plus" mode="contained" onPress={addItem} style={styles.addButton} disabled={!selectedItem} buttonColor='#429E9D' labelStyle={{ color: 'white' }} >
-            Añadir a Factura
-          </Button>
           <Divider style={{ marginVertical: 5 }}/>
           <Button icon="window-close" mode="outlined" textColor="black" onPress={hideModal} style={styles.addButton}>
             Cerrar
@@ -241,13 +230,10 @@ export default function NewInvoiceScreen() {
       </Modal>
     </Portal>
     <View style={ styles.container }>
-      <Surface elevation={2} style={{ paddingHorizontal: 2, maxHeight: '50%', overflow: 'hidden', backgroundColor: 'white' }}>
+      <Surface elevation={1} style={{ paddingHorizontal: 2, maxHeight: '50%', overflow: 'hidden', backgroundColor: 'white' }}>
         {selectedClient ? (
           <View style={{ height: '30%', paddingHorizontal: 16 }}>
-            <Text style={{ fontWeight: 'bold' }}>CUIT: {selectedClient.cuit}</Text>
-            <Text>RAZÓN SOCIAL: {selectedClient.companyName}</Text>
-            <Text>DIRECCIÓN: {selectedClient.address}</Text>
-            <Text>CONDICIÓN IVA: {condIvaOptions.find(condIvaType => condIvaType.value === String(selectedClient.condIvaTypeId))?.label}</Text>
+            <Text style={{ fontWeight: 'bold' }} ><Icon source='account' size={15} color='lightseagreen' />Cliente: {selectedClient.cuit} | {selectedClient.address}</Text>
             <Button style={{left: 0}} icon="arrow-left" onPress={() => setSelectedClient(null)} textColor='#429E9D' >Cambiar cliente</Button>
           </View>
         ) : (
@@ -257,38 +243,88 @@ export default function NewInvoiceScreen() {
         )}
       </Surface>
 
-      <DataTable>
-        <DataTable.Header>
-          <DataTable.Title>Código</DataTable.Title>
-          <DataTable.Title>|Item</DataTable.Title>
-          <DataTable.Title numeric>|Precio</DataTable.Title>
-          <DataTable.Title numeric>|Cantidad</DataTable.Title>
-          <DataTable.Title numeric>|Subtotal</DataTable.Title>
-          <DataTable.Title numeric>|Borrar</DataTable.Title>
-        </DataTable.Header>
+<DataTable>
+  <DataTable.Header>
+    <DataTable.Title style={{ flex: 0.1 }} >Cód</DataTable.Title>
+    <DataTable.Title style={{ flex: 0.1 }} >Can</DataTable.Title>
+    <DataTable.Title style={{ flex: 0.25 }} >Des</DataTable.Title>
+    <DataTable.Title style={{ flex: 0.2 }} >Pr</DataTable.Title>
+    <DataTable.Title style={{ flex: 0.25 }} >Subtotal</DataTable.Title>
+    <DataTable.Title style={{ flex: 0.1 }} >-</DataTable.Title>
+  </DataTable.Header>
 
-        {items.slice(from, to).map((item) => (
-          <DataTable.Row key={item.productId}>
-            <DataTable.Cell style={{ flex: 0.1}}>{item.code}</DataTable.Cell>
-            <DataTable.Cell style={{ flex: 0.3}}>{item.name}</DataTable.Cell>
-            <DataTable.Cell style={{ flex: 0.2}}>${item.price}</DataTable.Cell>
-            <DataTable.Cell style={{ flex: 0.1}}>x{item.quantity}</DataTable.Cell>
-            <DataTable.Cell style={{ flex: 0.2}} numeric>${(item.price*item.quantity).toFixed(2)}</DataTable.Cell>
-            <DataTable.Cell style={{ flex: 0.1}} numeric><IconButton icon="delete" size={20} onPress={() => removeItem(item.productId)} /></DataTable.Cell>
-          </DataTable.Row>
-        ))}
+  {items.slice(from, to).map((item, index) => {
+    const isEditing = selectedItem?.productId === item.productId;
+    return (
+      <TouchableOpacity
+        key={item.productId}
+        onPress={() => {
+          setSelectedItem(item);
+          setQuantity('');
+        }}
+      >
+        <DataTable.Row>
+          <DataTable.Cell style={{ flex: 0.1 }}>{item.code}</DataTable.Cell>
+          <DataTable.Cell style={{ flex: 0.1 }}>
+            {isEditing ? (
+              <TextInput
+                mode="outlined"
+                dense
+                keyboardType="numeric"
+                autoFocus
+                value={quantity}
+                onChangeText={(text) => {
+                  setQuantity(text);
+                  const subtotalValue = (parseFloat(text) * item.price) || 0;
+                  setSubtotal(subtotalValue);
+                }}
+                onBlur={() => {
+                  if (parseFloat(quantity) > 0) {
+                    setItems(prev =>
+                      prev.map(it =>
+                        it.productId === item.productId
+                          ? { ...it, quantity: parseFloat(quantity) }
+                          : it
+                      )
+                    );
+                  }
+                  setSelectedItem(null);
+                  setQuantity('');
+                }}
+                style={{ width: 60, height: 35 }}
+              />
+            ) : (
+              `${item.quantity}`
+            )}
+          </DataTable.Cell>
+          <DataTable.Cell style={{ flex: 0.25 }}>{(item.name).split(' ')[0]}</DataTable.Cell>
+          <DataTable.Cell style={{ flex: 0.2 }}>${item.price}</DataTable.Cell>
+          <DataTable.Cell style={{ flex: 0.25 }} numeric>
+            ${(item.price * item.quantity).toFixed(2)}
+          </DataTable.Cell>
+          <DataTable.Cell style={{ flex: 0.1 }} numeric>
+            <IconButton
+              icon="delete"
+              size={20}
+              onPress={() => removeItem(item.productId)}
+            />
+          </DataTable.Cell>
+        </DataTable.Row>
+      </TouchableOpacity>
+    );
+  })}
 
-        <DataTable.Pagination
-          page={page}
-          numberOfPages={Math.ceil(items.length / itemsPerPage)}
-          onPageChange={(page) => setPage(page)}
-          label={`${from + 1}-${to} de ${items.length}`}
-          numberOfItemsPerPageList={numberOfItemsPerPageList}
-          numberOfItemsPerPage={itemsPerPage}
-          showFastPaginationControls
-          selectPageDropdownLabel={'Filas por pagina'}
-        />
-      </DataTable>
+  <DataTable.Pagination
+    page={page}
+    numberOfPages={Math.ceil(items.length / itemsPerPage)}
+    onPageChange={(page) => setPage(page)}
+    label={`${from + 1}-${to} de ${items.length}`}
+    numberOfItemsPerPageList={numberOfItemsPerPageList}
+    numberOfItemsPerPage={itemsPerPage}
+    showFastPaginationControls
+    selectPageDropdownLabel={'Filas por pagina'}
+  />
+</DataTable>
       {
         items.length>0?
         (

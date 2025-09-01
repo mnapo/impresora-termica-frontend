@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, TouchableOpacity } from "react-native";
-import { Text, Searchbar, List, ActivityIndicator } from "react-native-paper";
+import { Text, Searchbar, List, ActivityIndicator, Checkbox, Button, Divider } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { productsActions } from '../store/products';
 
@@ -23,15 +23,16 @@ type ProductToItem = {
 type ItemSelectorProps = {
   pricesList: string;
   invoiceType: any;
-  onSelect: (item: ProductToItem) => void;
+  onSelectMany: (items: ProductToItem[]) => void;
 };
 
-export default function ItemSelector({ pricesList, invoiceType, onSelect }: ItemSelectorProps) {
+export default function ItemSelector({ pricesList, invoiceType, onSelectMany }: ItemSelectorProps) {
   const dispatch = useDispatch();
   const { items, loading } = useSelector((state: any) => state.products);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<Item[]>([]);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 1000;
@@ -68,6 +69,33 @@ export default function ItemSelector({ pricesList, invoiceType, onSelect }: Item
     }
   };
 
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      const copy = new Set(prev);
+      if (copy.has(id)) {
+        copy.delete(id);
+      } else {
+        copy.add(id);
+      }
+      return copy;
+    });
+  };
+
+  const confirmSelection = () => {
+    const selectedProducts = results.filter(p => selectedIds.has(p.id)).map(p => ({
+      id: p.id,
+      code: p.code,
+      name: p.name,
+      price: pricesList === "list1"
+        ? addTaxesByType(p.price1)
+        : pricesList === "list2"
+        ? addTaxesByType(p.price2)
+        : addTaxesByType(p.price3),
+    }));
+    onSelectMany(selectedProducts);
+    setSelectedIds(new Set());
+  };
+
   return (
     <View style={{ height: '100%' }}>
       <Searchbar
@@ -77,7 +105,7 @@ export default function ItemSelector({ pricesList, invoiceType, onSelect }: Item
         style={{ margin: 8, backgroundColor: 'white', borderColor: 'lightgray', borderWidth: 1, marginHorizontal: 16 }}
       />
       <Text style={{ fontWeight: "bold", marginLeft: 8, marginTop: 4 }}>
-        Seleccione un producto:
+        Seleccione producto/s:
       </Text>
 
       {loading ? (
@@ -88,29 +116,41 @@ export default function ItemSelector({ pricesList, invoiceType, onSelect }: Item
             data={paginatedItems}
             keyExtractor={(item) => item.id.toString()}
             style={{ height: '100%' }}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() =>
-                  onSelect({
-                    id: item.id,
-                    code: item.code,
-                    name: item.name,
-                    price:
-                      pricesList === "list1"
-                        ? addTaxesByType(item.price1)
-                        : pricesList === "list2"
-                        ? addTaxesByType(item.price2)
-                        : addTaxesByType(item.price3),
-                  })
-                }
-              >
-                <List.Item
-                  title={`${item.code} | ${item.name} | $${pricesList==='list1'?addTaxesByType(item.price1):pricesList==='list2'?addTaxesByType(item.price2):addTaxesByType(item.price3)}`}
-                  left={(props) => <List.Icon {...props} icon="cart-outline" />}
-                />
-              </TouchableOpacity>
-            )}
+            ItemSeparatorComponent={() => <Divider />}
+            renderItem={({ item }) => {
+              const price = pricesList === "list1"
+                ? addTaxesByType(item.price1)
+                : pricesList === "list2"
+                ? addTaxesByType(item.price2)
+                : addTaxesByType(item.price3);
+
+              const isSelected = selectedIds.has(item.id);
+
+              return (
+                <TouchableOpacity onPress={() => toggleSelect(item.id)}>
+                  <View style={{ backgroundColor: isSelected ? "#f0f0f0" : "white" }}>
+                    <List.Item
+                      title={`${item.code} | ${item.name} | $${price}`}
+                      left={() => (
+                        <Checkbox
+                          status={isSelected ? "checked" : "unchecked"}
+                          onPress={() => toggleSelect(item.id)}
+                        />
+                      )}
+                    />
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
           />
+          <Button
+            mode="contained"
+            style={{ margin: 10 }}
+            onPress={confirmSelection}
+            disabled={selectedIds.size === 0}
+          >
+            Confirmar selección
+          </Button>
         </>
       )}
     </View>
