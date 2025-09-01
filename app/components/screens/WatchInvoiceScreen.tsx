@@ -72,8 +72,8 @@ export default function WatchInvoiceScreen() {
       {invoice.type === 'arca'?
         (<>
           <Text style={{ fontSize: 24, fontWeight: 400 }}>Total S/ IVA: ${total}</Text>
-          <Text style={{ fontSize: 24, fontWeight: 400 }}>IVA 21%: ${(total / 0.21).toFixed(2)}</Text>
-          <Text style={{ fontSize: 26, fontWeight: 800 }}>Total: ${(total / 1.21).toFixed(2)}</Text>
+          <Text style={{ fontSize: 24, fontWeight: 400 }}>IVA 21%: ${(total * 0.21).toFixed(2)}</Text>
+          <Text style={{ fontSize: 26, fontWeight: 800 }}>Total: ${(total * 1.21).toFixed(2)}</Text>
         </>)
         :(<Text style={{ fontSize: 26, fontWeight: 800 }}>Total: ${total}</Text>)
       }
