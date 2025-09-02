@@ -12,10 +12,12 @@ import {
   FAB,
   SegmentedButtons,
   Text,
+  Snackbar,
   Divider
 } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { Stack } from 'expo-router';
+import ActionNotification from '../ActionNotification';
 import { productsActions } from '../../store/products';
 
 export default function ProductsScreen() {
@@ -34,11 +36,12 @@ export default function ProductsScreen() {
   const [price1, setPrice1] = useState('');
   const [price2, setPrice2] = useState('');
   const [price3, setPrice3] = useState('');
+  const [successfulAdditionNotificationVisible, setSuccessfulAdditionNotificationVisible] = useState(false);
+  const [successfulEditionNotificationVisible, setSuccessfulEditionNotificationVisible] = useState(false);
   const filteredItems = items.filter((item: any) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.code.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
   const sortedItems = [...filteredItems].sort((a, b) => {
     if (sortDirection === 'ascending') {
       return a.code.localeCompare(b.code);
@@ -90,8 +93,10 @@ export default function ProductsScreen() {
     };
     if (selectedProduct) {
       dispatch(productsActions.updateAction({ id: selectedProduct.id, ...payload }));
+      setSuccessfulEditionNotificationVisible(true);
     } else {
       dispatch(productsActions.createAction(payload));
+      setSuccessfulAdditionNotificationVisible(true);
     }
     setModalVisible(false);
   };
@@ -218,6 +223,8 @@ export default function ProductsScreen() {
           style={{ position: 'absolute', bottom: '2%', right: '10%', backgroundColor: '#429E9D' }}
         />
       </View>
+      <ActionNotification type="success" source="products" target={'#'+code} action="add" onDismiss={ ()=> {setSuccessfulAdditionNotificationVisible(false)} } visible={successfulAdditionNotificationVisible} />
+      <ActionNotification type="success" source="products" target={'#'+code} action="update" onDismiss={ ()=> {setSuccessfulEditionNotificationVisible(false)} } visible={successfulEditionNotificationVisible} />
     </PaperProvider>
   );
 }

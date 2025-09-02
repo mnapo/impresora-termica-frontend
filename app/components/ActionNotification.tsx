@@ -41,9 +41,6 @@ export default function ActionNotification({ type, source, target, action, visib
             case 'update':
                 msgAction = 'modificó';
                 break;
-            case 'comprobante':
-                msgAction = 'el comprobante';
-                break;
         }
         if (type === 'success') {
             return `Se ${msgAction} ${msgSource} ${target} ${msgType}`;
