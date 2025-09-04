@@ -4,13 +4,14 @@ import {
   PaperProvider,
   Portal,
   Modal,
+  DataTable,
   FAB,
   TextInput,
   Button,
   IconButton,
   Searchbar,
   Text,
-  DataTable,
+  HelperText,
   Divider
 } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,7 +24,7 @@ import { Dropdown } from 'react-native-paper-dropdown';
 export default function ClientsScreen() {
   const dispatch = useDispatch();
   const { items, loading } = useSelector((state: any) => state.clients);
-
+  const [clientRepeated, setClientRepeated] = useState(false);
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [cuit, setCuit] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -50,7 +51,6 @@ export default function ClientsScreen() {
   const hideModal = () => {
     setVisible(false);
     setSelectedClient(null);
-    setCuit('');
     setCompanyName('');
     setCondIvaTypeId('');
     setAddress('');
@@ -74,7 +74,7 @@ export default function ClientsScreen() {
     }
   }, [items, totalPages, page]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!companyName || !condIvaTypeId || !cuit || !address) return;
     const payload = {
       cuit,
@@ -82,14 +82,33 @@ export default function ClientsScreen() {
       condIvaTypeId: parseInt(condIvaTypeId) || NON_REGISTERED_CONDIVATYPE_ID,
       address
     };
+    setClientRepeated(false);
     if (selectedClient) {
-      dispatch(clientsActions.updateAction({ id: selectedClient.id, ...payload }));
-      setSuccessfulEditionNotificationVisible(true);
+      try {
+        await new Promise((resolve, reject) => {
+          dispatch(clientsActions.updateAction({ id: selectedClient.id, ...payload }, { resolve, reject }));
+        });
+        console.log("Client updated successfully");
+        setSuccessfulEditionNotificationVisible(true);
+        hideModal();
+      } catch (err: any) {
+          console.log("Error: " + err.message);
+      }
     } else {
-      dispatch(clientsActions.createAction(payload));
-      setSuccessfulAdditionNotificationVisible(true);
+      try {
+        await new Promise((resolve, reject) => {
+          dispatch(clientsActions.createAction(payload, { resolve, reject }));
+        });
+        setSuccessfulAdditionNotificationVisible(true);
+        hideModal();
+      } catch (err: any) {
+        if (err.code === 409) {
+          setClientRepeated(true);
+        } else {
+          console.log("Error: " + err.message);
+        }
+      }
     }
-    hideModal();
   };
 
   const handleEdit = (client: any) => {
@@ -122,6 +141,7 @@ export default function ClientsScreen() {
               style={ styles.input }
               activeUnderlineColor='#429E9D'
             />
+            <HelperText type="error" visible={clientRepeated}>El cliente ya existe</HelperText>
             <TextInput
               label="Razón Social"
               value={companyName}
