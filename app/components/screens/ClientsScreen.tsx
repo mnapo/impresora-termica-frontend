@@ -15,6 +15,7 @@ import {
 } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { Stack } from 'expo-router';
+import ActionNotification from '../ActionNotification';
 import DeleteConfirmation from '../DeleteConfirmation';
 import { clientsActions } from '../../store/clients';
 import { Dropdown } from 'react-native-paper-dropdown';
@@ -31,8 +32,11 @@ export default function ClientsScreen() {
   const [visible, setVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(0);
-  const itemsPerPage = 100;
+  const itemsPerPage = 1000;
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false);
+  const [successfulAdditionNotificationVisible, setSuccessfulAdditionNotificationVisible] = useState(false);
+  const [successfulEditionNotificationVisible, setSuccessfulEditionNotificationVisible] = useState(false);
+  const [successfulDeletionNotificationVisible, setSuccessfulDeletionNotificationVisible] = useState(false);
   const [clientToDeleteId, setClientToDeleteId] = useState('');
   const NON_REGISTERED_CONDIVATYPE_ID = 4;
   const condIvaOptions = [
@@ -80,8 +84,10 @@ export default function ClientsScreen() {
     };
     if (selectedClient) {
       dispatch(clientsActions.updateAction({ id: selectedClient.id, ...payload }));
+      setSuccessfulEditionNotificationVisible(true);
     } else {
       dispatch(clientsActions.createAction(payload));
+      setSuccessfulAdditionNotificationVisible(true);
     }
     hideModal();
   };
@@ -98,6 +104,7 @@ export default function ClientsScreen() {
   const handleDelete = (id: string) => {
     dispatch(clientsActions.removeAction(id));
     setDeleteConfirmationVisible(false);
+    setSuccessfulDeletionNotificationVisible(true);
   };
 
   return (
@@ -225,6 +232,9 @@ export default function ClientsScreen() {
           style={{ position: 'absolute', bottom: '2%', right: '10%', backgroundColor: '#429E9D' }}
         />
       </View>
+      <ActionNotification type="success" source="clients" target={`#${cuit}`} action="create" onDismiss={ ()=> {setSuccessfulAdditionNotificationVisible(false)} } visible={successfulAdditionNotificationVisible} />
+      <ActionNotification type="success" source="clients" target={`#${cuit}`} action="update" onDismiss={ ()=> {setSuccessfulEditionNotificationVisible(false)} } visible={successfulEditionNotificationVisible} />
+      <ActionNotification type="success" source="clients" target={`#${cuit}`} action="remove" onDismiss={ ()=> {setSuccessfulDeletionNotificationVisible(false)} } visible={successfulDeletionNotificationVisible} />
       <DeleteConfirmation source="clients" target={`${cuit}`} onConfirm={ ()=> {handleDelete(clientToDeleteId)} } onDismiss={ ()=> { setDeleteConfirmationVisible(false); setCuit(''); setClientToDeleteId('') } } visible={deleteConfirmationVisible} />
     </PaperProvider>
   );

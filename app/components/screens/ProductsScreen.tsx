@@ -36,9 +36,10 @@ export default function ProductsScreen() {
   const [price1, setPrice1] = useState('');
   const [price2, setPrice2] = useState('');
   const [price3, setPrice3] = useState('');
+  const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false);
   const [successfulAdditionNotificationVisible, setSuccessfulAdditionNotificationVisible] = useState(false);
   const [successfulEditionNotificationVisible, setSuccessfulEditionNotificationVisible] = useState(false);
-  const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false);
+  const [successfulDeletionNotificationVisible, setSuccessfulDeletionNotificationVisible] = useState(false);
   const [productToDeleteId, setProductToDeleteId] = useState('');
   const filteredItems = items.filter((item: any) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -82,6 +83,7 @@ export default function ProductsScreen() {
   const handleDelete = (id: string) => {
     dispatch(productsActions.removeAction(id));
     setDeleteConfirmationVisible(false);
+    setSuccessfulDeletionNotificationVisible(true);
   };
 
   const handleSave = () => {
@@ -227,8 +229,9 @@ export default function ProductsScreen() {
           style={{ position: 'absolute', bottom: '2%', right: '10%', backgroundColor: '#429E9D' }}
         />
       </View>
-      <ActionNotification type="success" source="products" target={`#${code}`} action="add" onDismiss={ ()=> {setSuccessfulAdditionNotificationVisible(false)} } visible={successfulAdditionNotificationVisible} />
+      <ActionNotification type="success" source="products" target={`#${code}`} action="create" onDismiss={ ()=> {setSuccessfulAdditionNotificationVisible(false)} } visible={successfulAdditionNotificationVisible} />
       <ActionNotification type="success" source="products" target={`#${code}`} action="update" onDismiss={ ()=> {setSuccessfulEditionNotificationVisible(false)} } visible={successfulEditionNotificationVisible} />
+      <ActionNotification type="success" source="products" target={`#${code}`} action="remove" onDismiss={ ()=> {setSuccessfulDeletionNotificationVisible(false)} } visible={successfulDeletionNotificationVisible} />
       <DeleteConfirmation source="products" target={`#${code}`} onConfirm={ ()=> {handleDelete(productToDeleteId)} } onDismiss={ ()=> { setDeleteConfirmationVisible(false); setCode(''), setProductToDeleteId('') } } visible={deleteConfirmationVisible} />
     </PaperProvider>
   );
