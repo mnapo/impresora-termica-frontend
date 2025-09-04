@@ -1,7 +1,7 @@
 // screens/LoginScreen.js
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { TextInput, Button, Text, Divider, Checkbox } from 'react-native-paper';
+import { TextInput, Button, Text, Checkbox } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginScreen() {
@@ -22,17 +22,16 @@ export default function LoginScreen() {
   const handlePasswordShown = () => {setPasswordShown(!passwordShown)}
 
   return (
-    <View style={styles().container}>
-      <Text style={styles().title}>Iniciar Sesión</Text>
-      <Divider/>
-      <Text>Email</Text>
-      <TextInput mode="outlined" value={email} onChangeText={setEmail} autoCapitalize="none" />
-      <Text>Contraseña</Text>
-      <TextInput mode="outlined" value={password} onChangeText={setPassword} secureTextEntry={!passwordShown} />
-      <Button icon="eye" mode="text" onPress={handlePasswordShown}>{passwordShown?'ocultar contraseña':'mostrar contraseña'}</Button>
-      <Button style={styles().button} mode="contained" onPress={handleLogin}>Entrar</Button>
-      {error && <Text style={{ color: "red" }}>{error}</Text>}
-      <Checkbox.Item label="Recordarme" status="checked" disabled={true} />
+    <View style={{ flex: 1, justifyContent: 'center', backgroundColor: 'white' }} >
+      <View style={styles().container}>
+        <Text>Email</Text>
+        <TextInput mode="outlined" value={email} onChangeText={setEmail} autoCapitalize="none" activeOutlineColor='#429E9D' style={{ backgroundColor: 'white' }} />
+        <Text>Contraseña</Text>
+        <TextInput mode="outlined" value={password} onChangeText={setPassword} secureTextEntry={!passwordShown} autoCapitalize="none" activeOutlineColor='#429E9D' style={{ backgroundColor: 'white' }} />
+        <Button icon="eye" mode="text" onPress={handlePasswordShown} labelStyle={{ color: '#429E9D' }} >{passwordShown?'ocultar contraseña':'mostrar contraseña'}</Button>
+        <Button style={styles().button} mode="contained" onPress={handleLogin}>Entrar</Button>
+        {error && <Text style={{ color: "red" }}>{error}</Text>}
+      </View>
     </View>
   );
 }
@@ -42,6 +41,8 @@ const styles = () => StyleSheet.create({
     flex: 1,
     paddingLeft: 40,
     paddingRight: 40,
+    marginVertical: '30%',
+    backgroundColor: 'white'
   },
   title: {
     fontSize: 16,
@@ -49,5 +50,6 @@ const styles = () => StyleSheet.create({
   },
   button: {
     marginTop: 15,
+    backgroundColor: '#429E9D',
   },
 });
