@@ -1,3 +1,4 @@
+import { error } from 'ajv/dist/vocabularies/applicator/dependencies';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 export function createEntityModule(entityName, service) {
@@ -15,7 +16,7 @@ export function createEntityModule(entityName, service) {
   const updateAction = (payload) => ({ type: UPDATE, payload });
   const removeAction = (id) => ({ type: REMOVE, payload: id });
   const setLoading = (loading) => ({ type: LOADING, payload: loading });
-  const setError = (error) => ({ type: ERROR, payload: error });
+  const setError = (error) => ({ type: ERROR, error });
 
   const initialState = {
     items: [],
@@ -55,7 +56,8 @@ export function createEntityModule(entityName, service) {
       yield call([service, 'create'], action.payload);
       yield put(fetchAction());
     } catch (err) {
-      yield put(setError(err.message || "Error de creación"));
+      console.log(err);
+      yield put(setError(err));
     }
   }
 
