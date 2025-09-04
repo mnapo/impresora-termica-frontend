@@ -1,4 +1,3 @@
-import { error } from 'ajv/dist/vocabularies/applicator/dependencies';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 export function createEntityModule(entityName, service) {
@@ -12,11 +11,15 @@ export function createEntityModule(entityName, service) {
 
   const fetchAction = (params) => ({ type: FETCH, payload: params });
   const setAction = (data) => ({ type: SET, payload: data });
-  const createAction = (payload) => ({ type: CREATE, payload });
-  const updateAction = (payload) => ({ type: UPDATE, payload });
-  const removeAction = (id) => ({ type: REMOVE, payload: id });
+
+  const createAction = (payload, meta) => ({ type: CREATE, payload, meta });
+  const updateAction = (payload, meta) => ({ type: UPDATE, payload, meta });
+  const removeAction = (id, meta) => ({ type: REMOVE, payload: id, meta });
+
   const setLoading = (loading) => ({ type: LOADING, payload: loading });
   const setError = (error) => ({ type: ERROR, error });
+
+  const ERROR_REPEATED = 'RECORD_REPEATED';
 
   const initialState = {
     items: [],
@@ -40,12 +43,16 @@ export function createEntityModule(entityName, service) {
   function* fetchSaga(action) {
     try {
       yield put(setLoading(true));
-
       const params = action.payload || {};
       const res = yield call([service, 'find'], params);
 
       const data = Array.isArray(res) ? res : res.data;
       yield put(setAction(data));
+      action.meta?.resolve?.(data);
+    } catch (err) {
+      const serialized = serializeError(err);
+      yield put(setError(serialized));
+      action.meta?.reject?.(serialized);
     } finally {
       yield put(setLoading(false));
     }
@@ -53,30 +60,41 @@ export function createEntityModule(entityName, service) {
 
   function* createSaga(action) {
     try {
-      yield call([service, 'create'], action.payload);
+      const response = yield call([service, 'create'], action.payload);
       yield put(fetchAction());
+      action.meta?.resolve?.(response);
     } catch (err) {
-      console.log(err);
-      yield put(setError(err));
+      const serialized = serializeError(err);
+      if (serialized.code === 409) {
+        yield put(setError(ERROR_REPEATED));
+      }
+      yield put(setError(serialized));
+      action.meta?.reject?.(serialized);
     }
   }
 
   function* updateSaga(action) {
     try {
       const { id, ...fields } = action.payload;
-      yield call([service, 'patch'], id, fields); 
+      const response = yield call([service, 'patch'], id, fields);
       yield put(fetchAction());
+      action.meta?.resolve?.(response);
     } catch (err) {
-      console.log('Update error', err);
+      const serialized = serializeError(err);
+      yield put(setError(serialized));
+      action.meta?.reject?.(serialized);
     }
   }
 
   function* removeSaga(action) {
     try {
-      yield call([service, 'remove'], action.payload);
+      const response = yield call([service, 'remove'], action.payload);
       yield put(fetchAction());
+      action.meta?.resolve?.(response);
     } catch (err) {
-      console.log('Remove error', err);
+      const serialized = serializeError(err);
+      yield put(setError(serialized));
+      action.meta?.reject?.(serialized);
     }
   }
 
@@ -87,10 +105,20 @@ export function createEntityModule(entityName, service) {
     yield takeLatest(REMOVE, removeSaga);
   }
 
+  function serializeError(err) {
+    return {
+      code: err.code || null,
+      message: err.message || 'Unknown error',
+      data: err.data || null,
+      className: err.className || null,
+    };
+  }
+
   return {
     actions: { fetchAction, createAction, updateAction, removeAction },
     reducer,
     saga,
+    ERROR_REPEATED,
   };
 }
 
