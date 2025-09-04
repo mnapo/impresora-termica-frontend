@@ -15,6 +15,7 @@ export function createEntityModule(entityName, service) {
   const updateAction = (payload) => ({ type: UPDATE, payload });
   const removeAction = (id) => ({ type: REMOVE, payload: id });
   const setLoading = (loading) => ({ type: LOADING, payload: loading });
+  const setError = (error) => ({ type: ERROR, payload: error });
 
   const initialState = {
     items: [],
@@ -54,7 +55,7 @@ export function createEntityModule(entityName, service) {
       yield call([service, 'create'], action.payload);
       yield put(fetchAction());
     } catch (err) {
-      console.log('Create error', err);
+      yield put(setError(err.message || "Error de creación"));
     }
   }
 
