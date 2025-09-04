@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import {
+  PaperProvider,
+  Portal,
+  Modal,
+  FAB,
   TextInput,
   Button,
   IconButton,
   Searchbar,
   Text,
-  FAB,
-  PaperProvider,
-  Portal,
-  Modal,
   DataTable,
   Divider
 } from 'react-native-paper';
@@ -108,19 +108,17 @@ export default function ClientsScreen() {
               value={cuit}
               onChangeText={setCuit}
               keyboardType="numeric"
-              style={{ marginBottom: 8 }}
+              maxLength={11}
+              style={ styles.input }
+              activeUnderlineColor='#429E9D'
             />
             <TextInput
               label="Razón Social"
               value={companyName}
               onChangeText={setCompanyName}
-              style={{ marginBottom: 8 }}
-            />
-            <TextInput
-              label="Dirección"
-              value={address}
-              onChangeText={setAddress}
-              style={{ marginBottom: 8 }}
+              maxLength={30}
+              style={ styles.input }
+              activeUnderlineColor='#429E9D'
             />
             <Dropdown
               label="Condición frente al IVA"
@@ -128,12 +126,23 @@ export default function ClientsScreen() {
               options={condIvaOptions}
               value={condIvaTypeId}
               onSelect={setCondIvaTypeId}
+              mode='outlined'
+              menuContentStyle={{ backgroundColor: 'white' }}
+            />
+            <TextInput
+              label="Dirección"
+              value={address}
+              onChangeText={setAddress}
+              maxLength={40}
+              style={ styles.input }
+              activeUnderlineColor='#429E9D'
             />
             <Button
               mode="contained"
               onPress={handleSave}
               icon={selectedClient ? 'pencil' : 'plus'}
               disabled={!cuit || !companyName || !condIvaTypeId || !address}
+              style={ styles.button }
             >
               {selectedClient ? 'Guardar cliente' : 'Agregar cliente'}
             </Button>
@@ -219,4 +228,6 @@ export default function ClientsScreen() {
 
 const styles = StyleSheet.create({
   modal: { backgroundColor: 'white', padding: 20 },
+  input: { marginBottom: 8, backgroundColor: 'white' },
+  button: { marginTop: 16, backgroundColor: '#429E9D' }
 });
