@@ -15,6 +15,7 @@ import {
 } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { Stack } from 'expo-router';
+import DeleteConfirmation from '../DeleteConfirmation';
 import { clientsActions } from '../../store/clients';
 import { Dropdown } from 'react-native-paper-dropdown';
 
@@ -31,7 +32,8 @@ export default function ClientsScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(0);
   const itemsPerPage = 100;
-
+  const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false);
+  const [clientToDeleteId, setClientToDeleteId] = useState('');
   const NON_REGISTERED_CONDIVATYPE_ID = 4;
   const condIvaOptions = [
     { label: 'Responsable Inscripto', value: '1' },
@@ -95,6 +97,7 @@ export default function ClientsScreen() {
 
   const handleDelete = (id: string) => {
     dispatch(clientsActions.removeAction(id));
+    setDeleteConfirmationVisible(false);
   };
 
   return (
@@ -196,7 +199,7 @@ export default function ClientsScreen() {
                           size={24}
                           style={{ backgroundColor: 'red' }}
                           iconColor="white"
-                          onPress={() => handleDelete(item.id)}
+                          onPress={() => { setCuit(item.cuit); setClientToDeleteId(item.id); setDeleteConfirmationVisible(true) } }
                         />
                       </View>
                     </DataTable.Cell>
@@ -222,6 +225,7 @@ export default function ClientsScreen() {
           style={{ position: 'absolute', bottom: '2%', right: '10%', backgroundColor: '#429E9D' }}
         />
       </View>
+      <DeleteConfirmation source="clients" target={`${cuit}`} onConfirm={ ()=> {handleDelete(clientToDeleteId)} } onDismiss={ ()=> { setDeleteConfirmationVisible(false); setCuit(''); setClientToDeleteId('') } } visible={deleteConfirmationVisible} />
     </PaperProvider>
   );
 }

@@ -32,7 +32,7 @@ export default function DeleteConfirmation({ source, target, visible, onConfirm,
             <View>
                 <Text style={{ fontSize: 16 }} >{craftMsg()}</Text>
                 <Button mode="contained" onPress={onConfirm} style={styles.button}>{confirmLabel}</Button>
-                <Button mode="outlined" onPress={onDismiss} style={{ marginTop: 10 }} labelStyle={{ color: '#429E9D'}} >{cancelLabel}</Button>
+                <Button mode="outlined" onPress={onDismiss} icon="window-close" style={{ marginTop: 10 }} labelStyle={{ color: '#429E9D'}} >{cancelLabel}</Button>
             </View>
         </Modal>
     </Portal>);

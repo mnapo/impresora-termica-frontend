@@ -17,6 +17,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { Stack } from 'expo-router';
 import ActionNotification from '../ActionNotification';
+import DeleteConfirmation from '../DeleteConfirmation';
 import { productsActions } from '../../store/products';
 
 export default function ProductsScreen() {
@@ -37,6 +38,8 @@ export default function ProductsScreen() {
   const [price3, setPrice3] = useState('');
   const [successfulAdditionNotificationVisible, setSuccessfulAdditionNotificationVisible] = useState(false);
   const [successfulEditionNotificationVisible, setSuccessfulEditionNotificationVisible] = useState(false);
+  const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false);
+  const [productToDeleteId, setProductToDeleteId] = useState('');
   const filteredItems = items.filter((item: any) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.code.toLowerCase().includes(searchQuery.toLowerCase())
@@ -78,6 +81,7 @@ export default function ProductsScreen() {
 
   const handleDelete = (id: string) => {
     dispatch(productsActions.removeAction(id));
+    setDeleteConfirmationVisible(false);
   };
 
   const handleSave = () => {
@@ -197,7 +201,7 @@ export default function ProductsScreen() {
                           size={24}
                           style={{ backgroundColor: 'red' }}
                           iconColor="white"
-                          onPress={() => handleDelete(item.id)}
+                          onPress={() => { setCode(item.code); setProductToDeleteId(item.id); setDeleteConfirmationVisible(true) } }
                         />
                       </View>
                     </DataTable.Cell>
@@ -225,6 +229,7 @@ export default function ProductsScreen() {
       </View>
       <ActionNotification type="success" source="products" target={`#${code}`} action="add" onDismiss={ ()=> {setSuccessfulAdditionNotificationVisible(false)} } visible={successfulAdditionNotificationVisible} />
       <ActionNotification type="success" source="products" target={`#${code}`} action="update" onDismiss={ ()=> {setSuccessfulEditionNotificationVisible(false)} } visible={successfulEditionNotificationVisible} />
+      <DeleteConfirmation source="products" target={`#${code}`} onConfirm={ ()=> {handleDelete(productToDeleteId)} } onDismiss={ ()=> { setDeleteConfirmationVisible(false); setCode(''), setProductToDeleteId('') } } visible={deleteConfirmationVisible} />
     </PaperProvider>
   );
 }
