@@ -12,7 +12,6 @@ import {
   FAB,
   SegmentedButtons,
   Text,
-  Snackbar,
   Divider
 } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -114,16 +113,17 @@ export default function ProductsScreen() {
       <Portal>
         <Modal visible={modalVisible} onDismiss={() => setModalVisible(false)} contentContainerStyle={styles.modal}>
           <View style={{ flex: 1, padding: 16 }}>
-            <TextInput label="Código" value={code} onChangeText={setCode} style={{ marginBottom: 8 }} />
-            <TextInput label="Descripción" value={name} onChangeText={setName} style={{ marginBottom: 8 }} />
-            <TextInput label="Precio de Lista #1" value={price1} onChangeText={setPrice1} keyboardType="numeric" style={{ marginBottom: 8 }} />
-            <TextInput label="Precio de Lista #2" value={price2} onChangeText={setPrice2} keyboardType="numeric" style={{ marginBottom: 8 }} />
-            <TextInput label="Precio de Lista #3" value={price3} onChangeText={setPrice3} keyboardType="numeric" style={{ marginBottom: 8 }} />
+            <TextInput label="Código" value={code} onChangeText={setCode} style={ styles.input } activeUnderlineColor='#429E9D' />
+            <TextInput label="Descripción" value={name} onChangeText={setName} style={ styles.input } activeUnderlineColor='#429E9D' />
+            <TextInput label="Precio de Lista #1" value={price1} onChangeText={setPrice1} keyboardType="numeric" style={ styles.input } activeUnderlineColor='#429E9D' />
+            <TextInput label="Precio de Lista #2 (opcional)" value={price2} onChangeText={setPrice2} keyboardType="numeric" style={ styles.input } activeUnderlineColor='#429E9D' />
+            <TextInput label="Precio de Lista #3 (opcional)" value={price3} onChangeText={setPrice3} keyboardType="numeric" style={ styles.input } activeUnderlineColor='#429E9D' />
             <Button
               mode="contained"
               onPress={handleSave}
               icon={selectedProduct ? 'pencil' : 'plus'}
               disabled={!code || !name || !price1}
+              style={ styles.button }
             >
               {selectedProduct ? 'Guardar producto' : 'Añadir producto'}
             </Button>
@@ -223,12 +223,14 @@ export default function ProductsScreen() {
           style={{ position: 'absolute', bottom: '2%', right: '10%', backgroundColor: '#429E9D' }}
         />
       </View>
-      <ActionNotification type="success" source="products" target={'#'+code} action="add" onDismiss={ ()=> {setSuccessfulAdditionNotificationVisible(false)} } visible={successfulAdditionNotificationVisible} />
-      <ActionNotification type="success" source="products" target={'#'+code} action="update" onDismiss={ ()=> {setSuccessfulEditionNotificationVisible(false)} } visible={successfulEditionNotificationVisible} />
+      <ActionNotification type="success" source="products" target={`#${code}`} action="add" onDismiss={ ()=> {setSuccessfulAdditionNotificationVisible(false)} } visible={successfulAdditionNotificationVisible} />
+      <ActionNotification type="success" source="products" target={`#${code}`} action="update" onDismiss={ ()=> {setSuccessfulEditionNotificationVisible(false)} } visible={successfulEditionNotificationVisible} />
     </PaperProvider>
   );
 }
 
 const styles = StyleSheet.create({
   modal: { backgroundColor: 'white', padding: 20 },
+  input: { marginBottom: 8, backgroundColor: 'white' },
+  button: { marginTop: 16, backgroundColor: '#429E9D' }
 });
