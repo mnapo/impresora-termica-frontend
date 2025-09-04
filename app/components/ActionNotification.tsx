@@ -32,7 +32,7 @@ export default function ActionNotification({ type, source, target, action, visib
                 break;
         }
         switch (action) {
-            case 'add':
+            case 'create':
                 msgAction = 'añadió';
                 break;
             case 'remove':
@@ -44,8 +44,10 @@ export default function ActionNotification({ type, source, target, action, visib
         }
         if (type === 'success') {
             return `Se ${msgAction} ${msgSource} ${target} ${msgType}`;
+        } else if (type === 'no-credits') {
+            return `No hay créditos suficientes para realizar la acción.`;
         }
-        return '';
+        return ''; 
     };
 
     return (
