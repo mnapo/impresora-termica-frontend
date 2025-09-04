@@ -7,6 +7,7 @@ export function createEntityModule(entityName, service) {
   const UPDATE = `${entityName}/UPDATE`;
   const REMOVE = `${entityName}/REMOVE`;
   const LOADING = `${entityName}/LOADING`;
+  const ERROR = `${entityName}/ERROR`;
 
   const fetchAction = (params) => ({ type: FETCH, payload: params });
   const setAction = (data) => ({ type: SET, payload: data });
@@ -17,6 +18,7 @@ export function createEntityModule(entityName, service) {
 
   const initialState = {
     items: [],
+    error: null,
     loading: false,
   };
 
@@ -26,6 +28,8 @@ export function createEntityModule(entityName, service) {
         return { ...state, items: action.payload };
       case LOADING:
         return { ...state, loading: action.payload };
+      case ERROR:
+        return { ...state, loading: false, error: action.error };
       default:
         return state;
     }
