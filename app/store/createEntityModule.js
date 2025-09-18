@@ -11,11 +11,9 @@ export function createEntityModule(entityName, service) {
 
   const fetchAction = (params) => ({ type: FETCH, payload: params });
   const setAction = (data) => ({ type: SET, payload: data });
-
   const createAction = (payload, meta) => ({ type: CREATE, payload, meta });
-  const updateAction = (payload, meta) => ({ type: UPDATE, payload, meta });
+  const updateAction = (id, data, meta) => ({ type: UPDATE, payload: { id, data }, meta });
   const removeAction = (id, meta) => ({ type: REMOVE, payload: id, meta });
-
   const setLoading = (loading) => ({ type: LOADING, payload: loading });
   const setError = (error) => ({ type: ERROR, error });
 
@@ -45,14 +43,8 @@ export function createEntityModule(entityName, service) {
       yield put(setLoading(true));
       const params = action.payload || {};
       const res = yield call([service, 'find'], params);
-
       const data = Array.isArray(res) ? res : res.data;
       yield put(setAction(data));
-      action.meta?.resolve?.(data);
-    } catch (err) {
-      const serialized = serializeError(err);
-      yield put(setError(serialized));
-      action.meta?.reject?.(serialized);
     } finally {
       yield put(setLoading(false));
     }
@@ -60,41 +52,39 @@ export function createEntityModule(entityName, service) {
 
   function* createSaga(action) {
     try {
-      const response = yield call([service, 'create'], action.payload);
+      yield call([service, 'create'], action.payload);
       yield put(fetchAction());
-      action.meta?.resolve?.(response);
+      action.meta?.resolve?.();
     } catch (err) {
-      const serialized = serializeError(err);
-      if (serialized.code === 409) {
+      if (err.code === 409) {
         yield put(setError(ERROR_REPEATED));
+      } else {
+        yield put(setError(err.message || err));
       }
-      yield put(setError(serialized));
-      action.meta?.reject?.(serialized);
+      action.meta?.reject?.(err);
     }
   }
 
   function* updateSaga(action) {
     try {
-      const { id, ...fields } = action.payload;
-      const response = yield call([service, 'patch'], id, fields);
+      const { id, data } = action.payload;
+      yield call([service, 'patch'], id, data);
       yield put(fetchAction());
-      action.meta?.resolve?.(response);
+      action.meta?.resolve?.();
     } catch (err) {
-      const serialized = serializeError(err);
-      yield put(setError(serialized));
-      action.meta?.reject?.(serialized);
+      yield put(setError(err.message || err));
+      action.meta?.reject?.(err);
     }
   }
 
   function* removeSaga(action) {
     try {
-      const response = yield call([service, 'remove'], action.payload);
+      yield call([service, 'remove'], action.payload);
       yield put(fetchAction());
-      action.meta?.resolve?.(response);
+      action.meta?.resolve?.();
     } catch (err) {
-      const serialized = serializeError(err);
-      yield put(setError(serialized));
-      action.meta?.reject?.(serialized);
+      yield put(setError(err.message || err));
+      action.meta?.reject?.(err);
     }
   }
 
@@ -105,22 +95,11 @@ export function createEntityModule(entityName, service) {
     yield takeLatest(REMOVE, removeSaga);
   }
 
-  function serializeError(err) {
-    return {
-      code: err.code || null,
-      message: err.message || 'Unknown error',
-      data: err.data || null,
-      className: err.className || null,
-    };
-  }
-
   return {
     actions: { fetchAction, createAction, updateAction, removeAction },
     reducer,
     saga,
-    ERROR_REPEATED,
   };
 }
 
-const placeHolder = () => {};
-export default placeHolder;
+export default createEntityModule;

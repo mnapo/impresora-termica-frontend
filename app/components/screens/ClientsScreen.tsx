@@ -86,7 +86,7 @@ export default function ClientsScreen() {
     if (selectedClient) {
       try {
         await new Promise((resolve, reject) => {
-          dispatch(clientsActions.updateAction({ id: selectedClient.id, ...payload }, { resolve, reject }));
+          dispatch(clientsActions.updateAction(selectedClient.id, payload, { resolve, reject }));
         });
         console.log("Client updated successfully");
         setSuccessfulEditionNotificationVisible(true);
